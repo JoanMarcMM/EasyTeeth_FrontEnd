@@ -60,7 +60,7 @@ fun LoginScreen(
             Image(
                 painter = painterResource(id = R.drawable.easy_teeth_sin_fondo),
                 contentDescription = "Logo",
-                modifier = Modifier.size(250.dp), // Ajustado un poco para que quepa todo
+                modifier = Modifier.size(250.dp),
                 contentScale = ContentScale.Fit
             )
 
@@ -127,7 +127,7 @@ fun LoginScreen(
                 )
             )
 
-            // Botón de olvido de contraseña (puedes vincularlo a un registro si quieres)
+            // Botón de olvido de contraseña
             TextButton(
                 onClick = { /* Navegar a registro o recuperación */ },
                 modifier = Modifier.align(Alignment.End)
@@ -135,7 +135,7 @@ fun LoginScreen(
                 Text("¿Contraseña olvidada?", color = Color(0xFF1E70EB), fontSize = 12.sp)
             }
 
-            // Mensaje de error dinámico desde el ViewModel
+            // Mensaje de error
             viewModel.errorMessage?.let { error ->
                 Text(
                     text = error,
@@ -147,11 +147,10 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón Iniciar Sesión con lógica de Retrofit
+            // Botón Iniciar Sesión
             Button(
                 onClick = {
                     viewModel.onLoginClick { user ->
-                        // Usamos la constante de tu archivo Routes
                         navController.navigate(Routes.HOME) {
                             // Borramos el historial para que no pueda volver al login con el botón atrás
                             popUpTo(Routes.LOGIN) { inclusive = true }
@@ -186,7 +185,7 @@ fun LoginScreen(
             // Botones Sociales (Estéticos)
             Row(modifier = Modifier.fillMaxWidth()) {
                 SocialButton(
-                    iconRes = R.drawable.google, // Asegúrate de tener estos iconos en res/drawable
+                    iconRes = R.drawable.google,
                     text = "Google",
                     modifier = Modifier.weight(1f)
                 )
