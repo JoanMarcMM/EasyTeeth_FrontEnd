@@ -1,4 +1,4 @@
-package model
+package com.example.easyteeth.model
 
 data class Patient(
     val id: Long? = null,
