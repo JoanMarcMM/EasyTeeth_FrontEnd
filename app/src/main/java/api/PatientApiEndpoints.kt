@@ -1,6 +1,6 @@
 package api
+import com.example.easyteeth.model.Patient
 
-import model.Patient
 
 /*interface PatientApiEndpoints {
 

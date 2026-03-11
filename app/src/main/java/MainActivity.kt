@@ -9,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import navigation.Routes
 import screens.HomeScreen
 import screens.LoginScreen
+import screens.CalendarScreen
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,13 +21,17 @@ class MainActivity : ComponentActivity() {
 
             NavHost(
                 navController = navController,
-                startDestination = Routes.LOGIN // <--- Esto garantiza que el Login salga primero
+                startDestination = Routes.HOME // <--- Esto garantiza que el Login salga primero
             ) {
                 composable(Routes.LOGIN) {
                     LoginScreen(navController)
                 }
                 composable(Routes.HOME) {
                     HomeScreen(navController)
+                }
+                composable(Routes.CALENDAR){
+                    CalendarScreen(navController)
+
                 }
             }
         }
