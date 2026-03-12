@@ -156,9 +156,11 @@ fun CalendarScreen(
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7499D1)),
                     border = BorderStroke(1.dp, Color(0xFF7499D1))
+
                 ) {
-                    Text("Ver todas las visitas", color = Color(0xFF7499D1), fontWeight = FontWeight.Bold)
+                    Text("Ver todas las visitas", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
         }

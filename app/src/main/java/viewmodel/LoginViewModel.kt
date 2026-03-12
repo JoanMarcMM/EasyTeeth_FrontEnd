@@ -8,8 +8,7 @@ import androidx.lifecycle.viewModelScope
 import api.RetrofitClient
 import api.UserApiEndpoints
 import kotlinx.coroutines.launch
-import model.User
-
+import com.example.easyteeth.model.User
 class LoginViewModel : ViewModel() {
 
     // 1. Estados de los campos de texto

@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
 
             NavHost(
                 navController = navController,
-                startDestination = Routes.HOME // <--- Esto garantiza que el Login salga primero
+                startDestination = Routes.LOGIN // <--- Esto garantiza que el Login salga primero
             ) {
                 composable(Routes.LOGIN) {
                     LoginScreen(navController)

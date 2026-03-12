@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import com.example.easyteeth.model.User
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.easyteeth.R // Asegúrate de que el package sea el correcto
@@ -150,7 +151,7 @@ fun LoginScreen(
             // Botón Iniciar Sesión
             Button(
                 onClick = {
-                    viewModel.onLoginClick { user ->
+                    viewModel.onLoginClick { user: com.example.easyteeth.model.User ->
                         navController.navigate(Routes.HOME) {
                             // Borramos el historial para que no pueda volver al login con el botón atrás
                             popUpTo(Routes.LOGIN) { inclusive = true }
