@@ -51,7 +51,7 @@ fun PatientMenuScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = { navController.navigate(Routes.PATIENTSLIST) },
+                onClick = { navController.navigate(Routes.PATIENT_LIST_TO_PROFILE) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),

@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.easyteeth.screens.AppointmentSearcherScreen
+import com.example.easyteeth.screens.PatientListToProfileScreen
 import com.example.easyteeth.screens.PatientSelectorScreen
 import navigation.Routes
 import screens.CalendarScreen
@@ -17,6 +18,7 @@ import screens.LoginScreen
 import screens.NewBackgroundScreen
 import screens.NewPatientScreen
 import screens.PatientMenuScreen
+import screens.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +73,47 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.PATIENTS_APPOINTMENT){
                     PatientSelectorScreen(navController)
 
+                }
+
+                composable(Routes.PATIENT_LIST_TO_PROFILE){
+                    PatientListToProfileScreen(navController)
+
+                }
+                composable(
+                    route = Routes.PATIENT_PROFILE_SCREEN,
+                    arguments = listOf(
+                        navArgument("patientId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) { backStackEntry ->
+                    val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+
+                    PatientProfileScreen(
+                        navController = navController,
+                        patientId = patientId
+                    )
+                }
+                composable(
+                    route = Routes.UPDATE_PATIENT_SCREEN,
+                    arguments = listOf(navArgument("patientId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                    UpdatePatientScreen(
+                        navController = navController,
+                        patientId = patientId
+                    )
+                }
+
+                composable(
+                    route = Routes.UPDATE_BACKGROUND_SCREEN,
+                    arguments = listOf(navArgument("patientId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                    UpdateBackgroundScreen(
+                        navController = navController,
+                        patientId = patientId
+                    )
                 }
             }
         }

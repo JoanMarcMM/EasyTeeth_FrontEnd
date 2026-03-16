@@ -107,7 +107,7 @@ fun HomeScreen(navController: NavController) {
                         iconResId = R.drawable.perfil,
                         contentDescription = "Perfil",
                         backgroundColor = Color(0xFF90E0D0),
-                        onClick = { navController.navigate(Routes.PATIENT_PROFILE) }
+                        onClick = { navController.navigate(Routes.PATIENT_MENU_SCREEN) }
                     )
                 }
             }
