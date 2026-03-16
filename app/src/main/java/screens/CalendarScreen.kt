@@ -107,7 +107,6 @@ fun CalendarScreen(
             )
 
             // 2. LISTADO DE CITAS (Scrollable)
-            // Usamos weight(1f) para que la lista use el espacio sobrante
             Box(modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
