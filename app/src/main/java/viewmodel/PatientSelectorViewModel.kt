@@ -4,7 +4,8 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import api.RetrofitClient
-import api.PatientApiEndpoints
+import api.*
+import com.example.easyteeth.api.PatientApiEndpoints
 import kotlinx.coroutines.launch
 import com.example.easyteeth.model.Patient
 
