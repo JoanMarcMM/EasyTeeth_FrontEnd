@@ -18,8 +18,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.easyteeth.R
 import navigation.Routes
@@ -53,8 +56,8 @@ fun HomeScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.easy_teeth_sin_fondo),
                 contentDescription = "Logo EasyTeeth",
                 modifier = Modifier
-                    .width(480.dp)
-                    .height(380.dp),
+                    .width(280.dp)
+                    .height(180.dp),
                 alignment = Alignment.Center
             )
 
@@ -105,6 +108,43 @@ fun HomeScreen(navController: NavController) {
                         contentDescription = "Perfil",
                         backgroundColor = Color(0xFF90E0D0),
                         onClick = { navController.navigate(Routes.PATIENT_PROFILE) }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                Button(
+                    onClick = { navController.navigate(Routes.PATIENT_MENU_SCREEN) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Pacients",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Button(
+                    onClick = { navController.navigate(Routes.APPOINTMENT_MENU_SCREEN) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Cites",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
