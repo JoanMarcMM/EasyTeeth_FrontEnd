@@ -107,7 +107,6 @@ fun CalendarScreen(
             )
 
             // 2. LISTADO DE CITAS (Scrollable)
-            // Usamos weight(1f) para que la lista use el espacio sobrante
             Box(modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -152,7 +151,7 @@ fun CalendarScreen(
                 OutlinedButton(
                     onClick = {
                         // Asegúrate de añadir esta ruta en tu NavHost
-                        navController.navigate("all_appointments_route")
+                        navController.navigate("appointment_searcher")
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp),

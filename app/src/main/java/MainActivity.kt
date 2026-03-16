@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.easyteeth.screens.AppointmentSearcherScreen
+import com.example.easyteeth.screens.PatientSelectorScreen
 import navigation.Routes
 import screens.CalendarScreen
 import screens.HomeScreen
@@ -60,6 +62,15 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         patientId = patientId
                     )
+                }
+                composable(Routes.APPOINTMENT_SEARCHER){
+                    AppointmentSearcherScreen(navController)
+
+                }
+
+                composable(Routes.PATIENTS_APPOINTMENT){
+                    PatientSelectorScreen(navController)
+
                 }
             }
         }

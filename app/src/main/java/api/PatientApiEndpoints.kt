@@ -2,6 +2,14 @@ package com.example.easyteeth.api
 
 import com.example.easyteeth.model.Patient
 import com.example.easyteeth.model.PatientRequest
+import okhttp3.ResponseBody
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 import retrofit2.Response
 import retrofit2.http.Body
@@ -36,4 +44,21 @@ interface PatientApiEndpoints {
     suspend fun deletePatient(
         @Path("id") id: Long
     ): Response<String>
+        @Body patient: Patient
+    ): Response<Any> // Usamos Any porque el backend puede devolver el Patient o una lista de errores (String)
+
+    @GET("patient/name/{name}")
+    suspend fun findByName(
+        @Path("name") name: String
+    ): Response<List<Patient>>
+
+    @GET("patient/dni/{dni}")
+    suspend fun findByDni(
+        @Path("dni") dni: String
+    ): Response<List<Patient>>
+
+    @GET("patient/ssn/{ssn}")
+    suspend fun findBySsn(
+        @Path("ssn") ssn: String
+    ): Response<List<Patient>>
 }
