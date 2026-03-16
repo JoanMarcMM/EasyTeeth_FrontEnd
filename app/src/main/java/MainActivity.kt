@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.easyteeth.screens.AppointmentSearcherScreen
 import navigation.Routes
 import screens.HomeScreen
 import screens.LoginScreen
@@ -31,6 +32,10 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(Routes.CALENDAR){
                     CalendarScreen(navController)
+
+                }
+                composable(Routes.APPOINTMENT_SEARCHER){
+                    AppointmentSearcherScreen(navController)
 
                 }
             }

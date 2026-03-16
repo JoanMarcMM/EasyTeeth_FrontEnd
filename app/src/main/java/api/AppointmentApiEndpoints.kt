@@ -10,4 +10,7 @@ import retrofit2.http.Path
 interface AppointmentApiEndpoints {
     @GET("appointment/dateBetween/{date}")
     suspend fun getAppointmentsByDay(@Path("date") date: String): Response<List<Appointment>>
+
+    @GET("appointment/index")
+    suspend fun getAllAppointments(): Response<List<Appointment>>
 }
