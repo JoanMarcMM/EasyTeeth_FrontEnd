@@ -34,5 +34,5 @@ interface PatientApiEndpoints {
     @DELETE("patient/{id}")
     suspend fun deletePatient(
         @Path("id") id: Long
-    ): Response<String>
+    ): Response<Unit>
 }
