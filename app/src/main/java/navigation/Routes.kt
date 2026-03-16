@@ -1,10 +1,14 @@
 package navigation
 
+import com.example.easyteeth.model.Appointment
+
 object Routes {
     const val HOME = "home"
     const val LOGIN = "login"
 
     const val SHOW_PATIENTS = "show_patients"
+
+    const val APPOINTMENT_SEARCHER = "appointment_searcher"
 
     const val CALENDAR = "calendar"
 

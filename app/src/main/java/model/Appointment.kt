@@ -7,7 +7,7 @@ data class Appointment(
     val motive: String,
     val date: String,
     val patient: Patient?,
-    val box: Box?,          // Asegúrate de tener estas clases o cámbialas a Any? temporalmente
-    val odontologist: Any?,
+    val box: Box?,
+    val odontologist: Odontologist?,
     val treatment: Treatment?
 )

@@ -152,7 +152,7 @@ fun CalendarScreen(
                 OutlinedButton(
                     onClick = {
                         // Asegúrate de añadir esta ruta en tu NavHost
-                        navController.navigate("all_appointments_route")
+                        navController.navigate("appointment_searcher")
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp),
