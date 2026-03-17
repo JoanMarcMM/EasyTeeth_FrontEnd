@@ -9,8 +9,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.easyteeth.screens.AppointmentSearcherScreen
+import com.example.easyteeth.screens.OdontogramScreen
 import com.example.easyteeth.screens.PatientListToProfileScreen
 import com.example.easyteeth.screens.PatientSelectorScreen
+import com.example.easyteeth.screens.ToothDetailScreen
 import navigation.Routes
 import screens.CalendarScreen
 import screens.HomeScreen
@@ -114,6 +116,27 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         patientId = patientId
                     )
+                }
+
+                composable(
+                    route = Routes.ODONTOGRAM_SCREEN,
+                    arguments = listOf(navArgument("patientId") { type = NavType.LongType })
+                ) {
+                    val patientId = it.arguments?.getLong("patientId") ?: 0L
+                    OdontogramScreen(navController, patientId)
+                }
+
+                composable(
+                    route = Routes.TOOTH_DETAIL_SCREEN,
+                    arguments = listOf(
+                        navArgument("patientId") { type = NavType.LongType },
+                        navArgument("toothId") { type = NavType.LongType }
+                    )
+                ) {
+                    val patientId = it.arguments?.getLong("patientId") ?: 0L
+                    val toothId = it.arguments?.getLong("toothId") ?: 0L
+
+                    ToothDetailScreen(navController, patientId, toothId)
                 }
             }
         }
