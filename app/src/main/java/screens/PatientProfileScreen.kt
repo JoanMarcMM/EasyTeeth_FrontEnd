@@ -239,7 +239,13 @@ fun PatientProfileScreen(
                         }
 
                         Spacer(modifier = Modifier.height(4.dp))
-
+                        Button(
+                            onClick = { navController.navigate("odontogram/$patientId") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(14.dp)
+                        ) {
+                            Text("Veure Odontograma")
+                        }
                         Button(
                             onClick = { navController.navigate("updatePatient/$patientId") },
                             modifier = Modifier.fillMaxWidth(),
