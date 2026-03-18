@@ -246,6 +246,23 @@ fun PatientProfileScreen(
                         ) {
                             Text("Veure Odontograma")
                         }
+
+
+                        Button(
+                            onClick = { navController.navigate("patientImages/$patientId") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(14.dp)
+                        ) {
+                            Text("Veure Imatges")
+                        }
+
+                        Button(
+                            onClick = { navController.navigate("patientDocuments/$patientId") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(14.dp)
+                        ) {
+                            Text("Veure Documents")
+                        }
                         Button(
                             onClick = { navController.navigate("updatePatient/$patientId") },
                             modifier = Modifier.fillMaxWidth(),

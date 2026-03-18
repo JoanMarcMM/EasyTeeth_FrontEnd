@@ -29,6 +29,9 @@ object Routes {
     const val UPDATE_BACKGROUND_SCREEN = "updateBackground/{patientId}"
 
     const val ODONTOGRAM_SCREEN = "odontogram/{patientId}"
+
+    const val PATIENT_IMAGES = "patientImages"
+    const val PATIENT_DOCUMENTS = "patientDocuments"
     const val TOOTH_DETAIL_SCREEN = "toothDetail/{patientId}/{toothId}"
 
     const val RADIOGRAPHYS = "radiographys"

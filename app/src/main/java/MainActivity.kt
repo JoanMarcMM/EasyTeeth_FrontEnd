@@ -138,6 +138,15 @@ class MainActivity : ComponentActivity() {
 
                     ToothDetailScreen(navController, patientId, toothId)
                 }
+                composable("patientImages/{patientId}") { backStackEntry ->
+                    val patientId = backStackEntry.arguments?.getString("patientId")?.toLong() ?: 0L
+                    PatientImagesScreen(navController, patientId)
+                }
+
+                composable("patientDocuments/{patientId}") { backStackEntry ->
+                    val patientId = backStackEntry.arguments?.getString("patientId")?.toLong() ?: 0L
+                    PatientDocumentsScreen(navController, patientId)
+                }
             }
         }
     }
