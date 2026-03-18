@@ -25,4 +25,11 @@ object RetrofitClient {
     val odontogramApi: OdontogramApiEndpoints by lazy {
         instance.create(OdontogramApiEndpoints::class.java)
     }
+    val imageApi: ImageApiEndpoints by lazy {
+        instance.create(ImageApiEndpoints::class.java)
+    }
+
+    val documentApi: DocumentApiEndpoints by lazy {
+        instance.create(DocumentApiEndpoints::class.java)
+    }
 }
