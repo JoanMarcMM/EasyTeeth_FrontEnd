@@ -1,14 +1,17 @@
 package com.example.easyteeth.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -41,7 +44,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -81,6 +86,8 @@ fun OdontogramScreen(
 
     val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     fun loadOdontogram() {
         scope.launch {
@@ -109,9 +116,7 @@ fun OdontogramScreen(
                 loadOdontogram()
             }
         }
-
         lifecycleOwner.lifecycle.addObserver(observer)
-
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
@@ -160,45 +165,149 @@ fun OdontogramScreen(
                 }
 
                 else -> {
-                    ArcadaVerticalCard(
-                        title = "Arcada superior permanent",
-                        leftTeeth = upperPermanentLeft,
-                        rightTeeth = upperPermanentRight,
-                        odontograms = odontograms,
-                        patientId = patientId,
-                        navController = navController
-                    )
-
-                    ArcadaVerticalCard(
-                        title = "Arcada superior temporal",
-                        leftTeeth = upperChildLeft,
-                        rightTeeth = upperChildRight,
-                        odontograms = odontograms,
-                        patientId = patientId,
-                        navController = navController
-                    )
-
-                    ArcadaVerticalCard(
-                        title = "Arcada inferior temporal",
-                        leftTeeth = lowerChildLeft,
-                        rightTeeth = lowerChildRight,
-                        odontograms = odontograms,
-                        patientId = patientId,
-                        navController = navController
-                    )
-
-                    ArcadaVerticalCard(
-                        title = "Arcada inferior permanent",
-                        leftTeeth = lowerPermanentLeft,
-                        rightTeeth = lowerPermanentRight,
-                        odontograms = odontograms,
-                        patientId = patientId,
-                        navController = navController
-                    )
+                    if (isLandscape) {
+                        LandscapeOdontogramContent(
+                            odontograms = odontograms,
+                            patientId = patientId,
+                            navController = navController
+                        )
+                    } else {
+                        PortraitOdontogramContent(
+                            odontograms = odontograms,
+                            patientId = patientId,
+                            navController = navController
+                        )
+                    }
 
                     LegendCard()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun PortraitOdontogramContent(
+    odontograms: List<Odontogram>,
+    patientId: Long,
+    navController: NavController
+) {
+    ArcadaVerticalCard(
+        title = "Dentadura permanent superior",
+        leftTeeth = upperPermanentLeft,
+        rightTeeth = upperPermanentRight,
+        odontograms = odontograms,
+        patientId = patientId,
+        navController = navController
+    )
+
+    ArcadaVerticalCard(
+        title = "Dentadura permanent inferior",
+        leftTeeth = lowerPermanentLeft,
+        rightTeeth = lowerPermanentRight,
+        odontograms = odontograms,
+        patientId = patientId,
+        navController = navController
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color(0xFFFDFDFD)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Text(
+                text = "Dentadura temporal",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            HorizontalDivider()
+
+            ArcadaVerticalCardContent(
+                title = "Superior temporal",
+                leftTeeth = upperChildLeft,
+                rightTeeth = upperChildRight,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
+            )
+
+            ArcadaVerticalCardContent(
+                title = "Inferior temporal",
+                leftTeeth = lowerChildLeft,
+                rightTeeth = lowerChildRight,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
+            )
+        }
+    }
+}
+
+@Composable
+fun LandscapeOdontogramContent(
+    odontograms: List<Odontogram>,
+    patientId: Long,
+    navController: NavController
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            Text(
+                text = "Vista panoràmica",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            HorizontalDivider()
+
+            ArcadaRowCompact(
+                title = "Permanent superior",
+                leftTeeth = upperPermanentLeft,
+                rightTeeth = upperPermanentRight,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
+            )
+
+            ArcadaRowCompact(
+                title = "Temporal superior",
+                leftTeeth = upperChildLeft,
+                rightTeeth = upperChildRight,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
+            )
+
+            ArcadaRowCompact(
+                title = "Temporal inferior",
+                leftTeeth = lowerChildLeft,
+                rightTeeth = lowerChildRight,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
+            )
+
+            ArcadaRowCompact(
+                title = "Permanent inferior",
+                leftTeeth = lowerPermanentLeft,
+                rightTeeth = lowerPermanentRight,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
+            )
         }
     }
 }
@@ -218,34 +327,101 @@ fun ArcadaVerticalCard(
         colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ArcadaVerticalCardContent(
+            title = title,
+            leftTeeth = leftTeeth,
+            rightTeeth = rightTeeth,
+            odontograms = odontograms,
+            patientId = patientId,
+            navController = navController
+        )
+    }
+}
+
+@Composable
+fun ArcadaVerticalCardContent(
+    title: String,
+    leftTeeth: List<ToothCatalogItem>,
+    rightTeeth: List<ToothCatalogItem>,
+    odontograms: List<Odontogram>,
+    patientId: Long,
+    navController: NavController
+) {
+    Column(
+        modifier = Modifier.padding(18.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+
+        HorizontalDivider()
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+            ToothVerticalColumn(
+                teeth = leftTeeth,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
             )
 
-            HorizontalDivider()
+            ToothVerticalColumn(
+                teeth = rightTeeth,
+                odontograms = odontograms,
+                patientId = patientId,
+                navController = navController
+            )
+        }
+    }
+}
+
+@Composable
+fun ArcadaRowCompact(
+    title: String,
+    leftTeeth: List<ToothCatalogItem>,
+    rightTeeth: List<ToothCatalogItem>,
+    odontograms: List<Odontogram>,
+    patientId: Long,
+    navController: NavController
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold
+        )
+
+        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+            val totalGap = 28.dp
+            val availableForTwoGroups = maxWidth - totalGap
+            val groupWidth = availableForTwoGroups / 2
+
+            val calculatedToothSize = (groupWidth / 8) - 6.dp
+            val toothSize = calculatedToothSize.coerceIn(28.dp, 42.dp)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                ToothVerticalColumn(
+                ToothHorizontalRow(
                     teeth = leftTeeth,
                     odontograms = odontograms,
                     patientId = patientId,
-                    navController = navController
+                    navController = navController,
+                    toothSize = toothSize
                 )
 
-                ToothVerticalColumn(
+                ToothHorizontalRow(
                     teeth = rightTeeth,
                     odontograms = odontograms,
                     patientId = patientId,
-                    navController = navController
+                    navController = navController,
+                    toothSize = toothSize
                 )
             }
         }
@@ -289,10 +465,45 @@ fun ToothVerticalColumn(
 }
 
 @Composable
+fun ToothHorizontalRow(
+    teeth: List<ToothCatalogItem>,
+    odontograms: List<Odontogram>,
+    patientId: Long,
+    navController: NavController,
+    toothSize: Dp
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        teeth.forEach { tooth ->
+            val toothRecords = odontograms.filter { it.tooth?.id == tooth.id }
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = tooth.number.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                ToothMiniShape(
+                    toothNumber = tooth.number,
+                    toothRecords = toothRecords,
+                    onClick = {
+                        navController.navigate("toothDetail/$patientId/${tooth.id}")
+                    },
+                    boxSize = toothSize
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun ToothMiniShape(
     toothNumber: Int,
     toothRecords: List<Odontogram>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    boxSize: Dp = 54.dp
 ) {
     val hasFiveSides = toothHasFiveSides(toothNumber)
     val wholeToothMissing = isMissingTooth(toothRecords)
@@ -303,15 +514,21 @@ fun ToothMiniShape(
     val bottomData = toothRecords.find { it.side?.id == 4L }
     val centerData = toothRecords.find { it.side?.id == 5L }
 
+    val topWidth = boxSize * 0.52f
+    val topHeight = boxSize * 0.26f
+    val sideWidth = boxSize * 0.26f
+    val sideHeight = boxSize * 0.52f
+    val centerSize = boxSize * 0.37f
+
     Box(
         modifier = Modifier
-            .size(54.dp)
+            .size(boxSize)
             .clickable { onClick() }
     ) {
         ToothZone(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .size(width = 28.dp, height = 14.dp),
+                .size(width = topWidth, height = topHeight),
             color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(topData),
             shape = topToothShape()
         )
@@ -319,7 +536,7 @@ fun ToothMiniShape(
         ToothZone(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .size(width = 14.dp, height = 28.dp),
+                .size(width = sideWidth, height = sideHeight),
             color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(leftData),
             shape = leftToothShape()
         )
@@ -328,7 +545,7 @@ fun ToothMiniShape(
             ToothZone(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .size(20.dp),
+                    .size(centerSize),
                 color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(centerData),
                 shape = RoundedCornerShape(2.dp)
             )
@@ -337,7 +554,7 @@ fun ToothMiniShape(
         ToothZone(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .size(width = 14.dp, height = 28.dp),
+                .size(width = sideWidth, height = sideHeight),
             color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(rightData),
             shape = rightToothShape()
         )
@@ -345,7 +562,7 @@ fun ToothMiniShape(
         ToothZone(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .size(width = 28.dp, height = 14.dp),
+                .size(width = topWidth, height = topHeight),
             color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(bottomData),
             shape = bottomToothShape()
         )
