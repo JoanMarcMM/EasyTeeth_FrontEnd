@@ -5,5 +5,10 @@ data class PatientRequest(
     val lastname1: String,
     val lastname2: String,
     val ssn: String,
-    val dni: String
+    val dni: String,
+    val phoneNumber: String? = null,
+    val email: String? = null,
+    val billingAddress: String? = null,
+    val bankAccountNumber: String? = null,
+    val taxIdentificationNumber: String? = null
 )

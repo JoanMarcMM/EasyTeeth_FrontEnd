@@ -33,6 +33,11 @@ fun UpdatePatientScreen(
     var lastname2 by remember { mutableStateOf("") }
     var ssn by remember { mutableStateOf("") }
     var dni by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var billingAddress by remember { mutableStateOf("") }
+    var bankAccountNumber by remember { mutableStateOf("") }
+    var taxIdentificationNumber by remember { mutableStateOf("") }
 
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -55,6 +60,11 @@ fun UpdatePatientScreen(
                         lastname2 = patient.lastname2
                         ssn = patient.ssn
                         dni = patient.dni
+                        phoneNumber = patient.phoneNumber ?: ""
+                        email = patient.email ?: ""
+                        billingAddress = patient.billingAddress ?: ""
+                        bankAccountNumber = patient.bankAccountNumber ?: ""
+                        taxIdentificationNumber = patient.taxIdentificationNumber ?: ""
                     } else {
                         errorMessage = "No s'ha pogut carregar el pacient"
                     }
@@ -122,6 +132,41 @@ fun UpdatePatientScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                OutlinedTextField(
+                    value = phoneNumber,
+                    onValueChange = { phoneNumber = it },
+                    label = { Text("Telèfon") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = billingAddress,
+                    onValueChange = { billingAddress = it },
+                    label = { Text("Adreça de facturació") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = bankAccountNumber,
+                    onValueChange = { bankAccountNumber = it },
+                    label = { Text("Número de compte") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = taxIdentificationNumber,
+                    onValueChange = { taxIdentificationNumber = it },
+                    label = { Text("Tax identification number") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 errorMessage?.let {
                     Text(
                         text = it,
@@ -143,7 +188,12 @@ fun UpdatePatientScreen(
                                         lastname1 = lastname1.trim(),
                                         lastname2 = lastname2.trim(),
                                         ssn = ssn.trim(),
-                                        dni = dni.trim()
+                                        dni = dni.trim(),
+                                        phoneNumber = phoneNumber.trim().ifBlank { null },
+                                        email = email.trim().ifBlank { null },
+                                        billingAddress = billingAddress.trim().ifBlank { null },
+                                        bankAccountNumber = bankAccountNumber.trim().ifBlank { null },
+                                        taxIdentificationNumber = taxIdentificationNumber.trim().ifBlank { null }
                                     )
                                 )
 
