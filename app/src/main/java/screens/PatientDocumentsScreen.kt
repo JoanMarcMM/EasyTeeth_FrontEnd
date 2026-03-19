@@ -1,10 +1,20 @@
 package screens
 
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Base64
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,11 +46,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import api.RetrofitClient
 import com.example.easyteeth.model.Document
 import com.example.easyteeth.model.DocumentRequest
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.time.LocalDateTime
 
 private const val MAX_DOCUMENT_SIZE_BYTES = 1_000_000L // ~1 MB
@@ -112,7 +126,7 @@ fun PatientDocumentsScreen(
                         return@launch
                     }
 
-                    val fileName = uri.lastPathSegment?.substringAfterLast('/') ?: "document"
+                    val fileName = extractSafeFileName(context, uri)
                     val mimeType = context.contentResolver.getType(uri) ?: "application/octet-stream"
 
                     val response = RetrofitClient.documentApi.createDocument(
@@ -137,16 +151,12 @@ fun PatientDocumentsScreen(
                         errorMessage = when {
                             response.code() == 413 ->
                                 "Arxiu massa gran. La mida màxima és ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}"
-
                             serverError.contains("PacketTooBigException", ignoreCase = true) ->
                                 "Arxiu massa gran. La mida màxima és ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}"
-
                             serverError.contains("max_allowed_packet", ignoreCase = true) ->
                                 "Arxiu massa gran. La mida màxima és ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}"
-
                             serverError.contains("too large", ignoreCase = true) ->
                                 "Arxiu massa gran. La mida màxima és ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}"
-
                             else ->
                                 "Error al guardar el document: ${response.code()}"
                         }
@@ -155,13 +165,10 @@ fun PatientDocumentsScreen(
                     errorMessage = when {
                         e.message?.contains("PacketTooBigException", ignoreCase = true) == true ->
                             "Arxiu massa gran. La mida màxima és ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}"
-
                         e.message?.contains("max_allowed_packet", ignoreCase = true) == true ->
                             "Arxiu massa gran. La mida màxima és ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}"
-
                         e.message?.contains("too large", ignoreCase = true) == true ->
                             "Arxiu massa gran. La mida màxima és ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}"
-
                         else ->
                             e.message ?: "Error en pujar el document"
                     }
@@ -261,6 +268,36 @@ fun PatientDocumentsScreen(
                                             errorMessage = e.message ?: "Error eliminant el document"
                                         }
                                     }
+                                },
+                                onDownload = {
+                                    val success = saveBase64DocumentToDownloads(
+                                        context = context,
+                                        base64File = documentItem.file,
+                                        fileName = documentItem.name,
+                                        mimeType = documentItem.type
+                                    )
+
+                                    Toast.makeText(
+                                        context,
+                                        if (success) "Document desat a Descàrregues" else "No s'ha pogut descarregar el document",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                onView = {
+                                    val success = openBase64Document(
+                                        context = context,
+                                        base64File = documentItem.file,
+                                        fileName = documentItem.name,
+                                        mimeType = documentItem.type
+                                    )
+
+                                    if (!success) {
+                                        Toast.makeText(
+                                            context,
+                                            "No s'ha pogut obrir el document",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
                             )
                         }
@@ -285,7 +322,9 @@ fun PatientDocumentsScreen(
 @Composable
 fun DocumentCard(
     document: Document,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onDownload: () -> Unit,
+    onView: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -312,7 +351,7 @@ fun DocumentCard(
 
             val fileSizeBytes = remember(document.file) {
                 try {
-                    android.util.Base64.decode(document.file, android.util.Base64.DEFAULT).size.toLong()
+                    Base64.decode(document.file, Base64.DEFAULT).size.toLong()
                 } catch (e: Exception) {
                     0L
                 }
@@ -322,6 +361,27 @@ fun DocumentCard(
                 "Tamany",
                 formatFileSize(fileSizeBytes)
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Button(
+                    onClick = onView,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Veure")
+                }
+
+                OutlinedButton(
+                    onClick = onDownload,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Descarregar")
+                }
+            }
 
             OutlinedButton(
                 onClick = onDelete,
@@ -361,5 +421,110 @@ fun formatFileSize(bytes: Long): String {
         bytes < 1024 -> "$bytes B"
         bytes < 1024 * 1024 -> String.format("%.1f KB", bytes / 1024.0)
         else -> String.format("%.1f MB", bytes / (1024.0 * 1024.0))
+    }
+}
+
+fun extractSafeFileName(context: Context, uri: Uri): String {
+    val rawName = uri.lastPathSegment?.substringAfterLast('/') ?: "document"
+    return if (rawName.contains(".")) rawName else "$rawName.bin"
+}
+
+fun saveBase64DocumentToDownloads(
+    context: Context,
+    base64File: String,
+    fileName: String,
+    mimeType: String
+): Boolean {
+    return try {
+        val fileBytes = Base64.decode(base64File, Base64.DEFAULT)
+
+        val safeName = if (fileName.contains(".")) {
+            fileName
+        } else {
+            fileName + extensionFromMimeType(mimeType)
+        }
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, safeName)
+            put(MediaStore.Downloads.MIME_TYPE, mimeType)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/EasyTeeth")
+                put(MediaStore.Downloads.IS_PENDING, 1)
+            }
+        }
+
+        val resolver = context.contentResolver
+        val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+            ?: return false
+
+        val outputStream: OutputStream = resolver.openOutputStream(uri) ?: return false
+        outputStream.write(fileBytes)
+        outputStream.flush()
+        outputStream.close()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val finalValues = ContentValues().apply {
+                put(MediaStore.Downloads.IS_PENDING, 0)
+            }
+            resolver.update(uri, finalValues, null, null)
+        }
+
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
+fun openBase64Document(
+    context: Context,
+    base64File: String,
+    fileName: String,
+    mimeType: String
+): Boolean {
+    return try {
+        val fileBytes = Base64.decode(base64File, Base64.DEFAULT)
+
+        val safeName = if (fileName.contains(".")) {
+            fileName
+        } else {
+            fileName + extensionFromMimeType(mimeType)
+        }
+
+        val tempFile = File(context.cacheDir, safeName)
+        val fos = FileOutputStream(tempFile)
+        fos.write(fileBytes)
+        fos.flush()
+        fos.close()
+
+        val uri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            tempFile
+        )
+
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+
+        context.startActivity(intent)
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
+fun extensionFromMimeType(mimeType: String): String {
+    return when (mimeType.lowercase()) {
+        "application/pdf" -> ".pdf"
+        "application/msword" -> ".doc"
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" -> ".docx"
+        "application/vnd.ms-excel" -> ".xls"
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" -> ".xlsx"
+        "text/plain" -> ".txt"
+        "image/png" -> ".png"
+        "image/jpeg" -> ".jpg"
+        else -> ".bin"
     }
 }
