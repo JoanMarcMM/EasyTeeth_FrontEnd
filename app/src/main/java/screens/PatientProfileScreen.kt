@@ -2,6 +2,7 @@ package screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -145,9 +146,7 @@ fun PatientProfileScreen(
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(18.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.White
-                            ),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
                             Column(
@@ -162,21 +161,91 @@ fun PatientProfileScreen(
 
                                 HorizontalDivider()
 
-                                ProfileDataRow("Nom", patient?.name ?: "")
-                                ProfileDataRow("Primer cognom", patient?.lastname1 ?: "")
-                                ProfileDataRow("Segon cognom", patient?.lastname2 ?: "")
-                                ProfileDataRow("DNI", patient?.dni ?: "")
-                                ProfileDataRow("SSN", patient?.ssn ?: "")
-                                ProfileDataRow("ID", patient?.id?.toString() ?: "")
+                                CompactProfileGrid(
+                                    items = listOf(
+                                        "Nom" to (patient?.name ?: ""),
+                                        "Primer cognom" to (patient?.lastname1 ?: ""),
+                                        "Segon cognom" to (patient?.lastname2 ?: ""),
+                                        "DNI" to (patient?.dni ?: ""),
+                                        "SSN" to (patient?.ssn ?: ""),
+                                        "ID" to (patient?.id?.toString() ?: "")
+                                    )
+                                )
+
+                                Button(
+                                    onClick = { navController.navigate("updatePatient/$patientId") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(14.dp)
+                                ) {
+                                    Text("Actualitzar Pacient")
+                                }
                             }
                         }
 
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(18.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.White
-                            ),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(18.dp),
+                                verticalArrangement = Arrangement.spacedBy(14.dp)
+                            ) {
+                                Text(
+                                    text = "Dades de contacte",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                HorizontalDivider()
+
+                                CompactProfileGrid(
+                                    items = listOf(
+                                        "Telèfon" to (patient?.phoneNumber ?: "-"),
+                                        "Email" to (patient?.email ?: "-")
+                                    )
+                                )
+                            }
+                        }
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(18.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(18.dp),
+                                verticalArrangement = Arrangement.spacedBy(14.dp)
+                            ) {
+                                Text(
+                                    text = "Dades econòmiques",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                HorizontalDivider()
+
+                                ProfileDataBlock(
+                                    title = "Adreça de facturació",
+                                    value = patient?.billingAddress ?: ""
+                                )
+                                ProfileDataBlock(
+                                    title = "Número de compte",
+                                    value = patient?.bankAccountNumber ?: ""
+                                )
+                                ProfileDataBlock(
+                                    title = "Tax identification number",
+                                    value = patient?.taxIdentificationNumber ?: ""
+                                )
+                            }
+                        }
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(18.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
                             Column(
@@ -229,74 +298,94 @@ fun PatientProfileScreen(
                                         label = "Anestèsia signada",
                                         value = background?.hasSignedAnesthesia == true
                                     )
+
+                                    Button(
+                                        onClick = { navController.navigate("updateBackground/$patientId") },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        shape = RoundedCornerShape(14.dp)
+                                    ) {
+                                        Text("Actualitzar Background")
+                                    }
                                 } else {
                                     Text(
                                         text = "Aquest pacient no té background registrat.",
                                         color = Color.Gray
                                     )
+
+                                    Button(
+                                        onClick = { navController.navigate("updateBackground/$patientId") },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        shape = RoundedCornerShape(14.dp)
+                                    ) {
+                                        Text("Actualitzar Background")
+                                    }
                                 }
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Button(
-                            onClick = { navController.navigate("odontogram/$patientId") },
+                        Card(
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp)
+                            shape = RoundedCornerShape(18.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
-                            Text("Veure Odontograma")
-                        }
+                            Column(
+                                modifier = Modifier.padding(18.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Text(
+                                    text = "Accions",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
 
+                                HorizontalDivider()
 
-                        Button(
-                            onClick = { navController.navigate("patientImages/$patientId") },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp)
-                        ) {
-                            Text("Veure Imatges")
-                        }
+                                Button(
+                                    onClick = { navController.navigate("odontogram/$patientId") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(14.dp)
+                                ) {
+                                    Text("Veure Odontograma")
+                                }
 
-                        Button(
-                            onClick = { navController.navigate("patientDocuments/$patientId") },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp)
-                        ) {
-                            Text("Veure Documents")
-                        }
-                        Button(
-                            onClick = { navController.navigate("updatePatient/$patientId") },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp)
-                        ) {
-                            Text("Actualitzar Pacient")
-                        }
+                                Button(
+                                    onClick = { navController.navigate("patientImages/$patientId") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(14.dp)
+                                ) {
+                                    Text("Veure Imatges")
+                                }
 
-                        Button(
-                            onClick = { navController.navigate("updateBackground/$patientId") },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp)
-                        ) {
-                            Text("Actualitzar Background")
-                        }
+                                Button(
+                                    onClick = { navController.navigate("patientDocuments/$patientId") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(14.dp)
+                                ) {
+                                    Text("Veure Documents")
+                                }
 
-                        Button(
-                            onClick = { showDeleteDialog = true },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp)
-                        ) {
-                            Text("Eliminar Pacient")
-                        }
+                                Button(
+                                    onClick = { showDeleteDialog = true },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(14.dp)
+                                ) {
+                                    Text("Eliminar Pacient")
+                                }
 
-                        OutlinedButton(
-                            onClick = { navController.popBackStack() },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp)
-                        ) {
-                            Text("Tornar")
+                                OutlinedButton(
+                                    onClick = { navController.popBackStack() },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(14.dp)
+                                ) {
+                                    Text("Tornar")
+                                }
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
                     }
+
                     if (showDeleteDialog) {
                         androidx.compose.material3.AlertDialog(
                             onDismissRequest = {
@@ -339,7 +428,10 @@ fun PatientProfileScreen(
                                     enabled = !isDeleting
                                 ) {
                                     if (isDeleting) {
-                                        CircularProgressIndicator()
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(18.dp),
+                                            strokeWidth = 2.dp
+                                        )
                                     } else {
                                         Text("Sí, eliminar")
                                     }
@@ -355,6 +447,49 @@ fun PatientProfileScreen(
                             }
                         )
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CompactProfileGrid(items: List<Pair<String, String>>) {
+    val rows = items.chunked(2)
+
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        rows.forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                rowItems.forEach { (label, value) ->
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xFFF9FAFB)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = label,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Color(0xFF6B7280),
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = value.ifBlank { "-" },
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color(0xFF111827)
+                            )
+                        }
+                    }
+                }
+
+                if (rowItems.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
