@@ -3,6 +3,7 @@ package com.example.easyteeth.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -50,7 +51,6 @@ fun PatientListToProfileScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 20.dp)
         ) {
-            // BUSCADOR POR NOMBRE O DNI
             OutlinedTextField(
                 value = viewModel.searchQuery,
                 onValueChange = { viewModel.applyFilter(it) },
@@ -77,10 +77,12 @@ fun PatientListToProfileScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            // LISTADO DE PACIENTES
             Box(modifier = Modifier.weight(1f)) {
                 if (viewModel.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = Color(0xFF1E70EB))
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color(0xFF1E70EB)
+                    )
                 } else if (viewModel.filteredPatients.isEmpty()) {
                     Text(
                         "No se encontraron pacientes",
@@ -93,11 +95,19 @@ fun PatientListToProfileScreen(
                         contentPadding = PaddingValues(bottom = 20.dp)
                     ) {
                         items(viewModel.filteredPatients) { patient ->
-                            PatientCard2(patient = patient) {
-                                patient.id?.let { patientId ->
-                                    navController.navigate("patient_profile/$patientId")
+                            PatientCard2(
+                                patient = patient,
+                                onClick = {
+                                    patient.id?.let { patientId ->
+                                        navController.navigate("patient_profile/$patientId")
+                                    }
+                                },
+                                onOdontogramClick = {
+                                    patient.id?.let { patientId ->
+                                        navController.navigate("odontogram/$patientId")
+                                    }
                                 }
-                            }
+                            )
                         }
                     }
                 }
@@ -108,7 +118,11 @@ fun PatientListToProfileScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PatientCard2(patient: Patient, onClick: () -> Unit) {
+fun PatientCard2(
+    patient: Patient,
+    onClick: () -> Unit,
+    onOdontogramClick: () -> Unit
+) {
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
@@ -130,20 +144,45 @@ fun PatientCard2(patient: Patient, onClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row {
-                    Badge(containerColor = Color(0xFFE3F2FD), contentColor = Color(0xFF1E70EB)) {
+                    Badge(
+                        containerColor = Color(0xFFE3F2FD),
+                        contentColor = Color(0xFF1E70EB)
+                    ) {
                         Text("DNI: ${patient.dni}", modifier = Modifier.padding(4.dp))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Badge(containerColor = Color(0xFFF1F8E9), contentColor = Color(0xFF388E3C)) {
+                    Badge(
+                        containerColor = Color(0xFFF1F8E9),
+                        contentColor = Color(0xFF388E3C)
+                    ) {
                         Text("SSN: ${patient.ssn}", modifier = Modifier.padding(4.dp))
                     }
                 }
             }
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = null,
-                tint = Color.Gray
-            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = Color(0xFFE8F0FE)
+                ) {
+                    IconButton(onClick = onOdontogramClick) {
+                        Icon(
+                            imageVector = Icons.Default.MedicalServices,
+                            contentDescription = "Ir al odontograma",
+                            tint = Color(0xFF1E70EB)
+                        )
+                    }
+                }
+
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = Color.Gray
+                )
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.easyteeth.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -31,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -44,8 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -53,7 +49,6 @@ import api.RetrofitClient
 import com.example.easyteeth.model.Odontogram
 import com.example.easyteeth.model.OdontogramRequest
 import com.example.easyteeth.utils.OdontoBlack
-import com.example.easyteeth.utils.OdontoGray
 import com.example.easyteeth.utils.allTeethCatalog
 import com.example.easyteeth.utils.getSimpleOdontogramColor
 import com.example.easyteeth.utils.isMissingTooth
@@ -80,8 +75,7 @@ fun ToothDetailScreen(
             isLoading = true
             errorMessage = null
             try {
-                val response = RetrofitClient.odontogramApi
-                    .getByPatientAndTooth(patientId, toothId)
+                val response = RetrofitClient.odontogramApi.getByPatientAndTooth(patientId, toothId)
 
                 if (response.isSuccessful) {
                     sides = response.body() ?: emptyList()
@@ -103,7 +97,7 @@ fun ToothDetailScreen(
     }
 
     Scaffold(
-        containerColor = androidx.compose.ui.graphics.Color(0xFFF7F8FA),
+        containerColor = Color(0xFFF7F8FA),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -121,7 +115,7 @@ fun ToothDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = androidx.compose.ui.graphics.Color(0xFFF7F8FA)
+                    containerColor = Color(0xFFF7F8FA)
                 )
             )
         }
@@ -156,8 +150,7 @@ fun ToothDetailScreen(
                 else -> {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(18.dp),
-                        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
                         Column(
@@ -176,17 +169,14 @@ fun ToothDetailScreen(
                             ToothBigDiagram(
                                 toothNumber = toothNumber,
                                 sides = sides,
-                                onClickSide = { sideId ->
-                                    selectedSideId = sideId
-                                }
+                                onClickSide = { sideId -> selectedSideId = sideId }
                             )
                         }
                     }
 
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(18.dp),
-                        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
                         Column(
@@ -202,16 +192,16 @@ fun ToothDetailScreen(
                             HorizontalDivider()
 
                             if (toothHasFiveSides(toothNumber)) {
-                                ToothLegendItem("1 · Vestibular")
-                                ToothLegendItem("2 · Lingual")
-                                ToothLegendItem("3 · Mesial")
-                                ToothLegendItem("4 · Distal")
-                                ToothLegendItem("5 · Oclusal")
+                                ToothLegendItem("1 · Superior")
+                                ToothLegendItem("2 · Esquerra")
+                                ToothLegendItem("3 · Dreta")
+                                ToothLegendItem("4 · Inferior")
+                                ToothLegendItem("5 · Centre / oclusal")
                             } else {
-                                ToothLegendItem("1 · Vestibular")
-                                ToothLegendItem("2 · Lingual")
-                                ToothLegendItem("3 · Mesial")
-                                ToothLegendItem("4 · Distal")
+                                ToothLegendItem("1 · Superior")
+                                ToothLegendItem("2 · Esquerra")
+                                ToothLegendItem("3 · Dreta")
+                                ToothLegendItem("4 · Inferior")
                             }
                         }
                     }
@@ -252,87 +242,18 @@ fun ToothBigDiagram(
     val bottomData = sides.find { it.side?.id == 4L }
     val centerData = sides.find { it.side?.id == 5L }
 
-    Box(
+    ToothCanvasDiagram(
         modifier = Modifier.size(220.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        ToothInteractiveZone(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .size(width = 120.dp, height = 56.dp),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(topData),
-            shape = topToothShape(),
-            onClick = { onClickSide(1L) },
-            label = "1"
-        )
-
-        ToothInteractiveZone(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .size(width = 56.dp, height = 120.dp),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(leftData),
-            shape = leftToothShape(),
-            onClick = { onClickSide(2L) },
-            label = "2"
-        )
-
-        if (hasFiveSides) {
-            ToothInteractiveZone(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(84.dp),
-                color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(centerData),
-                shape = RoundedCornerShape(4.dp),
-                onClick = { onClickSide(5L) },
-                label = "5"
-            )
-        }
-
-        ToothInteractiveZone(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .size(width = 56.dp, height = 120.dp),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(rightData),
-            shape = rightToothShape(),
-            onClick = { onClickSide(3L) },
-            label = "3"
-        )
-
-        ToothInteractiveZone(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .size(width = 120.dp, height = 56.dp),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(bottomData),
-            shape = bottomToothShape(),
-            onClick = { onClickSide(4L) },
-            label = "4"
-        )
-    }
-}
-
-@Composable
-fun ToothInteractiveZone(
-    modifier: Modifier,
-    color: androidx.compose.ui.graphics.Color,
-    shape: Shape,
-    onClick: () -> Unit,
-    label: String
-) {
-    Surface(
-        modifier = modifier
-            .clip(shape)
-            .clickable { onClick() },
-        color = color,
-        shadowElevation = 2.dp
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = label,
-                color = if (color == OdontoGray) androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.White,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
+        hasFiveSides = hasFiveSides,
+        topColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(topData),
+        leftColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(leftData),
+        rightColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(rightData),
+        bottomColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(bottomData),
+        centerColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(centerData),
+        enableClicks = true,
+        onSideClick = onClickSide,
+        showLabels = true
+    )
 }
 
 @Composable
@@ -406,9 +327,6 @@ fun EditSideDialog(
 
                             if (response.isSuccessful) {
                                 onSaved()
-                            } else {
-                                println("ERROR CODE = ${response.code()}")
-                                println("ERROR BODY = ${response.errorBody()?.string()}")
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -481,8 +399,6 @@ fun DropdownSelector(
 }
 
 @Composable
-fun ToothLegendItem(
-    label: String
-) {
+fun ToothLegendItem(label: String) {
     Text(label)
 }

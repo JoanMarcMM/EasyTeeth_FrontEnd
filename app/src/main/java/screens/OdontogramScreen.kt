@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.GenericShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -42,8 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -123,17 +120,27 @@ fun OdontogramScreen(
     }
 
     Scaffold(
-        containerColor = androidx.compose.ui.graphics.Color(0xFFF7F8FA),
+        containerColor = Color(0xFFF7F8FA),
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Odontograma", fontWeight = FontWeight.SemiBold) },
+                title = {
+                    Text(
+                        text = "Odontograma",
+                        fontWeight = FontWeight.SemiBold,
+                        style = if (isLandscape) {
+                            MaterialTheme.typography.titleSmall
+                        } else {
+                            MaterialTheme.typography.titleLarge
+                        }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = androidx.compose.ui.graphics.Color(0xFFF7F8FA)
+                    containerColor = Color(0xFFF7F8FA)
                 )
             )
         }
@@ -144,8 +151,11 @@ fun OdontogramScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(
+                    horizontal = if (isLandscape) 14.dp else 20.dp,
+                    vertical = if (isLandscape) 8.dp else 20.dp
+                ),
+            verticalArrangement = Arrangement.spacedBy(if (isLandscape) 12.dp else 16.dp)
         ) {
             when {
                 isLoading -> {
@@ -212,9 +222,8 @@ fun PortraitOdontogramContent(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color(0xFFFDFDFD)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier.padding(18.dp),
@@ -257,17 +266,16 @@ fun LandscapeOdontogramContent(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
                 text = "Vista panoràmica",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
 
@@ -323,8 +331,7 @@ fun ArcadaVerticalCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         ArcadaVerticalCardContent(
@@ -389,7 +396,7 @@ fun ArcadaRowCompact(
     patientId: Long,
     navController: NavController
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,
@@ -400,9 +407,8 @@ fun ArcadaRowCompact(
             val totalGap = 28.dp
             val availableForTwoGroups = maxWidth - totalGap
             val groupWidth = availableForTwoGroups / 2
-
-            val calculatedToothSize = (groupWidth / 8) - 6.dp
-            val toothSize = calculatedToothSize.coerceIn(28.dp, 42.dp)
+            val calculatedToothSize = (groupWidth / 8) - 5.dp
+            val toothSize = calculatedToothSize.coerceIn(26.dp, 40.dp)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -455,9 +461,7 @@ fun ToothVerticalColumn(
                 ToothMiniShape(
                     toothNumber = tooth.number,
                     toothRecords = toothRecords,
-                    onClick = {
-                        navController.navigate("toothDetail/$patientId/${tooth.id}")
-                    }
+                    onClick = { navController.navigate("toothDetail/$patientId/${tooth.id}") }
                 )
             }
         }
@@ -488,9 +492,7 @@ fun ToothHorizontalRow(
                 ToothMiniShape(
                     toothNumber = tooth.number,
                     toothRecords = toothRecords,
-                    onClick = {
-                        navController.navigate("toothDetail/$patientId/${tooth.id}")
-                    },
+                    onClick = { navController.navigate("toothDetail/$patientId/${tooth.id}") },
                     boxSize = toothSize
                 )
             }
@@ -514,71 +516,16 @@ fun ToothMiniShape(
     val bottomData = toothRecords.find { it.side?.id == 4L }
     val centerData = toothRecords.find { it.side?.id == 5L }
 
-    val topWidth = boxSize * 0.52f
-    val topHeight = boxSize * 0.26f
-    val sideWidth = boxSize * 0.26f
-    val sideHeight = boxSize * 0.52f
-    val centerSize = boxSize * 0.37f
-
-    Box(
+    ToothCanvasDiagram(
         modifier = Modifier
             .size(boxSize)
-            .clickable { onClick() }
-    ) {
-        ToothZone(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .size(width = topWidth, height = topHeight),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(topData),
-            shape = topToothShape()
-        )
-
-        ToothZone(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .size(width = sideWidth, height = sideHeight),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(leftData),
-            shape = leftToothShape()
-        )
-
-        if (hasFiveSides) {
-            ToothZone(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(centerSize),
-                color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(centerData),
-                shape = RoundedCornerShape(2.dp)
-            )
-        }
-
-        ToothZone(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .size(width = sideWidth, height = sideHeight),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(rightData),
-            shape = rightToothShape()
-        )
-
-        ToothZone(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .size(width = topWidth, height = topHeight),
-            color = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(bottomData),
-            shape = bottomToothShape()
-        )
-    }
-}
-
-@Composable
-fun ToothZone(
-    modifier: Modifier,
-    color: androidx.compose.ui.graphics.Color,
-    shape: Shape
-) {
-    Box(
-        modifier = modifier
-            .clip(shape)
-            .background(color)
+            .clickable { onClick() },
+        hasFiveSides = hasFiveSides,
+        topColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(topData),
+        leftColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(leftData),
+        rightColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(rightData),
+        bottomColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(bottomData),
+        centerColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(centerData)
     )
 }
 
@@ -586,8 +533,7 @@ fun ToothZone(
 fun LegendCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -615,44 +561,15 @@ fun LegendCard() {
 @Composable
 fun LegendItem(
     label: String,
-    color: androidx.compose.ui.graphics.Color
+    color: Color
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
             modifier = Modifier
                 .size(18.dp)
-                .clip(RoundedCornerShape(4.dp))
                 .background(color)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(label)
     }
-}
-
-fun topToothShape(): Shape = GenericShape { size, _ ->
-    moveTo(size.width * 0.2f, size.height)
-    lineTo(size.width * 0.8f, size.height)
-    lineTo(size.width, 0f)
-    lineTo(0f, 0f)
-}
-
-fun bottomToothShape(): Shape = GenericShape { size, _ ->
-    moveTo(0f, size.height)
-    lineTo(size.width, size.height)
-    lineTo(size.width * 0.8f, 0f)
-    lineTo(size.width * 0.2f, 0f)
-}
-
-fun leftToothShape(): Shape = GenericShape { size, _ ->
-    moveTo(size.width, size.height * 0.2f)
-    lineTo(size.width, size.height * 0.8f)
-    lineTo(0f, size.height)
-    lineTo(0f, 0f)
-}
-
-fun rightToothShape(): Shape = GenericShape { size, _ ->
-    moveTo(0f, size.height * 0.2f)
-    lineTo(0f, size.height * 0.8f)
-    lineTo(size.width, size.height)
-    lineTo(size.width, 0f)
 }
