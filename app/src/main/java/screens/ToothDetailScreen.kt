@@ -6,11 +6,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -42,190 +47,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import api.RetrofitClient
 import com.example.easyteeth.model.Odontogram
 import com.example.easyteeth.model.OdontogramRequest
+import com.example.easyteeth.model.Pathology
 import com.example.easyteeth.utils.OdontoBlack
 import com.example.easyteeth.utils.allTeethCatalog
 import com.example.easyteeth.utils.getSimpleOdontogramColor
 import com.example.easyteeth.utils.isMissingTooth
 import com.example.easyteeth.utils.toothHasFiveSides
 import kotlinx.coroutines.launch
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ToothDetailScreen(
-    navController: NavController,
-    patientId: Long,
-    toothId: Long
-) {
-    var sides by remember { mutableStateOf<List<Odontogram>>(emptyList()) }
-    var selectedSideId by remember { mutableStateOf<Long?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    val scope = rememberCoroutineScope()
-    val toothNumber = allTeethCatalog.firstOrNull { it.id == toothId }?.number ?: toothId.toInt()
-
-    fun loadToothData() {
-        scope.launch {
-            isLoading = true
-            errorMessage = null
-            try {
-                val response = RetrofitClient.odontogramApi.getByPatientAndTooth(patientId, toothId)
-
-                if (response.isSuccessful) {
-                    sides = response.body() ?: emptyList()
-                } else if (response.code() == 404) {
-                    sides = emptyList()
-                } else {
-                    errorMessage = "No s'ha pogut carregar el dent"
-                }
-            } catch (e: Exception) {
-                errorMessage = e.message ?: "Error de connexió"
-            } finally {
-                isLoading = false
-            }
-        }
-    }
-
-    LaunchedEffect(patientId, toothId) {
-        loadToothData()
-    }
-
-    Scaffold(
-        containerColor = Color(0xFFF7F8FA),
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Dent $toothNumber",
-                        fontWeight = FontWeight.SemiBold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFF7F8FA)
-                )
-            )
-        }
-    ) { innerPadding ->
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .imePadding()
-                .verticalScroll(rememberScrollState())
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            when {
-                isLoading -> {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                errorMessage != null -> {
-                    Text(
-                        text = errorMessage ?: "Error",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-
-                else -> {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(18.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Editar cares del dent",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            HorizontalDivider()
-
-                            ToothBigDiagram(
-                                toothNumber = toothNumber,
-                                sides = sides,
-                                onClickSide = { sideId -> selectedSideId = sideId }
-                            )
-                        }
-                    }
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(18.dp),
-                            verticalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            Text(
-                                text = "Correspondència de cares",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            HorizontalDivider()
-
-                            if (toothHasFiveSides(toothNumber)) {
-                                ToothLegendItem("1 · Superior")
-                                ToothLegendItem("2 · Esquerra")
-                                ToothLegendItem("3 · Dreta")
-                                ToothLegendItem("4 · Inferior")
-                                ToothLegendItem("5 · Centre / oclusal")
-                            } else {
-                                ToothLegendItem("1 · Superior")
-                                ToothLegendItem("2 · Esquerra")
-                                ToothLegendItem("3 · Dreta")
-                                ToothLegendItem("4 · Inferior")
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (selectedSideId != null) {
-            val existing = sides.find { it.side?.id == selectedSideId }
-
-            EditSideDialog(
-                existing = existing,
-                patientId = patientId,
-                toothId = toothId,
-                sideId = selectedSideId!!,
-                onDismiss = { selectedSideId = null },
-                onSaved = {
-                    selectedSideId = null
-                    loadToothData()
-                }
-            )
-        }
-    }
-}
+import android.content.res.Configuration
 
 @Composable
 fun ToothBigDiagram(
@@ -252,8 +88,154 @@ fun ToothBigDiagram(
         centerColor = if (wholeToothMissing) OdontoBlack else getSimpleOdontogramColor(centerData),
         enableClicks = true,
         onSideClick = onClickSide,
-        showLabels = true
+        showLabels = true,
+        topData = topData,
+        leftData = leftData,
+        rightData = rightData,
+        bottomData = bottomData,
+        centerData = centerData
     )
+}
+
+@Composable
+fun ToothLegendItem(label: String) {
+    Text(label)
+}
+
+@Composable
+fun PathologyListCard(
+    sides: List<Odontogram>,
+    patientId: Long,
+    toothId: Long,
+    onRefresh: () -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    var isProcessing by remember { mutableStateOf(false) }
+
+    // Group pathologies with their affected sides
+    val pathologyGroups = sides
+        .filter { it.pathology != null && it.pathology?.id != 4L } // Exclude missing tooth pathology
+        .groupBy { it.pathology?.id to it.pathology?.name }
+
+    if (pathologyGroups.isEmpty()) {
+        return
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Patologies detectades",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            HorizontalDivider()
+
+            pathologyGroups.entries.forEachIndexed { index, (pathologyInfo, records) ->
+                val (_, pathologyName) = pathologyInfo
+                val affectedSides = records.mapNotNull { it.side?.id }.sorted().joinToString(", ")
+                
+                // Check if any record is treated
+                val allTreated = records.all { it.treated }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = pathologyName ?: "Desconeguda",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                text = "Cares: $affectedSides",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    isProcessing = true
+                                    try {
+                                        // Toggle treatment status
+                                        records.forEach { record ->
+                                            val request = OdontogramRequest(
+                                                patientId = patientId,
+                                                toothId = toothId,
+                                                sideId = record.side?.id ?: 0L,
+                                                pathologyId = record.pathology?.id ?: 0L,
+                                                treated = !allTreated,
+                                                note = record.note ?: ""
+                                            )
+                                            RetrofitClient.odontogramApi.update(record.id, request)
+                                        }
+                                        onRefresh()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    } finally {
+                                        isProcessing = false
+                                    }
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = !isProcessing
+                        ) {
+                            Text(if (allTreated) "No tractat" else "Tractar")
+                        }
+
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    isProcessing = true
+                                    try {
+                                        // Delete all sides with this pathology
+                                        records.forEach { record ->
+                                            RetrofitClient.odontogramApi.delete(record.id)
+                                        }
+                                        onRefresh()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    } finally {
+                                        isProcessing = false
+                                    }
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = !isProcessing
+                        ) {
+                            Text("Esborrar")
+                        }
+                    }
+                }
+
+                if (index < pathologyGroups.size - 1) {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -310,23 +292,38 @@ fun EditSideDialog(
                     scope.launch {
                         isLoading = true
                         try {
-                            val request = OdontogramRequest(
-                                patientId = patientId,
-                                toothId = toothId,
-                                sideId = sideId,
-                                pathologyId = pathologyId,
-                                treated = treated,
-                                note = note
-                            )
-
-                            val response = if (existing == null) {
-                                RetrofitClient.odontogramApi.create(request)
+                            // If "Ninguna" is selected
+                            if (pathologyId == 0L) {
+                                // If there's an existing record, delete it
+                                if (existing != null) {
+                                    val response = RetrofitClient.odontogramApi.delete(existing.id)
+                                    if (response.isSuccessful) {
+                                        onSaved()
+                                    }
+                                } else {
+                                    // No existing record, just close without saving
+                                    onSaved()
+                                }
                             } else {
-                                RetrofitClient.odontogramApi.update(existing.id, request)
-                            }
+                                // Normal save/update logic
+                                val request = OdontogramRequest(
+                                    patientId = patientId,
+                                    toothId = toothId,
+                                    sideId = sideId,
+                                    pathologyId = pathologyId,
+                                    treated = treated,
+                                    note = note
+                                )
 
-                            if (response.isSuccessful) {
-                                onSaved()
+                                val response = if (existing == null) {
+                                    RetrofitClient.odontogramApi.create(request)
+                                } else {
+                                    RetrofitClient.odontogramApi.update(existing.id, request)
+                                }
+
+                                if (response.isSuccessful) {
+                                    onSaved()
+                                }
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -361,35 +358,42 @@ fun DropdownSelector(
     onSelected: (Long) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var pathologies by remember { mutableStateOf<List<Pathology>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
 
-    val options = listOf(
-        1L to "Càries oclusal",
-        2L to "Càries proximal",
-        3L to "Càries cervical",
-        4L to "Fractura dental",
-        5L to "Desgast oclusal",
-        6L to "Lesió periapical",
-        7L to "Pulpitis",
-        8L to "Abscés",
-        9L to "Càries radiogràfica",
-        10L to "Sellat de fosses i fissures",
-        11L to "Absència natural"
-    )
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            try {
+                val response = RetrofitClient.pathologyApi.getAllPathologies()
+                if (response.isSuccessful) {
+                    pathologies = listOf(
+                        Pathology(0L, "Ninguna")
+                    ) + (response.body() ?: emptyList())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                isLoading = false
+            }
+        }
+    }
 
     Box {
-        Button(onClick = { expanded = true }) {
-            Text(options.find { it.first == selected }?.second ?: "Seleccionar")
+        Button(onClick = { expanded = true }, enabled = !isLoading) {
+            Text(pathologies.find { it.id == selected }?.name ?: "Seleccionar")
         }
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            options.forEach { option ->
+            pathologies.forEach { pathology ->
                 DropdownMenuItem(
-                    text = { Text(option.second) },
+                    text = { Text(pathology.name) },
                     onClick = {
-                        onSelected(option.first)
+                        onSelected(pathology.id)
                         expanded = false
                     }
                 )
@@ -398,7 +402,313 @@ fun DropdownSelector(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToothLegendItem(label: String) {
-    Text(label)
+fun ToothDetailScreen(
+    navController: NavController,
+    patientId: Long,
+    toothId: Long
+) {
+    var sides by remember { mutableStateOf<List<Odontogram>>(emptyList()) }
+    var selectedSideId by remember { mutableStateOf<Long?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val scope = rememberCoroutineScope()
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val toothNumber = allTeethCatalog.firstOrNull { it.id == toothId }?.number ?: toothId.toInt()
+
+    fun loadToothData() {
+        scope.launch {
+            isLoading = true
+            errorMessage = null
+            try {
+                val response = RetrofitClient.odontogramApi.getByPatientAndTooth(patientId, toothId)
+
+                if (response.isSuccessful) {
+                    sides = response.body() ?: emptyList()
+                } else if (response.code() == 404) {
+                    sides = emptyList()
+                } else {
+                    errorMessage = "No s'ha pogut carregar el dent"
+                }
+            } catch (e: Exception) {
+                errorMessage = e.message ?: "Error de connexió"
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
+    LaunchedEffect(patientId, toothId) {
+        loadToothData()
+    }
+
+    Scaffold(
+        containerColor = Color(0xFFF7F8FA),
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Dent $toothNumber",
+                        fontWeight = FontWeight.SemiBold,
+                        style = if (isLandscape) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFFF7F8FA)
+                ),
+                modifier = if (isLandscape) Modifier
+                    .height(48.dp)
+                    .padding(vertical = 0.dp) else Modifier
+            )
+        }
+    ) { innerPadding ->
+
+        if (isLandscape) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .imePadding()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Left side - Tooth diagram
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .weight(0.4f)
+                                .fillMaxHeight(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    errorMessage != null -> {
+                        Box(
+                            modifier = Modifier
+                                .weight(0.4f)
+                                .fillMaxHeight(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = errorMessage ?: "Error",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+
+                    else -> {
+                        Card(
+                            modifier = Modifier
+                                .weight(0.4f)
+                                .fillMaxHeight(),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(12.dp)
+                                    .fillMaxHeight(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Editar cares",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                                ToothBigDiagram(
+                                    toothNumber = toothNumber,
+                                    sides = sides,
+                                    onClickSide = { sideId -> selectedSideId = sideId }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Right side - Menu content
+                Column(
+                    modifier = Modifier
+                        .weight(0.6f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    when {
+                        isLoading -> {}
+                        errorMessage != null -> {}
+                        else -> {
+                            PathologyListCard(
+                                sides = sides,
+                                patientId = patientId,
+                                toothId = toothId,
+                                onRefresh = { loadToothData() }
+                            )
+
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = Color.White),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(12.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        text = "Correspondència",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    HorizontalDivider()
+
+                                    if (toothHasFiveSides(toothNumber)) {
+                                        ToothLegendItem("1 · Superior")
+                                        ToothLegendItem("2 · Esquerra")
+                                        ToothLegendItem("3 · Dreta")
+                                        ToothLegendItem("4 · Inferior")
+                                        ToothLegendItem("5 · Centre / oclusal")
+                                    } else {
+                                        ToothLegendItem("1 · Superior")
+                                        ToothLegendItem("2 · Esquerra")
+                                        ToothLegendItem("3 · Dreta")
+                                        ToothLegendItem("4 · Inferior")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // Portrait orientation
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .imePadding()
+                    .verticalScroll(rememberScrollState())
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    errorMessage != null -> {
+                        Text(
+                            text = errorMessage ?: "Error",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+
+                    else -> {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(18.dp),
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Editar cares del dent",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                HorizontalDivider()
+
+                                ToothBigDiagram(
+                                    toothNumber = toothNumber,
+                                    sides = sides,
+                                    onClickSide = { sideId -> selectedSideId = sideId }
+                                )
+                            }
+                        }
+
+                        PathologyListCard(
+                            sides = sides,
+                            patientId = patientId,
+                            toothId = toothId,
+                            onRefresh = { loadToothData() }
+                        )
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(18.dp),
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Text(
+                                    text = "Correspondència de cares",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                HorizontalDivider()
+
+                                if (toothHasFiveSides(toothNumber)) {
+                                    ToothLegendItem("1 · Superior")
+                                    ToothLegendItem("2 · Esquerra")
+                                    ToothLegendItem("3 · Dreta")
+                                    ToothLegendItem("4 · Inferior")
+                                    ToothLegendItem("5 · Centre / oclusal")
+                                } else {
+                                    ToothLegendItem("1 · Superior")
+                                    ToothLegendItem("2 · Esquerra")
+                                    ToothLegendItem("3 · Dreta")
+                                    ToothLegendItem("4 · Inferior")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (selectedSideId != null) {
+            val existing = sides.find { it.side?.id == selectedSideId }
+
+            EditSideDialog(
+                existing = existing,
+                patientId = patientId,
+                toothId = toothId,
+                sideId = selectedSideId!!,
+                onDismiss = { selectedSideId = null },
+                onSaved = {
+                    selectedSideId = null
+                    loadToothData()
+                }
+            )
+        }
+    }
 }

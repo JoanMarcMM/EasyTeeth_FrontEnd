@@ -1,6 +1,7 @@
 package com.example.easyteeth.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -9,8 +10,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.example.easyteeth.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -164,18 +169,17 @@ fun PatientCard2(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Surface(
-                    shape = CircleShape,
-                    color = Color(0xFFE8F0FE)
-                ) {
-                    IconButton(onClick = onOdontogramClick) {
-                        Icon(
-                            imageVector = Icons.Default.MedicalServices,
-                            contentDescription = "Ir al odontograma",
-                            tint = Color(0xFF1E70EB)
-                        )
-                    }
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.odontogramicon),
+                    contentDescription = "Ir al odontograma",
+                    tint = Color(0xFF1E70EB),
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { onOdontogramClick() }
+                )
 
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
