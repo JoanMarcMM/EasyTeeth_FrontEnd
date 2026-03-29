@@ -4,6 +4,7 @@ import com.example.easyteeth.model.Odontogram
 import com.example.easyteeth.model.OdontogramRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -32,4 +33,9 @@ interface OdontogramApiEndpoints {
         @Path("id") id: Long,
         @Body request: OdontogramRequest
     ): Response<Odontogram>
+
+    @DELETE("odontogram/{id}")
+    suspend fun delete(
+        @Path("id") id: Long
+    ): Response<Void>
 }

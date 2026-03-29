@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.easyteeth.model.Odontogram
 
 @Composable
 fun ToothCanvasDiagram(
@@ -29,8 +30,25 @@ fun ToothCanvasDiagram(
     centerColor: Color = Color.Transparent,
     enableClicks: Boolean = false,
     onSideClick: ((Long) -> Unit)? = null,
-    showLabels: Boolean = false
+    showLabels: Boolean = false,
+    topData: Odontogram? = null,
+    leftData: Odontogram? = null,
+    rightData: Odontogram? = null,
+    bottomData: Odontogram? = null,
+    centerData: Odontogram? = null
 ) {
+    // Check if any side has pathology 5 or 6
+    val hasSpecialPathology = listOf(topData, leftData, rightData, bottomData, centerData).any {
+        it?.pathology?.id == 5L || it?.pathology?.id == 6L
+    }
+
+    // Override colors to grey if special pathology is present
+    val finalTopColor = if (hasSpecialPathology) Color(0xFFE0E0E0) else topColor
+    val finalLeftColor = if (hasSpecialPathology) Color(0xFFE0E0E0) else leftColor
+    val finalRightColor = if (hasSpecialPathology) Color(0xFFE0E0E0) else rightColor
+    val finalBottomColor = if (hasSpecialPathology) Color(0xFFE0E0E0) else bottomColor
+    val finalCenterColor = if (hasSpecialPathology) Color(0xFFE0E0E0) else centerColor
+
     val clickModifier = if (enableClicks && onSideClick != null) {
         Modifier.pointerInput(hasFiveSides) {
             detectTapGestures { offset ->
@@ -99,11 +117,11 @@ fun ToothCanvasDiagram(
                 }
 
                 drawRect(color = Color.White, size = size)
-                drawPath(topPath, topColor)
-                drawPath(leftPath, leftColor)
-                drawPath(rightPath, rightColor)
-                drawPath(bottomPath, bottomColor)
-                drawRect(centerColor, topLeft = inner.topLeft, size = inner.size)
+                drawPath(topPath, finalTopColor)
+                drawPath(leftPath, finalLeftColor)
+                drawPath(rightPath, finalRightColor)
+                drawPath(bottomPath, finalBottomColor)
+                drawRect(finalCenterColor, topLeft = inner.topLeft, size = inner.size)
 
                 drawRect(
                     color = borderColor,
@@ -123,6 +141,13 @@ fun ToothCanvasDiagram(
                 drawLine(borderColor, Offset(size.width, 0f), Offset(inner.right, inner.top), strokeWidth = stroke)
                 drawLine(borderColor, Offset(0f, size.height), Offset(inner.left, inner.bottom), strokeWidth = stroke)
                 drawLine(borderColor, Offset(size.width, size.height), Offset(inner.right, inner.bottom), strokeWidth = stroke)
+
+                // Draw overlays for special pathologies
+                drawPathologyOverlay(topData, Offset(size.width / 2f, size.height / 2f), size.width * 0.25f)
+                drawPathologyOverlay(leftData, Offset(size.width / 2f, size.height / 2f), size.width * 0.25f)
+                drawPathologyOverlay(rightData, Offset(size.width / 2f, size.height / 2f), size.width * 0.25f)
+                drawPathologyOverlay(bottomData, Offset(size.width / 2f, size.height / 2f), size.width * 0.25f)
+                drawPathologyOverlay(centerData, Offset(size.width / 2f, size.height / 2f), size.width * 0.25f)
 
             } else {
                 val center = Offset(size.width / 2f, size.height / 2f)
@@ -156,10 +181,10 @@ fun ToothCanvasDiagram(
                 }
 
                 drawRect(color = Color.White, size = size)
-                drawPath(topPath, topColor)
-                drawPath(leftPath, leftColor)
-                drawPath(rightPath, rightColor)
-                drawPath(bottomPath, bottomColor)
+                drawPath(topPath, finalTopColor)
+                drawPath(leftPath, finalLeftColor)
+                drawPath(rightPath, finalRightColor)
+                drawPath(bottomPath, finalBottomColor)
 
                 drawRect(
                     color = borderColor,
@@ -172,6 +197,12 @@ fun ToothCanvasDiagram(
                 drawLine(borderColor, Offset(size.width, 0f), center, strokeWidth = stroke)
                 drawLine(borderColor, Offset(0f, size.height), center, strokeWidth = stroke)
                 drawLine(borderColor, Offset(size.width, size.height), center, strokeWidth = stroke)
+
+                // Draw overlays for special pathologies - centered in tooth middle
+                drawPathologyOverlay(topData, Offset(center.x, center.y), size.width * 0.25f)
+                drawPathologyOverlay(leftData, Offset(center.x, center.y), size.width * 0.25f)
+                drawPathologyOverlay(rightData, Offset(center.x, center.y), size.width * 0.25f)
+                drawPathologyOverlay(bottomData, Offset(center.x, center.y), size.width * 0.25f)
             }
         }
 
@@ -184,6 +215,63 @@ fun ToothCanvasDiagram(
             if (hasFiveSides) {
                 Text("5", modifier = Modifier.align(Alignment.Center), fontWeight = FontWeight.Bold)
             }
+        }
+    }
+}
+
+fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPathologyOverlay(
+    data: Odontogram?,
+    center: Offset,
+    size: Float
+) {
+    if (data == null || data.pathology == null) return
+
+    val overlayColor = if (data.treated) Color(0xFF1E88E5) else Color(0xFFE53935) // Blue if treated, Red otherwise
+    val strokeWidth = 10f  // Bolder strokes
+    val overlaySize = size * 0.9f  // Smaller and centered
+
+    when (data.pathology.id) {
+        5L -> {
+            // Draw X for pathology ID 5
+            drawLine(
+                color = overlayColor,
+                start = Offset(center.x - overlaySize, center.y - overlaySize),
+                end = Offset(center.x + overlaySize, center.y + overlaySize),
+                strokeWidth = strokeWidth
+            )
+            drawLine(
+                color = overlayColor,
+                start = Offset(center.x + overlaySize, center.y - overlaySize),
+                end = Offset(center.x - overlaySize, center.y + overlaySize),
+                strokeWidth = strokeWidth
+            )
+        }
+        6L -> {
+            // Draw E for pathology ID 6
+            drawLine(
+                color = overlayColor,
+                start = Offset(center.x - overlaySize, center.y - overlaySize),
+                end = Offset(center.x + overlaySize, center.y - overlaySize),
+                strokeWidth = strokeWidth
+            )
+            drawLine(
+                color = overlayColor,
+                start = Offset(center.x - overlaySize, center.y - overlaySize),
+                end = Offset(center.x - overlaySize, center.y + overlaySize),
+                strokeWidth = strokeWidth
+            )
+            drawLine(
+                color = overlayColor,
+                start = Offset(center.x - overlaySize, center.y),
+                end = Offset(center.x + overlaySize, center.y),
+                strokeWidth = strokeWidth
+            )
+            drawLine(
+                color = overlayColor,
+                start = Offset(center.x - overlaySize, center.y + overlaySize),
+                end = Offset(center.x + overlaySize, center.y + overlaySize),
+                strokeWidth = strokeWidth
+            )
         }
     }
 }

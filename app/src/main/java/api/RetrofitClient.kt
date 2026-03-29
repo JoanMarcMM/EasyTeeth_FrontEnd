@@ -32,4 +32,8 @@ object RetrofitClient {
     val documentApi: DocumentApiEndpoints by lazy {
         instance.create(DocumentApiEndpoints::class.java)
     }
+
+    val pathologyApi: PathologyApiEndpoints by lazy {
+        instance.create(PathologyApiEndpoints::class.java)
+    }
 }

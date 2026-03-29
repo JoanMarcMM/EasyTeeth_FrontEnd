@@ -15,15 +15,15 @@ fun getSimpleOdontogramColor(record: Odontogram?): Color {
 
     return when {
         record.treated -> OdontoBlue
-        record.pathology?.id == 11L -> OdontoBlack
-        record.pathology?.id == 9L -> OdontoGreen
-        record.pathology?.id == 10L -> OdontoYellow
+        record.pathology?.id == 4L -> OdontoBlack
+        record.pathology?.id == 2L -> OdontoGreen
+        record.pathology?.id == 3L -> OdontoYellow
         else -> OdontoRed
     }
 }
 
 fun isMissingTooth(records: List<Odontogram>): Boolean {
-    return records.any { it.pathology?.id == 11L }
+    return records.any { it.pathology?.id == 4L }
 }
 
 fun toothHasFiveSides(toothNumber: Int): Boolean {
