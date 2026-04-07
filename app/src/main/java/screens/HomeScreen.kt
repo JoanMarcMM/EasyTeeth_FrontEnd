@@ -63,54 +63,55 @@ fun HomeScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(0.dp))
 
-            // 2. LA CUADRÍCULA DE BOTONES
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // BOTÓN 1: CALENDARIO
-                item {
-                    HomeMenuCard(
-                        iconResId = R.drawable.calendario,
-                        contentDescription = "Calendario",
-                        backgroundColor = Color(0xFF98A8E6),
-                        onClick = { navController.navigate(Routes.CALENDAR) }
-                    )
-                }
-
-                // BOTÓN 2: PACIENTES
-                item {
-                    HomeMenuCard(
-                        iconResId = R.drawable.pacientes,
-                        contentDescription = "Pacientes",
-                        backgroundColor = Color(0xFF90E0D0),
-                        onClick = { navController.navigate(Routes.PATIENTSLIST) }
-                    )
-                }
-
-                // BOTÓN 3: HERRAMIENTAS / AJUSTES
-                item {
-                    HomeMenuCard(
-                        iconResId = R.drawable.stock,
-                        contentDescription = "Herramientas",
-                        backgroundColor = Color(0xFF98A8E6),
-                        onClick = { navController.navigate(Routes.TREATMENTS) }
-                    )
-                }
-
-                // BOTÓN 4: PERFIL DE USUARIO
-                item {
-                    HomeMenuCard(
-                        iconResId = R.drawable.perfil,
-                        contentDescription = "Perfil",
-                        backgroundColor = Color(0xFF90E0D0),
-                        onClick = { navController.navigate(Routes.PATIENT_MENU_SCREEN) }
-                    )
-                }
-            }
+//            Todo comentado para poder normalizar los botones, a fin de hacerlo más bonito cuando el backend y la lógica ya esté hecha
+//            2. LA CUADRÍCULA DE BOTONES
+//            LazyVerticalGrid(
+//                columns = GridCells.Fixed(2),
+//                contentPadding = PaddingValues(8.dp),
+//                verticalArrangement = Arrangement.spacedBy(16.dp),
+//                horizontalArrangement = Arrangement.spacedBy(16.dp),
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                // BOTÓN 1: CALENDARIO
+//                item {
+//                    HomeMenuCard(
+//                        iconResId = R.drawable.calendario,
+//                        contentDescription = "Calendario",
+//                        backgroundColor = Color(0xFF98A8E6),
+//                        onClick = { navController.navigate(Routes.CALENDAR) }
+//                    )
+//                }
+//
+//                // BOTÓN 2: PACIENTES
+//                item {
+//                    HomeMenuCard(
+//                        iconResId = R.drawable.pacientes,
+//                        contentDescription = "Pacientes",
+//                        backgroundColor = Color(0xFF90E0D0),
+//                        onClick = { navController.navigate(Routes.PATIENTSLIST) }
+//                    )
+//                }
+//
+//                // BOTÓN 3: HERRAMIENTAS / AJUSTES
+//                item {
+//                    HomeMenuCard(
+//                        iconResId = R.drawable.stock,
+//                        contentDescription = "Herramientas",
+//                        backgroundColor = Color(0xFF98A8E6),
+//                        onClick = { navController.navigate(Routes.TREATMENTS) }
+//                    )
+//                }
+//
+//                // BOTÓN 4: PERFIL DE USUARIO
+//                item {
+//                    HomeMenuCard(
+//                        iconResId = R.drawable.perfil,
+//                        contentDescription = "Perfil",
+//                        backgroundColor = Color(0xFF90E0D0),
+//                        onClick = { navController.navigate(Routes.PATIENT_MENU_SCREEN) }
+//                    )
+//                }
+//            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -147,6 +148,45 @@ fun HomeScreen(navController: NavController) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+                Button(
+                    onClick = { navController.navigate(Routes.APPOINTMENT_MENU_SCREEN) }, // user/nurse para poder crear usuarios con diferentes rangos
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Usuari/Infermera",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+//                Button(
+//                    onClick = { navController.navigate(Routes.PROFILE_MENU_SCREEN) },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(55.dp),
+//                    shape = RoundedCornerShape(12.dp)
+//                ) {
+//                    Text(
+//                        text = "Profile",
+//                        fontSize = 18.sp,
+//                        fontWeight = FontWeight.SemiBold
+//                    )
+//                }
+//                Button(
+//                    onClick = { navController.navigate(Routes.NURSES_MENU_SCREEN) },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(55.dp),
+//                    shape = RoundedCornerShape(12.dp)
+//                ) {
+//                    Text(
+//                        text = "Nurses",
+//                        fontSize = 18.sp,
+//                        fontWeight = FontWeight.SemiBold
+//                    )
+//                }
             }
         }
     }
