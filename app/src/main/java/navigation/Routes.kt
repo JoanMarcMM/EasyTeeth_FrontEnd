@@ -36,4 +36,15 @@ object Routes {
 
     const val RADIOGRAPHYS = "radiographys"
     const val FIRST_APPOINTMENT = "first_appointment"
+
+    const val STORAGE_AND_ORDERS_MENU = "storage_and_orders_menu"
+
+    const val STORAGE_LIST = "storage_list"
+    const val STORAGE_DETAIL = "storage_detail/{storageId}"
+
+    const val UTENSIL_LIST = "utensil_list"
+    const val UTENSIL_ORDER_SELECTION = "utensil_order_selection/{storageId}"
+    const val ORDER_REVIEW = "order_review/{storageId}"
+    const val ORDERS_LIST = "orders_list"
+    const val ORDER_DETAIL = "order_detail/{orderId}"
 }

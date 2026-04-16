@@ -18,7 +18,7 @@ import navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PatientMenuScreen(navController: NavController) {
+fun StorageAndOrdersMenuScreen(navController: NavController) {
 
     Scaffold(
         containerColor = Color.White,
@@ -26,7 +26,7 @@ fun PatientMenuScreen(navController: NavController) {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Pacients",
+                        text = "Magatzems i Comandes",
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -56,14 +56,14 @@ fun PatientMenuScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(
-                onClick = { navController.navigate(Routes.NEW_PATIENT_SCREEN) },
+                onClick = { navController.navigate(Routes.STORAGE_LIST) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = "Nou Pacient",
+                    text = "Magatzems",
                     fontSize = 18.sp
                 )
             }
@@ -71,14 +71,14 @@ fun PatientMenuScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = { navController.navigate(Routes.PATIENT_LIST_TO_PROFILE) },
+                onClick = { navController.navigate(Routes.ORDERS_LIST) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = "Llistar Pacients",
+                    text = "Comandes",
                     fontSize = 18.sp
                 )
             }
