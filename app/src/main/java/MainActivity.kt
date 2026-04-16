@@ -13,6 +13,13 @@ import com.example.easyteeth.screens.OdontogramScreen
 import com.example.easyteeth.screens.PatientListToProfileScreen
 import com.example.easyteeth.screens.PatientSelectorScreen
 import com.example.easyteeth.screens.ToothDetailScreen
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import api.RetrofitClient
+import com.example.easyteeth.screens.BoxCalendarScreen
+import viewmodel.BoxViewModel
+import com.example.easyteeth.screens.BoxListScreen
 import navigation.Routes
 import screens.CalendarScreen
 import screens.HomeScreen
@@ -67,17 +74,17 @@ class MainActivity : ComponentActivity() {
                         patientId = patientId
                     )
                 }
-                composable(Routes.APPOINTMENT_SEARCHER){
+                composable(Routes.APPOINTMENT_SEARCHER) {
                     AppointmentSearcherScreen(navController)
 
                 }
 
-                composable(Routes.PATIENTS_APPOINTMENT){
+                composable(Routes.PATIENTS_APPOINTMENT) {
                     PatientSelectorScreen(navController)
 
                 }
 
-                composable(Routes.PATIENT_LIST_TO_PROFILE){
+                composable(Routes.PATIENT_LIST_TO_PROFILE) {
                     PatientListToProfileScreen(navController)
 
                 }
@@ -146,6 +153,40 @@ class MainActivity : ComponentActivity() {
                 composable("patientDocuments/{patientId}") { backStackEntry ->
                     val patientId = backStackEntry.arguments?.getString("patientId")?.toLong() ?: 0L
                     PatientDocumentsScreen(navController, patientId)
+                }
+                composable(Routes.BOXES) {
+                    val boxViewModel = viewModel<BoxViewModel>(
+                        factory = object : ViewModelProvider.Factory {
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return BoxViewModel(RetrofitClient.boxApi) as T
+                            }
+                        }
+                    )
+                    BoxListScreen(navController = navController, viewModel = boxViewModel)
+                }
+                composable(
+                    route = Routes.BOX_CALENDAR_SCREEN,
+                    arguments = listOf(
+                        navArgument("boxId") { type = NavType.LongType },
+                        navArgument("numBox") { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val boxId = backStackEntry.arguments?.getLong("boxId") ?: 0L
+                    val numBox = backStackEntry.arguments?.getInt("numBox") ?: 0
+                    val boxViewModel = viewModel<BoxViewModel>(
+                        factory = object : ViewModelProvider.Factory {
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return BoxViewModel(RetrofitClient.boxApi) as T
+                            }
+                        }
+                    )
+
+                    BoxCalendarScreen(
+                        navController = navController,
+                        boxId = boxId,
+                        numBox = numBox,
+                        viewModel = boxViewModel
+                    )
                 }
             }
         }

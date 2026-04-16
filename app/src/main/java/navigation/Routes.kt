@@ -36,4 +36,6 @@ object Routes {
 
     const val RADIOGRAPHYS = "radiographys"
     const val FIRST_APPOINTMENT = "first_appointment"
+    const val BOXES = "boxes"
+    const val BOX_CALENDAR_SCREEN = "boxCalendar/{boxId}/{numBox}"
 }

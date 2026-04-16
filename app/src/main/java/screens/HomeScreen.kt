@@ -161,6 +161,19 @@ fun HomeScreen(navController: NavController) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+                Button(
+                    onClick = { navController.navigate(Routes.BOXES) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Box",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
 //                Button(
 //                    onClick = { navController.navigate(Routes.PROFILE_MENU_SCREEN) },
 //                    modifier = Modifier
