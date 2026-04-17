@@ -161,6 +161,8 @@ fun HomeScreen(navController: NavController) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+                Button(
+                    onClick = { navController.navigate(Routes.BOXES) },
 
                 Button(
                     onClick = { navController.navigate(Routes.STORAGE_AND_ORDERS_MENU) },
@@ -170,6 +172,7 @@ fun HomeScreen(navController: NavController) {
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
+                        text = "Box",
                         text = "Magatzems i comandes",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold

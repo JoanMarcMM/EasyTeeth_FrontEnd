@@ -36,6 +36,8 @@ object RetrofitClient {
     val pathologyApi: PathologyApiEndpoints by lazy {
         instance.create(PathologyApiEndpoints::class.java)
     }
+    val boxApi: BoxApiEndpoints by lazy {
+        instance.create(BoxApiEndpoints::class.java)
 
     val storageApi: StorageApiEndpoints by lazy {
         instance.create(StorageApiEndpoints::class.java)
