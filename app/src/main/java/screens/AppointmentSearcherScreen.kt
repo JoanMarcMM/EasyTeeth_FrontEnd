@@ -1,8 +1,4 @@
-package com.example.easyteeth.screens
-
-
-
-
+package screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background

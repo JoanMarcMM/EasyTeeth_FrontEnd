@@ -1,4 +1,4 @@
-package com.example.easyteeth.screens
+package screens
 
 import android.app.Activity
 import androidx.compose.foundation.background

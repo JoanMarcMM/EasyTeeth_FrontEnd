@@ -1,4 +1,4 @@
-package com.example.easyteeth.screens
+package screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
