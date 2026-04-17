@@ -24,5 +24,5 @@ interface DocumentApiEndpoints {
     @DELETE("document/{id}")
     suspend fun deleteDocument(
         @Path("id") id: Long
-    ): Response<String>
+    ): Response<Void>
 }

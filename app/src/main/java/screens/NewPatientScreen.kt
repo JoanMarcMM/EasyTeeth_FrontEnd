@@ -214,6 +214,18 @@ fun NewPatientScreen(
                 Button(
                     onClick = {
                         scope.launch {
+                            // Validate email
+                            if (!isValidEmail(email)) {
+                                errorMessage = "El correu electrònic no és vàlid. Utilitza el format: exemple@domini.com"
+                                return@launch
+                            }
+
+                            // Validate phone number
+                            if (!isValidPhoneNumber(phoneNumber)) {
+                                errorMessage = "El telèfon no és vàlid. Ha de tenir almenys 6 dígits (opcional: +)"
+                                return@launch
+                            }
+
                             isLoading = true
                             errorMessage = null
 
@@ -295,4 +307,16 @@ private fun PatientTextField(
             unfocusedContainerColor = Color.Transparent
         )
     )
+}
+
+private fun isValidEmail(email: String): Boolean {
+    if (email.isBlank()) return true // Email is optional
+    val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+    return email.matches(Regex(emailPattern))
+}
+
+private fun isValidPhoneNumber(phoneNumber: String): Boolean {
+    if (phoneNumber.isBlank()) return true // Phone is optional
+    val phonePattern = "^[+]?[0-9]{6,}$"
+    return phoneNumber.matches(Regex(phonePattern))
 }
