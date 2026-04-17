@@ -9,6 +9,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,6 +46,18 @@ fun BoxCalendarScreen(
 
     val materials by viewModel.materials.collectAsState()
     val isLoading by viewModel.loading.collectAsState()
+    val hasInsufficientStock by viewModel.hasInsufficientStock.collectAsState()
+    val insufficientUtensilsList by viewModel.insufficientUtensilsList.collectAsState()
+
+    // Check if selected date is today
+    val isToday = remember(datePickerState.selectedDateMillis) {
+        val calendar = Calendar.getInstance()
+        val selectedCalendar = Calendar.getInstance()
+        selectedCalendar.timeInMillis = datePickerState.selectedDateMillis ?: todayMillis
+        
+        calendar.get(Calendar.YEAR) == selectedCalendar.get(Calendar.YEAR) &&
+        calendar.get(Calendar.DAY_OF_YEAR) == selectedCalendar.get(Calendar.DAY_OF_YEAR)
+    }
 
     if (!view.isInEditMode) {
         SideEffect {
@@ -52,11 +66,11 @@ fun BoxCalendarScreen(
         }
     }
 
+    // Fetch materials whenever the selected date changes
     LaunchedEffect(datePickerState.selectedDateMillis) {
-        showSuccessMessage = false
-        isError = false
-
         datePickerState.selectedDateMillis?.let { millis ->
+            showSuccessMessage = false
+            isError = false
             val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
             viewModel.fetchMaterials(boxId, dateStr)
         }
@@ -161,21 +175,110 @@ fun BoxCalendarScreen(
                 )
             }
 
-            Button(
-                enabled = datePickerState.selectedDateMillis != null && materials.isNotEmpty(),
-                onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        val newStatus = !isAllStocked
+            // Show date warning - not today
+            if (!isToday && materials.isNotEmpty()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Info",
+                            tint = Color(0xFF1976D2),
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = "You can only restock on today's date. You are viewing materials for another day.",
+                            color = Color(0xFF1565C0),
+                            fontSize = 13.sp,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
 
-                        viewModel.updateStockStatus(boxId, millis, newStatus) { success ->
-                            if (success) {
-                                showSuccessMessage = true
-                                isError = false
-                                val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
-                                viewModel.fetchMaterials(boxId, dateStr)
-                            } else {
-                                isError = true
-                                showSuccessMessage = false
+            // Show insufficient stock warning
+            if (hasInsufficientStock && materials.isNotEmpty() && isToday) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.WarningAmber,
+                            contentDescription = "Advertencia",
+                            tint = Color(0xFFC62828),
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "No hay suficientes utensiles disponibles",
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFC62828),
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            if (insufficientUtensilsList.isNotEmpty()) {
+                                Text(
+                                    text = "Falta:",
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(0xFFB71C1C),
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                insufficientUtensilsList.forEach { item ->
+                                    Text(
+                                        text = "• $item",
+                                        color = Color(0xFFB71C1C),
+                                        fontSize = 11.sp,
+                                        modifier = Modifier.padding(start = 8.dp, bottom = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Button(
+                enabled = datePickerState.selectedDateMillis != null && 
+                        materials.isNotEmpty() && 
+                        !hasInsufficientStock &&
+                        isToday,
+                onClick = {
+                    if (isToday) {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val newStatus = !isAllStocked
+
+                            viewModel.updateStockStatus(boxId, millis, newStatus) { success ->
+                                if (success) {
+                                    showSuccessMessage = true
+                                    isError = false
+                                    val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
+                                    viewModel.fetchMaterials(boxId, dateStr)
+                                } else {
+                                    isError = true
+                                    showSuccessMessage = false
+                                }
                             }
                         }
                     }
@@ -187,11 +290,16 @@ fun BoxCalendarScreen(
                     .height(55.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isAllStocked) Color(0xFFD32F2F) else Color(0xFF65558F)
+                    containerColor = if (isAllStocked) Color(0xFFD32F2F) else Color(0xFF65558F),
+                    disabledContainerColor = Color(0xFFBDBDBD)
                 )
             ) {
                 Text(
-                    text = if (isAllStocked) "Cancel·lar Reposició" else "Confirmar Reposició",
+                    text = if (isToday) {
+                        if (isAllStocked) "Cancel·lar Reposció" else "Confirmar Reposció"
+                    } else {
+                        "Viewing Materials"
+                    },
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
