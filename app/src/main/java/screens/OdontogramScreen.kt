@@ -607,6 +607,8 @@ fun LegendCard() {
             LegendItem("Sellat de fosses i fissures", OdontoYellow)
             LegendItem("Absència natural", OdontoBlack)
             LegendItem("Sense registre", OdontoGray)
+            LegendItemText("e", "Endodoncia")
+            LegendItemText("x", "Extracció")
         }
     }
 }
@@ -622,6 +624,29 @@ fun LegendItem(
                 .size(18.dp)
                 .background(color)
         )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(label)
+    }
+}
+
+@Composable
+fun LegendItemText(
+    letter: String,
+    label: String
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(18.dp)
+                .background(Color.LightGray),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = letter,
+                fontWeight = FontWeight.Bold,
+                fontSize = MaterialTheme.typography.labelSmall.fontSize
+            )
+        }
         Spacer(modifier = Modifier.width(10.dp))
         Text(label)
     }

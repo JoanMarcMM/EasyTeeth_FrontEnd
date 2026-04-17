@@ -24,5 +24,5 @@ interface ImageApiEndpoints {
     @DELETE("image/{id}")
     suspend fun deleteImage(
         @Path("id") id: Long
-    ): Response<String>
+    ): Response<Void>
 }
