@@ -10,8 +10,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.easyteeth.screens.AppointmentSearcherScreen
 import com.example.easyteeth.screens.OdontogramScreen
+import com.example.easyteeth.screens.OrderReviewScreen
 import com.example.easyteeth.screens.PatientListToProfileScreen
 import com.example.easyteeth.screens.PatientSelectorScreen
+import com.example.easyteeth.screens.StorageListScreen
+import com.example.easyteeth.screens.StorageDetailScreen
 import com.example.easyteeth.screens.ToothDetailScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +23,8 @@ import api.RetrofitClient
 import com.example.easyteeth.screens.BoxCalendarScreen
 import viewmodel.BoxViewModel
 import com.example.easyteeth.screens.BoxListScreen
+import com.example.easyteeth.screens.UtensilListScreen
+import com.example.easyteeth.screens.UtensilOrderSelectionScreen
 import navigation.Routes
 import screens.CalendarScreen
 import screens.HomeScreen
@@ -27,6 +32,7 @@ import screens.LoginScreen
 import screens.NewBackgroundScreen
 import screens.NewPatientScreen
 import screens.PatientMenuScreen
+import screens.OrdersListScreen
 import screens.*
 
 class MainActivity : ComponentActivity() {
@@ -187,6 +193,53 @@ class MainActivity : ComponentActivity() {
                         numBox = numBox,
                         viewModel = boxViewModel
                     )
+
+                composable(Routes.STORAGE_AND_ORDERS_MENU) {
+                    StorageAndOrdersMenuScreen(navController)
+                }
+
+                composable(Routes.STORAGE_LIST) {
+                    StorageListScreen(navController)
+                }
+
+                composable(
+                    route = Routes.STORAGE_DETAIL,
+                    arguments = listOf(navArgument("storageId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val storageId = backStackEntry.arguments?.getLong("storageId") ?: 0L
+                    StorageDetailScreen(navController, storageId)
+                }
+
+                composable(Routes.UTENSIL_LIST) {
+                    UtensilListScreen(navController)
+                }
+
+                composable(
+                    route = Routes.UTENSIL_ORDER_SELECTION,
+                    arguments = listOf(navArgument("storageId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val storageId = backStackEntry.arguments?.getLong("storageId") ?: 0L
+                    UtensilOrderSelectionScreen(navController, storageId)
+                }
+
+                composable(
+                    route = Routes.ORDER_REVIEW,
+                    arguments = listOf(navArgument("storageId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val storageId = backStackEntry.arguments?.getLong("storageId") ?: 0L
+                    OrderReviewScreen(navController, storageId)
+                }
+
+                composable(Routes.ORDERS_LIST) {
+                    OrdersListScreen(navController)
+                }
+
+                composable(
+                    route = Routes.ORDER_DETAIL,
+                    arguments = listOf(navArgument("orderId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val orderId = backStackEntry.arguments?.getLong("orderId") ?: 0L
+                    OrderDetailScreen(navController, orderId)
                 }
             }
         }

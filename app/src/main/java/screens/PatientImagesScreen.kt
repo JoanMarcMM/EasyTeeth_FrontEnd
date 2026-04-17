@@ -354,9 +354,14 @@ fun PatientImagesScreen(
                         scope.launch {
                             try {
                                 imageItem.id?.let { id ->
-                                    RetrofitClient.imageApi.deleteImage(id)
-                                    selectedImageToDelete = null
-                                    loadImages()
+                                    val response = RetrofitClient.imageApi.deleteImage(id)
+                                    if (response.isSuccessful) {
+                                        selectedImageToDelete = null
+                                        loadImages()
+                                    } else {
+                                        errorMessage = "Error al eliminar la imatge: ${response.code()}"
+                                        selectedImageToDelete = null
+                                    }
                                 }
                             } catch (e: Exception) {
                                 errorMessage = e.message ?: "Error eliminant la imatge"

@@ -53,8 +53,11 @@ class PatientSelectorViewModel : ViewModel() {
             }
         }
 
+        // Sort by ID in descending order (newest to oldest)
+        val sortedFiltered = filtered.sortedByDescending { it.id }
+
         filteredPatients.clear()
-        filteredPatients.addAll(filtered) // Nota: Asegúrate que el nombre sea filteredPatients
+        filteredPatients.addAll(sortedFiltered)
     }
 
     // Función corregida para evitar errores de nombres

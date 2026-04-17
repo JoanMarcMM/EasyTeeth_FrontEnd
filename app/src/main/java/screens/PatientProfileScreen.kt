@@ -205,8 +205,7 @@ fun PatientProfileScreen(
                                         "Primer cognom" to (patient?.lastname1 ?: ""),
                                         "Segon cognom" to (patient?.lastname2 ?: ""),
                                         "DNI" to (patient?.dni ?: ""),
-                                        "SSN" to (patient?.ssn ?: ""),
-                                        "ID" to (patient?.id?.toString() ?: "")
+                                        "SSN" to (patient?.ssn ?: "")
                                     )
                                 )
 

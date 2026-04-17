@@ -38,5 +38,20 @@ object RetrofitClient {
     }
     val boxApi: BoxApiEndpoints by lazy {
         instance.create(BoxApiEndpoints::class.java)
+
+    val storageApi: StorageApiEndpoints by lazy {
+        instance.create(StorageApiEndpoints::class.java)
+    }
+
+    val stockStorageApi: StockStorageApiEndpoints by lazy {
+        instance.create(StockStorageApiEndpoints::class.java)
+    }
+
+    val utensilApi: UtensilApiEndpoints by lazy {
+        instance.create(UtensilApiEndpoints::class.java)
+    }
+
+    val utensilOrderApi: UtensilOrderApiEndpoints by lazy {
+        instance.create(UtensilOrderApiEndpoints::class.java)
     }
 }
