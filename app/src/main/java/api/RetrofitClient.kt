@@ -38,7 +38,7 @@ object RetrofitClient {
     }
     val boxApi: BoxApiEndpoints by lazy {
         instance.create(BoxApiEndpoints::class.java)
-
+    }
     val storageApi: StorageApiEndpoints by lazy {
         instance.create(StorageApiEndpoints::class.java)
     }

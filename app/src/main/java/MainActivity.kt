@@ -8,26 +8,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.easyteeth.screens.AppointmentSearcherScreen
-import com.example.easyteeth.screens.OdontogramScreen
-import com.example.easyteeth.screens.OrderReviewScreen
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import api.RetrofitClient
 import com.example.easyteeth.screens.PatientListToProfileScreen
 import com.example.easyteeth.screens.PatientSelectorScreen
 import com.example.easyteeth.screens.StorageListScreen
 import com.example.easyteeth.screens.StorageDetailScreen
 import com.example.easyteeth.screens.ToothDetailScreen
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import api.RetrofitClient
-import com.example.easyteeth.screens.BoxCalendarScreen
-import viewmodel.BoxViewModel
-import com.example.easyteeth.screens.BoxListScreen
 import com.example.easyteeth.screens.UtensilListScreen
 import com.example.easyteeth.screens.UtensilOrderSelectionScreen
 import navigation.Routes
+import screens.AppointmentSearcherScreen
+import screens.OdontogramScreen
+import screens.OrderReviewScreen
+import screens.BoxCalendarScreen
+import screens.BoxListScreen
 import screens.CalendarScreen
 import screens.HomeScreen
+import viewmodel.BoxViewModel
 import screens.LoginScreen
 import screens.NewBackgroundScreen
 import screens.NewPatientScreen
@@ -193,6 +193,7 @@ class MainActivity : ComponentActivity() {
                         numBox = numBox,
                         viewModel = boxViewModel
                     )
+                }
 
                 composable(Routes.STORAGE_AND_ORDERS_MENU) {
                     StorageAndOrdersMenuScreen(navController)

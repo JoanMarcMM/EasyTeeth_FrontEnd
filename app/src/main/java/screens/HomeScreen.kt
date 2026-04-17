@@ -163,7 +163,17 @@ fun HomeScreen(navController: NavController) {
                 }
                 Button(
                     onClick = { navController.navigate(Routes.BOXES) },
-
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Box",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
                 Button(
                     onClick = { navController.navigate(Routes.STORAGE_AND_ORDERS_MENU) },
                     modifier = Modifier
@@ -172,7 +182,6 @@ fun HomeScreen(navController: NavController) {
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
-                        text = "Box",
                         text = "Magatzems i comandes",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold

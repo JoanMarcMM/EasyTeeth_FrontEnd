@@ -1,4 +1,4 @@
-package com.example.easyteeth.screens
+package screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -53,6 +53,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import api.RetrofitClient
 import com.example.easyteeth.model.Odontogram
+import com.example.easyteeth.screens.ToothCanvasDiagram
 import com.example.easyteeth.utils.OdontoBlack
 import com.example.easyteeth.utils.OdontoBlue
 import com.example.easyteeth.utils.OdontoGray
