@@ -5,6 +5,7 @@ import com.example.easyteeth.model.Appointment
 object Routes {
     const val HOME = "home"
     const val LOGIN = "login"
+    const val PROFILE = "profile"
 
     const val SHOW_PATIENTS = "show_patients"
 
