@@ -21,6 +21,29 @@ class BoxViewModel(
     private val api: BoxApiEndpoints
 ) : ViewModel() {
 
+    companion object {
+        // Global storage for box order materials across ViewModel instances
+        private val globalBoxMaterials = MutableStateFlow<List<StockBox>>(emptyList())
+        private val globalOrderDate = MutableStateFlow<String>("")
+        private val globalBoxId = MutableStateFlow<Long>(0L)
+
+        fun getGlobalBoxMaterials(): StateFlow<List<StockBox>> = globalBoxMaterials
+        fun getGlobalOrderDate(): StateFlow<String> = globalOrderDate
+        fun getGlobalBoxId(): StateFlow<Long> = globalBoxId
+
+        fun setGlobalBoxOrder(boxId: Long, date: String, materials: List<StockBox>) {
+            globalBoxId.value = boxId
+            globalOrderDate.value = date
+            globalBoxMaterials.value = materials
+        }
+
+        fun clearGlobalBoxOrder() {
+            globalBoxId.value = 0L
+            globalOrderDate.value = ""
+            globalBoxMaterials.value = emptyList()
+        }
+    }
+
     private val _boxes = MutableStateFlow<List<Box>>(emptyList())
     val boxes: StateFlow<List<Box>> = _boxes
 
@@ -35,6 +58,15 @@ class BoxViewModel(
 
     private val _insufficientUtensilsList = MutableStateFlow<List<String>>(emptyList())
     val insufficientUtensilsList: StateFlow<List<String>> = _insufficientUtensilsList
+
+    private val _orderCreating = MutableStateFlow(false)
+    val orderCreating: StateFlow<Boolean> = _orderCreating
+
+    private val _orderError = MutableStateFlow<String?>(null)
+    val orderError: StateFlow<String?> = _orderError
+
+    private val _orderSuccess = MutableStateFlow(false)
+    val orderSuccess: StateFlow<Boolean> = _orderSuccess
 
     init {
         fetchBoxes()
@@ -268,5 +300,89 @@ class BoxViewModel(
                 onResult(false)
             }
         }
+    }
+
+    fun createOrderFromMaterials(dateMillis: Long, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _orderCreating.value = true
+            _orderError.value = null
+            _orderSuccess.value = false
+
+            try {
+                val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(dateMillis))
+                
+                // Get all storages to find the first one (or we could add a parameter for storage selection)
+                val storagesResponse = RetrofitClient.storageApi.getAllStorages()
+                if (!storagesResponse.isSuccessful || storagesResponse.body() == null) {
+                    _orderError.value = "Error obteniendo los almacenes"
+                    _orderCreating.value = false
+                    onResult(false)
+                    return@launch
+                }
+
+                val storages = storagesResponse.body()!!
+                if (storages.isEmpty()) {
+                    _orderError.value = "No hay almacenes disponibles"
+                    _orderCreating.value = false
+                    onResult(false)
+                    return@launch
+                }
+
+                // Use the first storage
+                val storage = storages.first()
+
+                // Create order items from materials
+                val orderItems = _materials.value.map { material ->
+                    com.example.easyteeth.model.OrderItemRequest(
+                        utensilId = material.utensil.id ?: 0,
+                        quantity = material.quantity,
+                        unitPrice = material.utensil.price
+                    )
+                }
+
+                if (orderItems.isEmpty()) {
+                    _orderError.value = "No hay materiales para encargar"
+                    _orderCreating.value = false
+                    onResult(false)
+                    return@launch
+                }
+
+                // Create the order request
+                val orderRequest = com.example.easyteeth.model.UtensilOrderRequest(
+                    orderDate = dateString,
+                    storageId = storage.id ?: 0,
+                    orderItems = orderItems
+                )
+
+                // Send the order to the API
+                val response = RetrofitClient.utensilOrderApi.createOrder(orderRequest)
+                
+                if (response.isSuccessful) {
+                    _orderSuccess.value = true
+                    _orderError.value = null
+                    Log.i("BoxViewModel", "Order created successfully for date $dateString")
+                    onResult(true)
+                } else {
+                    _orderError.value = "Error al crear la comanda: ${response.code()}"
+                    Log.e("BoxViewModel", "Error creating order: ${response.code()}")
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                _orderError.value = "Error: ${e.message}"
+                Log.e("BoxViewModel", "Exception creating order: ${e.localizedMessage}")
+                onResult(false)
+            } finally {
+                _orderCreating.value = false
+            }
+        }
+    }
+
+    fun clearOrderMessages() {
+        _orderError.value = null
+        _orderSuccess.value = false
+    }
+
+    fun setGlobalBoxOrderForReview(boxId: Long, dateStr: String, materials: List<StockBox>) {
+        setGlobalBoxOrder(boxId, dateStr, materials)
     }
 }

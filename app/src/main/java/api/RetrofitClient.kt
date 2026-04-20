@@ -54,4 +54,12 @@ object RetrofitClient {
     val utensilOrderApi: UtensilOrderApiEndpoints by lazy {
         instance.create(UtensilOrderApiEndpoints::class.java)
     }
+
+    val supplierApi: SupplierApiEndpoints by lazy {
+        instance.create(SupplierApiEndpoints::class.java)
+    }
+
+    val historicUtensilApi: HistoricUtensilApiEndpoints by lazy {
+        instance.create(HistoricUtensilApiEndpoints::class.java)
+    }
 }
