@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.example.easyteeth.model.User
+import com.example.easyteeth.state.UserStateHolder
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.easyteeth.R // Asegúrate de que el package sea el correcto
@@ -66,7 +67,7 @@ fun LoginScreen(
             )
 
             Text(
-                text = "Bienvenido a tu centro\nde control dental",
+                text = "Benvingut al teu centre\nde control dental",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -75,7 +76,7 @@ fun LoginScreen(
             )
 
             Text(
-                text = "Inicia sesión para gestionar la clínica",
+                text = "Inicia sessió per gestionar la clínica",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 8.dp)
@@ -85,7 +86,7 @@ fun LoginScreen(
 
             // Campo Usuario vinculado al ViewModel
             Text(
-                text = "USUARIO",
+                text = "USUARI",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.LightGray,
@@ -95,7 +96,7 @@ fun LoginScreen(
                 value = viewModel.username,
                 onValueChange = { viewModel.username = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Nombre de usuario") },
+                placeholder = { Text("Nom d'usuari") },
                 trailingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -108,7 +109,7 @@ fun LoginScreen(
 
             // Campo Contraseña vinculado al ViewModel
             Text(
-                text = "CONTRASEÑA",
+                text = "CONTRASENYA",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.LightGray,
@@ -133,7 +134,7 @@ fun LoginScreen(
                 onClick = { /* Navegar a registro o recuperación */ },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("¿Contraseña olvidada?", color = Color(0xFF1E70EB), fontSize = 12.sp)
+                Text("¿Contrasenya oblidada?", color = Color(0xFF1E70EB), fontSize = 12.sp)
             }
 
             // Mensaje de error
@@ -152,6 +153,7 @@ fun LoginScreen(
             Button(
                 onClick = {
                     viewModel.onLoginClick { user: com.example.easyteeth.model.User ->
+                        UserStateHolder.setUser(user)
                         navController.navigate(Routes.HOME) {
                             // Borramos el historial para que no pueda volver al login con el botón atrás
                             popUpTo(Routes.LOGIN) { inclusive = true }
@@ -168,7 +170,7 @@ fun LoginScreen(
                 if (viewModel.isLoading) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                 } else {
-                    Text("Iniciar sesión", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Inicia sessió", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
 
@@ -177,7 +179,7 @@ fun LoginScreen(
             // Separador visual
             Row(verticalAlignment = Alignment.CenterVertically) {
                 HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-                Text("  O CONTINÚA CON  ", fontSize = 10.sp, color = Color.Gray)
+                Text("  O CONTINUA AMB  ", fontSize = 10.sp, color = Color.Gray)
                 HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
             }
 

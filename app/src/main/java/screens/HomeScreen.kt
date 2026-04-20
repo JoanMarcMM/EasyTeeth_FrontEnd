@@ -148,15 +148,16 @@ fun HomeScreen(navController: NavController) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+
                 Button(
-                    onClick = { navController.navigate(Routes.APPOINTMENT_MENU_SCREEN) }, // user/nurse para poder crear usuarios con diferentes rangos
+                    onClick = { navController.navigate(Routes.PROFILE) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(55.dp),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
-                        text = "Usuari/Infermera",
+                        text = "Perfil",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )

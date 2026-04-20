@@ -303,6 +303,10 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.SUPPLIER_CREATE) {
                     SupplierCreateScreen(navController)
                 }
+
+                composable(Routes.PROFILE) {
+                    ProfileScreen(navController)
+                }
             }
         }
     }
