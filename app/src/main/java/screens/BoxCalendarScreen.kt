@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.easyteeth.model.StockBox
+import navigation.Routes
 import viewmodel.BoxViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,11 +44,15 @@ fun BoxCalendarScreen(
 
     var showSuccessMessage by remember { mutableStateOf(false) }
     var isError by remember { mutableStateOf(false) }
+    var orderCreationInProgress by remember { mutableStateOf(false) }
 
     val materials by viewModel.materials.collectAsState()
     val isLoading by viewModel.loading.collectAsState()
     val hasInsufficientStock by viewModel.hasInsufficientStock.collectAsState()
     val insufficientUtensilsList by viewModel.insufficientUtensilsList.collectAsState()
+    val orderCreating by viewModel.orderCreating.collectAsState()
+    val orderError by viewModel.orderError.collectAsState()
+    val orderSuccess by viewModel.orderSuccess.collectAsState()
 
     // Check if selected date is today
     val isToday = remember(datePickerState.selectedDateMillis) {
@@ -71,6 +76,7 @@ fun BoxCalendarScreen(
         datePickerState.selectedDateMillis?.let { millis ->
             showSuccessMessage = false
             isError = false
+            viewModel.clearOrderMessages()
             val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
             viewModel.fetchMaterials(boxId, dateStr)
         }
@@ -182,27 +188,50 @@ fun BoxCalendarScreen(
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5))
                 ) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .padding(12.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            .fillMaxWidth()
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Info",
-                            tint = Color(0xFF1976D2),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Text(
-                            text = "You can only restock on today's date. You are viewing materials for another day.",
-                            color = Color(0xFF1565C0),
-                            fontSize = 13.sp,
-                            modifier = Modifier.weight(1f)
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp),
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = "Info",
+                                tint = Color(0xFF6A1B9A),
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = "You are viewing materials for a future date. You can create an order with these exact items.",
+                                color = Color(0xFF4A148C),
+                                fontSize = 13.sp,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        if (orderError != null) {
+                            Text(
+                                text = "Error: $orderError",
+                                color = Color.Red,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                        if (orderSuccess) {
+                            Text(
+                                text = "Order created successfully!",
+                                color = Color(0xFF2E7D32),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -262,10 +291,11 @@ fun BoxCalendarScreen(
             Button(
                 enabled = datePickerState.selectedDateMillis != null && 
                         materials.isNotEmpty() && 
-                        !hasInsufficientStock &&
-                        isToday,
+                        (isToday && !hasInsufficientStock || !isToday) &&
+                        !orderCreating,
                 onClick = {
                     if (isToday) {
+                        // Today: confirm/cancel restock
                         datePickerState.selectedDateMillis?.let { millis ->
                             val newStatus = !isAllStocked
 
@@ -281,6 +311,13 @@ fun BoxCalendarScreen(
                                 }
                             }
                         }
+                    } else {
+                        // Future date: navigate to order review screen
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
+                            viewModel.setGlobalBoxOrderForReview(boxId, dateStr, materials)
+                            navController.navigate("${Routes.BOX_ORDER_REVIEW}".replace("{boxId}", boxId.toString()).replace("{dateMillis}", millis.toString()))
+                        }
                     }
                 },
                 modifier = Modifier
@@ -290,20 +327,32 @@ fun BoxCalendarScreen(
                     .height(55.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isAllStocked) Color(0xFFD32F2F) else Color(0xFF65558F),
+                    containerColor = if (isToday) {
+                        if (isAllStocked) Color(0xFFD32F2F) else Color(0xFF65558F)
+                    } else {
+                        Color(0xFF1E70EB)
+                    },
                     disabledContainerColor = Color(0xFFBDBDBD)
                 )
             ) {
-                Text(
-                    text = if (isToday) {
-                        if (isAllStocked) "Cancel·lar Reposció" else "Confirmar Reposció"
-                    } else {
-                        "Viewing Materials"
-                    },
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
+                if (orderCreating) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(
+                        text = if (isToday) {
+                            if (isAllStocked) "Cancel·lar Reposció" else "Confirmar Reposció"
+                        } else {
+                            "Crear Comanda"
+                        },
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                }
             }
         }
     }

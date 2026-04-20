@@ -47,6 +47,14 @@ object Routes {
     const val UTENSIL_LIST = "utensil_list"
     const val UTENSIL_ORDER_SELECTION = "utensil_order_selection/{storageId}"
     const val ORDER_REVIEW = "order_review/{storageId}"
+    const val BOX_ORDER_REVIEW = "box_order_review/{boxId}/{dateMillis}"
     const val ORDERS_LIST = "orders_list"
     const val ORDER_DETAIL = "order_detail/{orderId}"
+
+    const val UTENSILS_AND_SUPPLIERS_MENU = "utensils_and_suppliers_menu"
+    const val UTENSIL_LIST_MANAGEMENT = "utensil_list_management"
+    const val UTENSIL_EDIT = "utensil_edit/{utensilId}"
+    const val SUPPLIER_LIST = "supplier_list"
+    const val SUPPLIER_EDIT = "supplier_edit/{supplierId}"
+    const val SUPPLIER_CREATE = "supplier_create"
 }

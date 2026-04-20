@@ -187,6 +187,19 @@ fun HomeScreen(navController: NavController) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+                Button(
+                    onClick = { navController.navigate(Routes.UTENSILS_AND_SUPPLIERS_MENU) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Utensilis i Proveidors",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
 //                Button(
 //                    onClick = { navController.navigate(Routes.PROFILE_MENU_SCREEN) },
 //                    modifier = Modifier

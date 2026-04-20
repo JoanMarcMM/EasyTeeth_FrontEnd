@@ -19,6 +19,12 @@ import com.example.easyteeth.screens.StorageDetailScreen
 import com.example.easyteeth.screens.ToothDetailScreen
 import com.example.easyteeth.screens.UtensilListScreen
 import com.example.easyteeth.screens.UtensilOrderSelectionScreen
+import com.example.easyteeth.screens.UtensilsAndSuppliersMenuScreen
+import com.example.easyteeth.screens.UtensilListManagementScreen
+import com.example.easyteeth.screens.UtensilEditScreen
+import com.example.easyteeth.screens.SupplierListScreen
+import com.example.easyteeth.screens.SupplierEditScreen
+import com.example.easyteeth.screens.SupplierCreateScreen
 import navigation.Routes
 import screens.AppointmentSearcherScreen
 import screens.OdontogramScreen
@@ -195,6 +201,29 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
+                composable(
+                    route = Routes.BOX_ORDER_REVIEW,
+                    arguments = listOf(
+                        navArgument("boxId") { type = NavType.LongType },
+                        navArgument("dateMillis") { type = NavType.LongType }
+                    )
+                ) { backStackEntry ->
+                    val boxId = backStackEntry.arguments?.getLong("boxId") ?: 0L
+                    val dateMillis = backStackEntry.arguments?.getLong("dateMillis") ?: 0L
+                    val boxViewModel = viewModel<BoxViewModel>(
+                        factory = object : ViewModelProvider.Factory {
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return BoxViewModel(RetrofitClient.boxApi) as T
+                            }
+                        }
+                    )
+                    BoxOrderReviewScreen(
+                        navController = navController,
+                        boxId = boxId,
+                        dateMillis = dateMillis
+                    )
+                }
+
                 composable(Routes.STORAGE_AND_ORDERS_MENU) {
                     StorageAndOrdersMenuScreen(navController)
                 }
@@ -241,6 +270,38 @@ class MainActivity : ComponentActivity() {
                 ) { backStackEntry ->
                     val orderId = backStackEntry.arguments?.getLong("orderId") ?: 0L
                     OrderDetailScreen(navController, orderId)
+                }
+
+                composable(Routes.UTENSILS_AND_SUPPLIERS_MENU) {
+                    UtensilsAndSuppliersMenuScreen(navController)
+                }
+
+                composable(Routes.UTENSIL_LIST_MANAGEMENT) {
+                    UtensilListManagementScreen(navController)
+                }
+
+                composable(
+                    route = Routes.UTENSIL_EDIT,
+                    arguments = listOf(navArgument("utensilId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val utensilId = backStackEntry.arguments?.getLong("utensilId") ?: 0L
+                    UtensilEditScreen(utensilId, navController)
+                }
+
+                composable(Routes.SUPPLIER_LIST) {
+                    SupplierListScreen(navController)
+                }
+
+                composable(
+                    route = Routes.SUPPLIER_EDIT,
+                    arguments = listOf(navArgument("supplierId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val supplierId = backStackEntry.arguments?.getLong("supplierId") ?: 0L
+                    SupplierEditScreen(supplierId, navController)
+                }
+
+                composable(Routes.SUPPLIER_CREATE) {
+                    SupplierCreateScreen(navController)
                 }
             }
         }
