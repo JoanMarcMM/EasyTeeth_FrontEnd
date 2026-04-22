@@ -1,5 +1,7 @@
 package screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,22 +9,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TextFieldDefaults
+
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import api.RetrofitClient
 import com.example.easyteeth.model.PatientRequest
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdatePatientScreen(
     navController: NavController,
@@ -79,147 +95,281 @@ fun UpdatePatientScreen(
         }
     }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Actualitzar Pacient", color = Color.White) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1B4B7C)
+                )
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.White)
                 .padding(innerPadding)
                 .imePadding()
                 .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            Text(
-                text = "Actualitzar Pacient",
-                style = MaterialTheme.typography.headlineMedium
-            )
-
             if (isLoading) {
                 CircularProgressIndicator()
             } else {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Nom") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFFE3F2FD)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        Text(
+                            text = "Dades personals",
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                OutlinedTextField(
-                    value = lastname1,
-                    onValueChange = { lastname1 = it },
-                    label = { Text("Primer cognom") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        OutlinedTextField(
+                            value = name,
+                            onValueChange = { name = it },
+                            label = { Text("Nom") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
 
-                OutlinedTextField(
-                    value = lastname2,
-                    onValueChange = { lastname2 = it },
-                    label = { Text("Segon cognom") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        OutlinedTextField(
+                            value = lastname1,
+                            onValueChange = { lastname1 = it },
+                            label = { Text("Primer cognom") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
 
-                OutlinedTextField(
-                    value = ssn,
-                    onValueChange = { ssn = it },
-                    label = { Text("SSN") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        OutlinedTextField(
+                            value = lastname2,
+                            onValueChange = { lastname2 = it },
+                            label = { Text("Segon cognom") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
 
-                OutlinedTextField(
-                    value = dni,
-                    onValueChange = { dni = it },
-                    label = { Text("DNI") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        OutlinedTextField(
+                            value = ssn,
+                            onValueChange = { ssn = it },
+                            label = { Text("SSN") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
 
-                OutlinedTextField(
-                    value = phoneNumber,
-                    onValueChange = { phoneNumber = it },
-                    label = { Text("Telèfon") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        OutlinedTextField(
+                            value = dni,
+                            onValueChange = { dni = it },
+                            label = { Text("DNI") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
+                    }
+                }
 
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFFE3F2FD)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        Text(
+                            text = "Contacte",
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                OutlinedTextField(
-                    value = billingAddress,
-                    onValueChange = { billingAddress = it },
-                    label = { Text("Adreça de facturació") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        OutlinedTextField(
+                            value = phoneNumber,
+                            onValueChange = { phoneNumber = it },
+                            label = { Text("Telèfon") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
 
-                OutlinedTextField(
-                    value = bankAccountNumber,
-                    onValueChange = { bankAccountNumber = it },
-                    label = { Text("Número de compte") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        OutlinedTextField(
+                            value = email,
+                            onValueChange = { email = it },
+                            label = { Text("Email") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
+                    }
+                }
 
-                OutlinedTextField(
-                    value = taxIdentificationNumber,
-                    onValueChange = { taxIdentificationNumber = it },
-                    label = { Text("Tax identification number") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFFE3F2FD)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        Text(
+                            text = "Facturació",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        OutlinedTextField(
+                            value = billingAddress,
+                            onValueChange = { billingAddress = it },
+                            label = { Text("Adreça de facturació") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
+
+                        OutlinedTextField(
+                            value = bankAccountNumber,
+                            onValueChange = { bankAccountNumber = it },
+                            label = { Text("Número de compte") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
+
+                        OutlinedTextField(
+                            value = taxIdentificationNumber,
+                            onValueChange = { taxIdentificationNumber = it },
+                            label = { Text("Tax identification number") },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
+                        )
+                    }
+                }
 
                 errorMessage?.let {
-                    Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color(0xFFFFEBEE)
+                    ) {
+                        Text(
+                            text = it,
+                            color = Color(0xFFC62828),
+                            modifier = Modifier.padding(14.dp)
+                        )
+                    }
                 }
 
-                Button(
-                    onClick = {
-                        scope.launch {
-                            isLoading = true
-                            errorMessage = null
-
-                            try {
-                                val response = RetrofitClient.patientApi.updatePatient(
-                                    patientId,
-                                    PatientRequest(
-                                        name = name.trim(),
-                                        lastname1 = lastname1.trim(),
-                                        lastname2 = lastname2.trim(),
-                                        ssn = ssn.trim(),
-                                        dni = dni.trim(),
-                                        phoneNumber = phoneNumber.trim().ifBlank { null },
-                                        email = email.trim().ifBlank { null },
-                                        billingAddress = billingAddress.trim().ifBlank { null },
-                                        bankAccountNumber = bankAccountNumber.trim().ifBlank { null },
-                                        taxIdentificationNumber = taxIdentificationNumber.trim().ifBlank { null }
-                                    )
-                                )
-
-                                if (response.isSuccessful) {
-                                    navController.popBackStack()
-                                } else {
-                                    errorMessage = "Error al actualitzar el pacient: ${response.code()}"
-                                }
-                            } catch (e: Exception) {
-                                errorMessage = e.message ?: "Error de connexió"
-                            } finally {
-                                isLoading = false
-                            }
-                        }
-                    },
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !isLoading
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Text("Actualitzar")
-                }
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                isLoading = true
+                                errorMessage = null
 
-                OutlinedButton(
-                    onClick = { navController.popBackStack() },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Cancel·lar")
+                                try {
+                                    val response = RetrofitClient.patientApi.updatePatient(
+                                        patientId,
+                                        PatientRequest(
+                                            name = name.trim(),
+                                            lastname1 = lastname1.trim(),
+                                            lastname2 = lastname2.trim(),
+                                            ssn = ssn.trim(),
+                                            dni = dni.trim(),
+                                            phoneNumber = phoneNumber.trim().ifBlank { null },
+                                            email = email.trim().ifBlank { null },
+                                            billingAddress = billingAddress.trim().ifBlank { null },
+                                            bankAccountNumber = bankAccountNumber.trim()
+                                                .ifBlank { null },
+                                            taxIdentificationNumber = taxIdentificationNumber.trim()
+                                                .ifBlank { null }
+                                        )
+                                    )
+
+                                    if (response.isSuccessful) {
+                                        navController.popBackStack()
+                                    } else {
+                                        errorMessage =
+                                            "Error al actualitzar el pacient: ${response.code()}"
+                                    }
+                                } catch (e: Exception) {
+                                    errorMessage = e.message ?: "Error de connexió"
+                                } finally {
+                                    isLoading = false
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading,
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
+                    ) {
+                        Text("Actualitzar", color = Color.White)
+                    }
+
+                    OutlinedButton(
+                        onClick = { navController.popBackStack() },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF1B4B7C)
+                        ),
+                        border = BorderStroke(2.dp, Color(0xFF1B4B7C))
+                    ) {
+                        Text("Cancel·lar")
+                    }
                 }
             }
         }

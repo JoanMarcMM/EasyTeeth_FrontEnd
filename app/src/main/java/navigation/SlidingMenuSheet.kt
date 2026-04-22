@@ -39,7 +39,7 @@ fun SlidingMenuSheet(
     navController: NavHostController
 ) {
     val offsetY by animateDpAsState(
-        targetValue = if (isVisible) 0.dp else 350.dp,
+        targetValue = if (isVisible) 0.dp else 600.dp,
         animationSpec = tween<Dp>(durationMillis = 300),
         label = "menu_slide"
     )
@@ -49,31 +49,31 @@ fun SlidingMenuSheet(
             label = "Pacients",
             icon = Icons.Filled.Person,
             route = Routes.PATIENT_MENU_SCREEN,
-            color = Color(0xFF90E0D0)
+            color = Color(0xFF1B4B7C) // Dark Blue
         ),
         MenuItemData(
             label = "Cites",
             icon = Icons.Filled.DateRange,
             route = Routes.APPOINTMENT_MENU_SCREEN,
-            color = Color(0xFF98A8E6)
+            color = Color(0xFF2E7DB4) // Medium Blue
         ),
         MenuItemData(
             label = "Box",
-            icon = Icons.Filled.Home,
+            icon = Icons.Filled.Warehouse,
             route = Routes.BOXES,
-            color = Color(0xFFFFB366)
+            color = Color(0xFF4DA6E6) // Sky Blue
         ),
         MenuItemData(
-            label = "Magatzems",
+            label = "Magatzems i comandes",
             icon = Icons.Filled.Storage,
             route = Routes.STORAGE_AND_ORDERS_MENU,
-            color = Color(0xFF90E0D0)
+            color = Color(0xFF00BCD4) // Cyan
         ),
         MenuItemData(
-            label = "Utensilis",
-            icon = Icons.Filled.Settings,
+            label = "Utensilis i Proveïdors",
+            icon = Icons.Filled.Inventory,
             route = Routes.UTENSILS_AND_SUPPLIERS_MENU,
-            color = Color(0xFF98A8E6)
+            color = Color(0xFF5BA3D0) // Light Blue
         )
     )
 
@@ -98,7 +98,7 @@ fun SlidingMenuSheet(
                 .align(Alignment.BottomCenter)
                 .offset(y = offsetY)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .background(Color.White)
+                .background(Color(0xFFF5F7FA))
                 .padding(horizontal = 16.dp, vertical = 24.dp)
         ) {
             // Menu Grid
@@ -138,8 +138,8 @@ fun MenuCard(
 ) {
     Column(
         modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(item.color.copy(alpha = 0.2f))
+            .clip(RoundedCornerShape(16.dp))
+            .background(item.color)
             .clickable(onClick = onClick)
             .padding(16.dp)
             .fillMaxWidth(),
@@ -149,14 +149,15 @@ fun MenuCard(
         Icon(
             imageVector = item.icon,
             contentDescription = item.label,
-            tint = item.color,
-            modifier = Modifier.size(32.dp)
+            tint = Color.White,
+            modifier = Modifier.size(40.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = item.label,
-            style = MaterialTheme.typography.labelSmall,
-            color = item.color
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.White,
+            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
         )
     }
 }

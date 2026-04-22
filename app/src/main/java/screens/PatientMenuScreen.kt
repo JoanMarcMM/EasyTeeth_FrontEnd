@@ -27,19 +27,21 @@ fun PatientMenuScreen(navController: NavController) {
                 title = {
                     Text(
                         text = "Pacients",
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar"
+                            contentDescription = "Tornar",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
+                    containerColor = Color(0xFF1B4B7C)
                 )
             )
         }
@@ -60,11 +62,14 @@ fun PatientMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
             ) {
                 Text(
                     text = "Nou Pacient",
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
 
@@ -75,11 +80,14 @@ fun PatientMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7DB4))
             ) {
                 Text(
                     text = "Llistar Pacients",
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
 
