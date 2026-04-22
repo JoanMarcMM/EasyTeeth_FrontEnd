@@ -3,9 +3,19 @@ package com.example.easyteeth
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.lifecycle.ViewModel
@@ -26,6 +36,8 @@ import com.example.easyteeth.screens.SupplierListScreen
 import com.example.easyteeth.screens.SupplierEditScreen
 import com.example.easyteeth.screens.SupplierCreateScreen
 import navigation.Routes
+import navigation.BottomNavigationBar
+import navigation.SlidingMenuSheet
 import screens.AppointmentSearcherScreen
 import screens.OdontogramScreen
 import screens.OrderReviewScreen
@@ -46,7 +58,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+            AppContent(navController)
+        }
+    }
+}
 
+@Composable
+fun AppContent(navController: NavHostController) {
+    val backStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry.value?.destination?.route
+    val showBottomNav = currentRoute != Routes.LOGIN
+    val menuOpenState = remember { mutableStateOf(false) }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            if (showBottomNav) {
+                BottomNavigationBar(
+                    navController = navController,
+                    onMenuClick = { menuOpenState.value = !menuOpenState.value }
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = innerPadding.calculateBottomPadding())
+        ) {
             NavHost(
                 navController = navController,
                 startDestination = Routes.LOGIN
@@ -308,6 +347,12 @@ class MainActivity : ComponentActivity() {
                     ProfileScreen(navController)
                 }
             }
+
+            SlidingMenuSheet(
+                isVisible = menuOpenState.value,
+                onDismiss = { menuOpenState.value = false },
+                navController = navController
+            )
         }
     }
 }
