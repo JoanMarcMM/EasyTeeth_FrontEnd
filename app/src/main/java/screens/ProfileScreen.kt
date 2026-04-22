@@ -54,15 +54,15 @@ fun ProfileScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Perfil de l'Usuari", fontWeight = FontWeight.Bold) },
+                title = { Text("Perfil de l'Usuari", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black
+                    containerColor = Color(0xFF1B4B7C),
+                    titleContentColor = Color.White
                 )
             )
         }
@@ -325,7 +325,7 @@ fun ProfileScreen(
                                     .weight(1f)
                                     .height(45.dp),
                                 shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E70EB)),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C)),
                                 enabled = !viewModel.passwordChangeInProgress
                             ) {
                                 if (viewModel.passwordChangeInProgress) {
@@ -351,12 +351,13 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
             ) {
                 Text(
-                    text = "Tancar Sessió",
+                    text = "Canviar Contrasenya",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
                 )
             }
         }

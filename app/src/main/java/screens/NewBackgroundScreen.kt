@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +63,7 @@ fun NewBackgroundScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(Color.White)
                 .padding(innerPadding)
                 .statusBarsPadding()
                 .imePadding()
@@ -242,22 +244,28 @@ fun NewBackgroundScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isLoading,
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
                             strokeWidth = 2.5.dp,
+                            color = Color.White,
                             modifier = Modifier.padding(vertical = 2.dp)
                         )
                     } else {
-                        Text("Guardar background")
+                        Text("Guardar background", color = Color.White, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
                     }
                 }
 
                 OutlinedButton(
                     onClick = { navController.popBackStack() },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color(0xFF1B4B7C)
+                    ),
+                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                 ) {
                     Text("Tornar")
                 }

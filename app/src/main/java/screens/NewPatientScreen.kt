@@ -11,9 +11,15 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -21,6 +27,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +39,7 @@ import api.RetrofitClient
 import com.example.easyteeth.model.PatientRequest
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPatientScreen(
     navController: NavController
@@ -51,11 +61,25 @@ fun NewPatientScreen(
     val scope = rememberCoroutineScope()
     val shape = RoundedCornerShape(10.dp)
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Nou Pacient", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color.White) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1B4B7C)
+                )
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(Color.White)
                 .padding(innerPadding)
                 .statusBarsPadding()
                 .imePadding()
@@ -266,21 +290,27 @@ fun NewPatientScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isLoading,
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            strokeWidth = 2.5.dp
+                            strokeWidth = 2.5.dp,
+                            color = Color.White
                         )
                     } else {
-                        Text("Guardar pacient")
+                        Text("Guardar pacient", color = Color.White, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
                     }
                 }
 
                 OutlinedButton(
                     onClick = { navController.popBackStack() },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color(0xFF1B4B7C)
+                    ),
+                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                 ) {
                     Text("Tornar")
                 }

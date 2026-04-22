@@ -7,7 +7,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Warehouse
+import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.Inventory
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
@@ -113,94 +124,59 @@ fun HomeScreen(navController: NavController) {
 //                }
 //            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
+                // Color palette inspired by EasyTeeth logo (blues)
+                val darkBlue = Color(0xFF1B4B7C)
+                val mediumBlue = Color(0xFF2E7DB4)
+                val lightBlue = Color(0xFF5BA3D0)
+                val cyan = Color(0xFF00BCD4)
+                val skyBlue = Color(0xFF4DA6E6)
 
-                Button(
-                    onClick = { navController.navigate(Routes.PATIENT_MENU_SCREEN) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Pacients",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                // PACIENTS
+                EasyTeethMenuButton(
+                    text = "Pacients",
+                    icon = R.drawable.pacientes,
+                    backgroundColor = darkBlue,
+                    onClick = { navController.navigate(Routes.PATIENT_MENU_SCREEN) }
+                )
 
-                Button(
-                    onClick = { navController.navigate(Routes.APPOINTMENT_MENU_SCREEN) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Cites",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                // CITES
+                EasyTeethMenuButton(
+                    text = "Cites",
+                    icon = R.drawable.calendario,
+                    backgroundColor = mediumBlue,
+                    onClick = { navController.navigate(Routes.APPOINTMENT_MENU_SCREEN) }
+                )
 
-                Button(
-                    onClick = { navController.navigate(Routes.PROFILE) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Perfil",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-                Button(
-                    onClick = { navController.navigate(Routes.BOXES) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Box",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-                Button(
-                    onClick = { navController.navigate(Routes.STORAGE_AND_ORDERS_MENU) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Magatzems i comandes",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-                Button(
-                    onClick = { navController.navigate(Routes.UTENSILS_AND_SUPPLIERS_MENU) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Utensilis i Proveidors",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                // BOX
+                EasyTeethMenuButtonMaterialIcon(
+                    text = "Box",
+                    icon = Icons.Filled.Warehouse,
+                    backgroundColor = skyBlue,
+                    onClick = { navController.navigate(Routes.BOXES) }
+                )
+
+                // MAGATZEMS I COMANDES
+                EasyTeethMenuButtonMaterialIcon(
+                    text = "Magatzems i comandes",
+                    icon = Icons.Filled.Storage,
+                    backgroundColor = cyan,
+                    onClick = { navController.navigate(Routes.STORAGE_AND_ORDERS_MENU) }
+                )
+
+                // UTENSILIS I PROVEÏDORS
+                EasyTeethMenuButtonMaterialIcon(
+                    text = "Utensilis i Proveïdors",
+                    icon = Icons.Filled.Inventory,
+                    backgroundColor = mediumBlue,
+                    onClick = { navController.navigate(Routes.UTENSILS_AND_SUPPLIERS_MENU) }
+                )
 //                Button(
 //                    onClick = { navController.navigate(Routes.PROFILE_MENU_SCREEN) },
 //                    modifier = Modifier
@@ -232,6 +208,99 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
+
+
+@Composable
+fun EasyTeethMenuButton(
+    text: String,
+    icon: Int,
+    backgroundColor: Color,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(65.dp)
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(16.dp),
+                clip = false
+            ),
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = backgroundColor
+        ),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = text,
+                modifier = Modifier.size(40.dp),
+                tint = Color.White
+            )
+            Text(
+                text = text,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun EasyTeethMenuButtonMaterialIcon(
+    text: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    backgroundColor: Color,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(65.dp)
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(16.dp),
+                clip = false
+            ),
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = backgroundColor
+        ),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = text,
+                modifier = Modifier.size(40.dp),
+                tint = Color.White
+            )
+            Text(
+                text = text,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+        }
+    }
+}
 
 @Composable
 fun HomeMenuCard(
