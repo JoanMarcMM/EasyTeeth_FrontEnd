@@ -2,6 +2,7 @@ package screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -27,19 +28,21 @@ fun StorageAndOrdersMenuScreen(navController: NavController) {
                 title = {
                     Text(
                         text = "Magatzems i Comandes",
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar"
+                            contentDescription = "Tornar",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
+                    containerColor = Color(0xFF1B4B7C)
                 )
             )
         }
@@ -60,11 +63,13 @@ fun StorageAndOrdersMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
             ) {
                 Text(
                     text = "Magatzems",
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = Color.White
                 )
             }
 
@@ -75,11 +80,13 @@ fun StorageAndOrdersMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7DB4))
             ) {
                 Text(
                     text = "Comandes",
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = Color.White
                 )
             }
 
@@ -90,11 +97,13 @@ fun StorageAndOrdersMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(2.dp, Color(0xFF1B4B7C))
             ) {
                 Text(
                     text = "Tornar",
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = Color(0xFF1B4B7C)
                 )
             }
 

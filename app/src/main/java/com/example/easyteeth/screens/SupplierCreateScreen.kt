@@ -1,5 +1,6 @@
 package com.example.easyteeth.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,14 +45,16 @@ fun SupplierCreateScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Add New Supplier") },
+                title = { Text("Add New Supplier", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         }
     ) { innerPadding ->
@@ -166,7 +169,8 @@ fun SupplierCreateScreen(
                         },
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp),
+                            .height(50.dp)
+                            ,
                         enabled = !isLoading && name.isNotBlank() && email.isNotBlank(),
                         shape = RoundedCornerShape(8.dp)
                     ) {

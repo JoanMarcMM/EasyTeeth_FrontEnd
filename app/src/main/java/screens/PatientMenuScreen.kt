@@ -2,6 +2,7 @@ package screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -98,11 +99,13 @@ fun PatientMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(2.dp, Color(0xFF1B4B7C))
             ) {
                 Text(
                     text = "Tornar",
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = Color(0xFF1B4B7C)
                 )
             }
 

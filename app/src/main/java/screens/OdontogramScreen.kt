@@ -124,13 +124,14 @@ fun OdontogramScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF7F8FA),
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Odontograma",
                         fontWeight = FontWeight.SemiBold,
+                        color = Color.White,
                         style = if (isLandscape) {
                             MaterialTheme.typography.titleSmall
                         } else {
@@ -140,11 +141,11 @@ fun OdontogramScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFF7F8FA)
+                    containerColor = Color(0xFF1B4B7C)
                 ),
                 modifier = if (isLandscape) Modifier
                     .height(48.dp)

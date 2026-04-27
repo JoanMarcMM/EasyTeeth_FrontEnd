@@ -36,19 +36,21 @@ fun BoxListScreen(
                 title = {
                     Text(
                         text = "Boxes de la Clínica",
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar"
+                            contentDescription = "Tornar",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
+                    containerColor = Color(0xFF1B4B7C)
                 )
             )
         }
@@ -100,7 +102,7 @@ fun BoxListScreen(
                                     text = "${box.numBox}",
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF65558F)
+                                    color = Color(0xFF1B4B7C)
                                 )
                             }
                         }

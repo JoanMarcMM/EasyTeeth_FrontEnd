@@ -29,7 +29,6 @@ import com.example.easyteeth.screens.StorageDetailScreen
 import com.example.easyteeth.screens.ToothDetailScreen
 import com.example.easyteeth.screens.UtensilListScreen
 import com.example.easyteeth.screens.UtensilOrderSelectionScreen
-import com.example.easyteeth.screens.UtensilsAndSuppliersMenuScreen
 import com.example.easyteeth.screens.UtensilListManagementScreen
 import com.example.easyteeth.screens.UtensilEditScreen
 import com.example.easyteeth.screens.SupplierListScreen

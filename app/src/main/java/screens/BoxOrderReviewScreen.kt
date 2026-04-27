@@ -58,7 +58,7 @@ fun BoxOrderReviewScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Revisar Comanda", fontWeight = FontWeight.Bold) },
+                title = { Text("Revisar Comanda", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -66,10 +66,10 @@ fun BoxOrderReviewScreen(
                             navController.popBackStack()
                         }
                     ) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         },
         containerColor = Color.White
@@ -282,7 +282,7 @@ fun BoxOrderReviewScreen(
                     .height(55.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1E70EB),
+                    containerColor = Color(0xFF1B4B7C),
                     disabledContainerColor = Color(0xFFBDBDBD)
                 )
             ) {

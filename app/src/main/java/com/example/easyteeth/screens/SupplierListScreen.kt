@@ -41,20 +41,22 @@ fun SupplierListScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Proveidors") },
+                title = { Text("Proveidors", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate(Routes.SUPPLIER_CREATE) },
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = Color(0xFF1B4B7C),
                 shape = RoundedCornerShape(50.dp)
             ) {
                 Icon(
@@ -184,7 +186,8 @@ fun SupplierListItem(
                         .height(45.dp)
                         .width(45.dp),
                     shape = RoundedCornerShape(8.dp),
-                    contentPadding = PaddingValues(0.dp)
+                    contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Edit,

@@ -51,13 +51,13 @@ fun OrdersListScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Comandes", fontWeight = FontWeight.Bold) },
+                title = { Text("Comandes", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         },
         containerColor = Color.White
@@ -202,9 +202,10 @@ fun OrdersListScreen(navController: NavController) {
                         Button(
                             onClick = { viewModel.loadAllOrders() },
                             modifier = Modifier.height(40.dp),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                         ) {
-                            Text("Reintentar", fontSize = 12.sp)
+                            Text("Reintentar", fontSize = 12.sp, color = Color.White)
                         }
                     }
                 }

@@ -55,8 +55,8 @@ fun OrderReviewScreen(navController: NavController, storageId: Long) {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text("Comanda Confirmada", fontWeight = FontWeight.Bold) },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                    title = { Text("Comanda Confirmada", fontWeight = FontWeight.Bold, color = Color.White) },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
                 )
             },
             containerColor = Color.White
@@ -112,13 +112,13 @@ fun OrderReviewScreen(navController: NavController, storageId: Long) {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text("Revisió de la Comanda", fontWeight = FontWeight.Bold) },
+                    title = { Text("Revisió de la Comanda", fontWeight = FontWeight.Bold, color = Color.White) },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
                         }
                     },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
                 )
             },
             containerColor = Color.White

@@ -62,14 +62,16 @@ fun UtensilEditScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Edit Utensil") },
+                title = { Text("Edit Utensil", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         }
     ) { innerPadding ->
@@ -264,7 +266,8 @@ fun UtensilEditScreen(
                                 .fillMaxWidth()
                                 .height(50.dp),
                             enabled = !isLoading && brand.isNotBlank() && model.isNotBlank() && price.isNotBlank() && selectedSupplierId != null,
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                         ) {
                             Text("Save Changes")
                         }

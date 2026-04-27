@@ -23,9 +23,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -180,25 +182,27 @@ fun PatientDocumentsScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF7F8FA),
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Documents del pacient",
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar"
+                            contentDescription = "Tornar",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFF7F8FA)
+                    containerColor = Color(0xFF1B4B7C)
                 )
             )
         }
@@ -215,12 +219,13 @@ fun PatientDocumentsScreen(
                 onClick = { documentPickerLauncher.launch("*/*") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp),
-                enabled = !isUploading
+                enabled = !isUploading,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
             ) {
                 if (isUploading) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(color = Color.White)
                 } else {
-                    Text("Afegir document")
+                    Text("Afegir document", color = Color.White)
                 }
             }
 
@@ -369,26 +374,29 @@ fun DocumentCard(
                 Button(
                     onClick = onView,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
-                    Text("Veure")
+                    Text("Veure", color = Color.White)
                 }
 
                 OutlinedButton(
                     onClick = onDownload,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                 ) {
-                    Text("Descarregar")
+                    Text("Descarregar", color = Color(0xFF1B4B7C))
                 }
             }
 
             OutlinedButton(
                 onClick = onDelete,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(2.dp, Color(0xFF1B4B7C))
             ) {
-                Text("Eliminar document")
+                Text("Eliminar document", color = Color(0xFF1B4B7C))
             }
         }
     }

@@ -50,13 +50,13 @@ fun OrderDetailScreen(navController: NavController, orderId: Long) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Detalls de la Comanda", fontWeight = FontWeight.Bold) },
+                title = { Text("Detalls de la Comanda", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         },
         containerColor = Color.White

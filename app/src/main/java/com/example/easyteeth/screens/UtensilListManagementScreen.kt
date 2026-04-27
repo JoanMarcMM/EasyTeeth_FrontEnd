@@ -41,14 +41,16 @@ fun UtensilListManagementScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Utensilis") },
+                title = { Text("Utensilis", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         }
     ) { innerPadding ->
@@ -179,7 +181,8 @@ fun UtensilListItem(
                         .height(45.dp)
                         .width(45.dp),
                     shape = RoundedCornerShape(8.dp),
-                    contentPadding = PaddingValues(0.dp)
+                    contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Edit,

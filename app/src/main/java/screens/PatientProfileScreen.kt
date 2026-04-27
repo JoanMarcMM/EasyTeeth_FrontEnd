@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -92,25 +94,27 @@ fun PatientProfileScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF7F8FA),
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Perfil del pacient",
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar"
+                            contentDescription = "Tornar",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFF7F8FA)
+                    containerColor = Color(0xFF1B4B7C)
                 )
             )
         }
@@ -169,14 +173,16 @@ fun PatientProfileScreen(
                                 Button(
                                     onClick = { navController.navigate("odontogram/$patientId") },
                                     modifier = Modifier.fillMaxWidth(),
-                                    shape = RoundedCornerShape(14.dp)
+                                    shape = RoundedCornerShape(14.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.MedicalServices,
-                                        contentDescription = null
+                                        contentDescription = null,
+                                        tint = Color.White
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Actualitzar Odontograma")
+                                    Text("Actualitzar Odontograma", color = Color.White)
                                 }
                             }
                         }
@@ -216,40 +222,46 @@ fun PatientProfileScreen(
                                     Button(
                                         onClick = { navController.navigate("updatePatient/$patientId") },
                                         modifier = Modifier.fillMaxWidth(),
-                                        shape = RoundedCornerShape(14.dp)
+                                        shape = RoundedCornerShape(14.dp),
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Edit,
-                                            contentDescription = null
+                                            contentDescription = null,
+                                            tint = Color.White
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Actualitzar Pacient")
+                                        Text("Actualitzar Pacient", color = Color.White)
                                     }
 
                                     Button(
                                         onClick = { navController.navigate("patientImages/$patientId") },
                                         modifier = Modifier.fillMaxWidth(),
-                                        shape = RoundedCornerShape(14.dp)
+                                        shape = RoundedCornerShape(14.dp),
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7DB4))
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Image,
-                                            contentDescription = null
+                                            contentDescription = null,
+                                            tint = Color.White
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Veure Imatges")
+                                        Text("Veure Imatges", color = Color.White)
                                     }
 
                                     Button(
                                         onClick = { navController.navigate("patientDocuments/$patientId") },
                                         modifier = Modifier.fillMaxWidth(),
-                                        shape = RoundedCornerShape(14.dp)
+                                        shape = RoundedCornerShape(14.dp),
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5BA3D0))
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Folder,
-                                            contentDescription = null
+                                            contentDescription = null,
+                                            tint = Color.White
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Veure Documents")
+                                        Text("Veure Documents", color = Color.White)
                                     }
                                 }
                             }
@@ -375,9 +387,10 @@ fun PatientProfileScreen(
                                     Button(
                                         onClick = { navController.navigate("updateBackground/$patientId") },
                                         modifier = Modifier.fillMaxWidth(),
-                                        shape = RoundedCornerShape(14.dp)
+                                        shape = RoundedCornerShape(14.dp),
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                                     ) {
-                                        Text("Actualitzar Background")
+                                        Text("Actualitzar Background", color = Color.White)
                                     }
                                 } else {
                                     Text(
@@ -388,9 +401,10 @@ fun PatientProfileScreen(
                                     Button(
                                         onClick = { navController.navigate("updateBackground/$patientId") },
                                         modifier = Modifier.fillMaxWidth(),
-                                        shape = RoundedCornerShape(14.dp)
+                                        shape = RoundedCornerShape(14.dp),
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                                     ) {
-                                        Text("Actualitzar Background")
+                                        Text("Actualitzar Background", color = Color.White)
                                     }
                                 }
                             }
@@ -417,17 +431,19 @@ fun PatientProfileScreen(
                                 Button(
                                     onClick = { showDeleteDialog = true },
                                     modifier = Modifier.fillMaxWidth(),
-                                    shape = RoundedCornerShape(14.dp)
+                                    shape = RoundedCornerShape(14.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                                 ) {
-                                    Text("Eliminar Pacient")
+                                    Text("Eliminar Pacient", color = Color.White)
                                 }
 
                                 OutlinedButton(
                                     onClick = { navController.popBackStack() },
                                     modifier = Modifier.fillMaxWidth(),
-                                    shape = RoundedCornerShape(14.dp)
+                                    shape = RoundedCornerShape(14.dp),
+                                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                                 ) {
-                                    Text("Tornar")
+                                    Text("Tornar", color = Color(0xFF1B4B7C))
                                 }
                             }
                         }
@@ -474,24 +490,27 @@ fun PatientProfileScreen(
                                             }
                                         }
                                     },
-                                    enabled = !isDeleting
+                                    enabled = !isDeleting,
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                                 ) {
                                     if (isDeleting) {
                                         CircularProgressIndicator(
                                             modifier = Modifier.size(18.dp),
-                                            strokeWidth = 2.dp
+                                            strokeWidth = 2.dp,
+                                            color = Color.White
                                         )
                                     } else {
-                                        Text("Sí, eliminar")
+                                        Text("Sí, eliminar", color = Color.White)
                                     }
                                 }
                             },
                             dismissButton = {
                                 OutlinedButton(
                                     onClick = { showDeleteDialog = false },
-                                    enabled = !isDeleting
+                                    enabled = !isDeleting,
+                                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                                 ) {
-                                    Text("Cancel·lar")
+                                    Text("Cancel·lar", color = Color(0xFF1B4B7C))
                                 }
                             }
                         )

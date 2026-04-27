@@ -58,13 +58,13 @@ fun CalendarScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Calendario", fontWeight = FontWeight.Bold) },
+                title = { Text("Calendario", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         },
         containerColor = Color.White
@@ -143,7 +143,7 @@ fun CalendarScreen(
                     onClick = { navController.navigate(Routes.PATIENTS_APPOINTMENT) },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7499D1))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
                     Text("Agendar cita", color = Color.White, fontWeight = FontWeight.Bold)
                 }
@@ -155,11 +155,9 @@ fun CalendarScreen(
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7499D1)),
-                    border = BorderStroke(1.dp, Color(0xFF7499D1))
-
+                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                 ) {
-                    Text("Ver todas las visitas", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Buscar Cita", color = Color(0xFF1B4B7C), fontWeight = FontWeight.Bold)
                 }
             }
         }

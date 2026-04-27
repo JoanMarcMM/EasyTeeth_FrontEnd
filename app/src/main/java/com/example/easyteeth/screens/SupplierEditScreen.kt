@@ -58,14 +58,16 @@ fun SupplierEditScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Edit Supplier") },
+                title = { Text("Edit Supplier", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         }
     ) { innerPadding ->
@@ -193,7 +195,8 @@ fun SupplierEditScreen(
                                 .fillMaxWidth()
                                 .height(50.dp),
                             enabled = !isLoading && name.isNotBlank() && email.isNotBlank(),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                         ) {
                             Text("Save Changes")
                         }
