@@ -106,7 +106,7 @@ fun NewPatientScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = shape,
                 tonalElevation = 1.dp,
-                color = MaterialTheme.colorScheme.surface
+                color = Color(0xFFE3F2FD)
             ) {
                 Column(
                     modifier = Modifier.padding(18.dp),
@@ -154,7 +154,7 @@ fun NewPatientScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = shape,
                 tonalElevation = 1.dp,
-                color = MaterialTheme.colorScheme.surface
+                color = Color(0xFFE3F2FD)
             ) {
                 Column(
                     modifier = Modifier.padding(18.dp),
@@ -184,7 +184,7 @@ fun NewPatientScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = shape,
                 tonalElevation = 1.dp,
-                color = MaterialTheme.colorScheme.surface
+                color = Color(0xFFE3F2FD)
             ) {
                 Column(
                     modifier = Modifier.padding(18.dp),

@@ -119,6 +119,7 @@ fun LoginScreen(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
                 modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Contrasenya") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
@@ -164,13 +165,13 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E70EB)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C)),
                 enabled = !viewModel.isLoading
             ) {
                 if (viewModel.isLoading) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                 } else {
-                    Text("Inicia sessió", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Inicia sessió", fontSize = 16.sp, fontWeight = FontWeight.SemiBold,)
                 }
             }
 

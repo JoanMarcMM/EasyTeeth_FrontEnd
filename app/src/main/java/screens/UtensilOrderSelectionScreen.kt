@@ -42,13 +42,13 @@ fun UtensilOrderSelectionScreen(navController: NavController, storageId: Long) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Comanda de Material", fontWeight = FontWeight.Bold) },
+                title = { Text("Comanda de Material", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         },
         containerColor = Color.White
@@ -132,14 +132,15 @@ fun UtensilOrderSelectionScreen(navController: NavController, storageId: Long) {
                     shape = RoundedCornerShape(12.dp),
                     enabled = selectedQuantities.isNotEmpty(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1E70EB),
+                        containerColor = Color(0xFF1B4B7C),
                         disabledContainerColor = Color.LightGray
                     )
                 ) {
                     Text(
                         "Seguir amb la comanda",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
                     )
                 }
             }

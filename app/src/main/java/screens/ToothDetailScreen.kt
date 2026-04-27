@@ -16,10 +16,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -200,9 +202,10 @@ fun PathologyListCard(
                                 }
                             },
                             modifier = Modifier.weight(1f),
-                            enabled = !isProcessing
+                            enabled = !isProcessing,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                         ) {
-                            Text(if (allTreated) "No tractat" else "Tractar")
+                            Text(if (allTreated) "No tractat" else "Tractar", color = Color.White)
                         }
 
                         OutlinedButton(
@@ -223,9 +226,10 @@ fun PathologyListCard(
                                 }
                             },
                             modifier = Modifier.weight(1f),
-                            enabled = !isProcessing
+                            enabled = !isProcessing,
+                            border = BorderStroke(2.dp, Color(0xFFD32F2F))
                         ) {
-                            Text("Esborrar")
+                            Text("Esborrar", color = Color(0xFFD32F2F))
                         }
                     }
                 }
@@ -332,21 +336,23 @@ fun EditSideDialog(
                         }
                     }
                 },
-                enabled = !isLoading
+                enabled = !isLoading,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
             ) {
                 if (isLoading) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(color = Color.White)
                 } else {
-                    Text("Guardar")
+                    Text("Guardar", color = Color.White)
                 }
             }
         },
         dismissButton = {
             OutlinedButton(
                 onClick = onDismiss,
-                enabled = !isLoading
+                enabled = !isLoading,
+                border = BorderStroke(2.dp, Color(0xFF1B4B7C))
             ) {
-                Text("Cancel·lar")
+                Text("Cancel·lar", color = Color(0xFF1B4B7C))
             }
         }
     )
@@ -381,8 +387,12 @@ fun DropdownSelector(
     }
 
     Box {
-        Button(onClick = { expanded = true }, enabled = !isLoading) {
-            Text(pathologies.find { it.id == selected }?.name ?: "Seleccionar")
+        Button(
+            onClick = { expanded = true },
+            enabled = !isLoading,
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
+        ) {
+            Text(pathologies.find { it.id == selected }?.name ?: "Seleccionar", color = Color.White)
         }
 
         DropdownMenu(

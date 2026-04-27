@@ -25,10 +25,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -156,17 +158,17 @@ fun PatientImagesScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF7F8FA),
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Imatges del pacient") },
+                title = { Text("Imatges del pacient", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFF7F8FA)
+                    containerColor = Color(0xFF1B4B7C)
                 )
             )
         }
@@ -206,9 +208,13 @@ fun PatientImagesScreen(
                 onClick = { imagePickerLauncher.launch("image/*") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp),
-                enabled = !isUploading
+                enabled = !isUploading,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF1B4B7C),
+                    disabledContainerColor = Color(0xFFBDBDBD)
+                )
             ) {
-                Text(if (isUploading) "Pujant..." else "Pujar imatge")
+                Text(if (isUploading) "Pujant..." else "Pujar imatge", color = Color.White)
             }
 
             Text(
@@ -312,8 +318,11 @@ fun PatientImagesScreen(
         AlertDialog(
             onDismissRequest = { selectedImageToPreview = null },
             confirmButton = {
-                Button(onClick = { selectedImageToPreview = null }) {
-                    Text("Tancar")
+                Button(
+                    onClick = { selectedImageToPreview = null },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
+                ) {
+                    Text("Tancar", color = Color.White)
                 }
             },
             text = {
@@ -368,16 +377,18 @@ fun PatientImagesScreen(
                                 selectedImageToDelete = null
                             }
                         }
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                 ) {
-                    Text("Eliminar")
+                    Text("Eliminar", color = Color.White)
                 }
             },
             dismissButton = {
                 OutlinedButton(
-                    onClick = { selectedImageToDelete = null }
+                    onClick = { selectedImageToDelete = null },
+                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                 ) {
-                    Text("Cancel·lar")
+                    Text("Cancel·lar", color = Color(0xFF1B4B7C))
                 }
             }
         )
@@ -444,26 +455,29 @@ fun ImageCard(
                 Button(
                     onClick = onPreview,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
-                    Text("Veure gran")
+                    Text("Veure gran", color = Color.White)
                 }
 
                 OutlinedButton(
                     onClick = onDelete,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(2.dp, Color(0xFFD32F2F))
                 ) {
-                    Text("Eliminar")
+                    Text("Eliminar", color = Color(0xFFD32F2F))
                 }
             }
 
             OutlinedButton(
                 onClick = onDownload,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(2.dp, Color(0xFF1B4B7C))
             ) {
-                Text("Descarregar imatge")
+                Text("Descarregar imatge", color = Color(0xFF1B4B7C))
             }
         }
     }

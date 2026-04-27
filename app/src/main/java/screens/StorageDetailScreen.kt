@@ -39,21 +39,22 @@ fun StorageDetailScreen(navController: NavController, storageId: Long) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Magatzem #$storageId - Stock", fontWeight = FontWeight.Bold) },
+                title = { Text("Magatzem #$storageId - Stock", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate(Routes.UTENSIL_ORDER_SELECTION.replace("{storageId}", storageId.toString())) },
-                containerColor = Color(0xFF1E70EB),
+                containerColor = Color(0xFF1B4B7C),
                 contentColor = Color.White,
-                shape = RoundedCornerShape(50)
+                shape = RoundedCornerShape(50),
+
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Crear orden")
             }
@@ -195,6 +196,7 @@ fun StockItemCard(stock: StockStorage) {
                             "${stock.quantity}",
                             modifier = Modifier.padding(4.dp),
                             fontWeight = FontWeight.Bold
+
                         )
                     }
                 }

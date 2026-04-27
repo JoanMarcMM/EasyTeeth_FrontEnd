@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -282,16 +283,18 @@ fun UpdateBackgroundScreen(
                                 }
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            enabled = !isLoading
+                            enabled = !isLoading,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                         ) {
-                            Text("Actualitzar")
+                            Text("Actualitzar", color = Color.White)
                         }
 
                         OutlinedButton(
                             onClick = { navController.popBackStack() },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            border = BorderStroke(2.dp, Color(0xFF1B4B7C))
                         ) {
-                            Text("Cancel·lar")
+                            Text("Cancel·lar", color = Color(0xFF1B4B7C))
                         }
                     }
                 }

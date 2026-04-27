@@ -13,10 +13,15 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -25,6 +30,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,6 +44,7 @@ import com.example.easyteeth.model.BackgroundRequest
 import kotlinx.coroutines.launch
 import navigation.Routes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewBackgroundScreen(
     navController: NavController,
@@ -59,7 +67,22 @@ fun NewBackgroundScreen(
     val scope = rememberCoroutineScope()
     val cardShape = RoundedCornerShape(10.dp)
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Nou Background", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color.White) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1B4B7C)
+                )
+            )
+        },
+        containerColor = Color.White
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,7 +108,7 @@ fun NewBackgroundScreen(
 
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
+                color = Color(0xFFE3F2FD),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -102,7 +125,7 @@ fun NewBackgroundScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = cardShape,
                 tonalElevation = 1.dp,
-                color = MaterialTheme.colorScheme.surface
+                color = Color(0xFFE3F2FD)
             ) {
                 Column(
                     modifier = Modifier.padding(18.dp),
@@ -149,7 +172,7 @@ fun NewBackgroundScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = cardShape,
                 tonalElevation = 1.dp,
-                color = MaterialTheme.colorScheme.surface
+                color = Color(0xFFE3F2FD)
             ) {
                 Column(
                     modifier = Modifier.padding(18.dp),
@@ -323,7 +346,8 @@ private fun SwitchRow(
             )
             Switch(
                 checked = checked,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = onCheckedChange,
+
             )
         }
     }

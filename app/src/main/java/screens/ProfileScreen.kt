@@ -192,12 +192,13 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E70EB))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                 ) {
                     Text(
                         text = "Canviar Contrasenya",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
                     )
                 }
             } else {
@@ -310,9 +311,9 @@ fun ProfileScreen(
                                     .weight(1f)
                                     .height(45.dp),
                                 shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE3F2FD))
                             ) {
-                                Text("Cancelar", color = Color.Black)
+                                Text("Cancelar", color = Color(0xFF1B4B7C), fontWeight = FontWeight.SemiBold)
                             }
 
                             Button(
@@ -354,7 +355,7 @@ fun ProfileScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
             ) {
                 Text(
-                    text = "Canviar Contrasenya",
+                    text = "Log Out",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
@@ -386,9 +387,9 @@ fun ProfileScreen(
             dismissButton = {
                 Button(
                     onClick = { showConfirmLogout = false },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE3F2FD))
                 ) {
-                    Text("Cancelar", color = Color.Black)
+                    Text("Cancelar", color = Color(0xFF1B4B7C), fontWeight = FontWeight.SemiBold)
                 }
             }
         )
