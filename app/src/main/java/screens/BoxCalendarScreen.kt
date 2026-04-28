@@ -96,141 +96,156 @@ fun BoxCalendarScreen(
         },
         containerColor = Color.White
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp)
         ) {
-            Text(
-                text = "Selecciona el dia per preparar els materials del Box $numBox:",
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                fontSize = 16.sp,
-                color = Color.DarkGray
-            )
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(8.dp, RoundedCornerShape(24.dp)),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                DatePicker(
-                    state = datePickerState,
-                    showModeToggle = false,
-                    title = null,
-                    headline = null,
-                    colors = DatePickerDefaults.colors(
-                        selectedDayContainerColor = Color(0xFF1E70EB),
-                        todayDateBorderColor = Color(0xFF1E70EB)
-                    )
+            item {
+                Text(
+                    text = "Selecciona el dia per preparar els materials del Box $numBox:",
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    fontSize = 16.sp,
+                    color = Color.DarkGray
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(8.dp, RoundedCornerShape(24.dp)),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    DatePicker(
+                        state = datePickerState,
+                        showModeToggle = false,
+                        title = null,
+                        headline = null,
+                        colors = DatePickerDefaults.colors(
+                            selectedDayContainerColor = Color(0xFF1E70EB),
+                            todayDateBorderColor = Color(0xFF1E70EB)
+                        )
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
             if (datePickerState.selectedDateMillis != null) {
                 if (isLoading) {
-                    Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Color(0xFF65558F))
+                    item {
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(color = Color(0xFF65558F))
+                        }
                     }
                 } else if (materials.isEmpty()) {
-                    Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Text("No hi ha materials programats", color = Color.Gray)
+                    item {
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp), contentAlignment = Alignment.Center) {
+                            Text("No hi ha materials programats", color = Color.Gray)
+                        }
                     }
                 } else {
-                    Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    item {
                         Text(
                             text = "Instrumental necessari",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            items(materials) { item ->
-                                MaterialItemRow(item)
-                            }
-                        }
+                    }
+                    items(materials) { item ->
+                        MaterialItemRow(item)
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
             }
 
             val isAllStocked = materials.isNotEmpty() && materials.all { it.stocked }
 
             if (showSuccessMessage) {
-                Text(
-                    text = if (isAllStocked) "Materials reposats correctament!" else "Reposició cancel·lada!",
-                    color = if (isAllStocked) Color(0xFF4CAF50) else Color(0xFFD32F2F),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                item {
+                    Text(
+                        text = if (isAllStocked) "Materials reposats correctament!" else "Reposició cancel·lada!",
+                        color = if (isAllStocked) Color(0xFF4CAF50) else Color(0xFFD32F2F),
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
             }
 
             if (isError) {
-                Text(
-                    text = "Error en connectar amb el servidor",
-                    color = Color.Red,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                item {
+                    Text(
+                        text = "Error en connectar amb el servidor",
+                        color = Color.Red,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
             }
 
             // Show date warning - not today
             if (!isToday && materials.isNotEmpty()) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5))
-                ) {
-                    Column(
+                item {
+                    Card(
                         modifier = Modifier
-                            .padding(12.dp)
                             .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5))
                     ) {
-                        Row(
+                        Column(
                             modifier = Modifier
+                                .padding(12.dp)
                                 .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                            verticalAlignment = Alignment.Top,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = "Info",
-                                tint = Color(0xFF6A1B9A),
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Text(
-                                text = "You are viewing materials for a future date. You can create an order with these exact items.",
-                                color = Color(0xFF4A148C),
-                                fontSize = 13.sp,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                        if (orderError != null) {
-                            Text(
-                                text = "Error: $orderError",
-                                color = Color.Red,
-                                fontSize = 12.sp,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                        }
-                        if (orderSuccess) {
-                            Text(
-                                text = "Order created successfully!",
-                                color = Color(0xFF2E7D32),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp),
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = "Info",
+                                    tint = Color(0xFF6A1B9A),
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = "Estàs veient materials per a una data futura. Pots crear una comanda amb aquests articles exactes.",
+                                    color = Color(0xFF4A148C),
+                                    fontSize = 13.sp,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            if (orderError != null) {
+                                Text(
+                                    text = "Error: $orderError",
+                                    color = Color.Red,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                            }
+                            if (orderSuccess) {
+                                Text(
+                                    text = "Comanda creada amb èxit!",
+                                    color = Color(0xFF2E7D32),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -238,49 +253,51 @@ fun BoxCalendarScreen(
 
             // Show insufficient stock warning
             if (hasInsufficientStock && materials.isNotEmpty() && isToday) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
-                ) {
-                    Row(
+                item {
+                    Card(
                         modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.WarningAmber,
-                            contentDescription = "Advertencia",
-                            tint = Color(0xFFC62828),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "No hay suficientes utensiles disponibles",
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFFC62828),
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(bottom = 4.dp)
+                        Row(
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.WarningAmber,
+                                contentDescription = "Advertencia",
+                                tint = Color(0xFFC62828),
+                                modifier = Modifier.size(20.dp)
                             )
-                            if (insufficientUtensilsList.isNotEmpty()) {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Falta:",
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color(0xFFB71C1C),
-                                    fontSize = 12.sp,
+                                    text = "No hi ha suficients utensilis disponibles",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFC62828),
+                                    fontSize = 14.sp,
                                     modifier = Modifier.padding(bottom = 4.dp)
                                 )
-                                insufficientUtensilsList.forEach { item ->
+                                if (insufficientUtensilsList.isNotEmpty()) {
                                     Text(
-                                        text = "• $item",
+                                        text = "Manquen:",
+                                        fontWeight = FontWeight.SemiBold,
                                         color = Color(0xFFB71C1C),
-                                        fontSize = 11.sp,
-                                        modifier = Modifier.padding(start = 8.dp, bottom = 2.dp)
+                                        fontSize = 12.sp,
+                                        modifier = Modifier.padding(bottom = 4.dp)
                                     )
+                                    insufficientUtensilsList.forEach { item ->
+                                        Text(
+                                            text = "• $item",
+                                            color = Color(0xFFB71C1C),
+                                            fontSize = 11.sp,
+                                            modifier = Modifier.padding(start = 8.dp, bottom = 2.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -288,70 +305,72 @@ fun BoxCalendarScreen(
                 }
             }
 
-            Button(
-                enabled = datePickerState.selectedDateMillis != null && 
-                        materials.isNotEmpty() && 
-                        (isToday && !hasInsufficientStock || !isToday) &&
-                        !orderCreating,
-                onClick = {
-                    if (isToday) {
-                        // Today: confirm/cancel restock
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            val newStatus = !isAllStocked
+            item {
+                Button(
+                    enabled = datePickerState.selectedDateMillis != null && 
+                            materials.isNotEmpty() && 
+                            (isToday && !hasInsufficientStock || !isToday) &&
+                            !orderCreating,
+                    onClick = {
+                        if (isToday) {
+                            // Today: confirm/cancel restock
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                val newStatus = !isAllStocked
 
-                            viewModel.updateStockStatus(boxId, millis, newStatus) { success ->
-                                if (success) {
-                                    showSuccessMessage = true
-                                    isError = false
-                                    val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
-                                    viewModel.fetchMaterials(boxId, dateStr)
-                                } else {
-                                    isError = true
-                                    showSuccessMessage = false
+                                viewModel.updateStockStatus(boxId, millis, newStatus) { success ->
+                                    if (success) {
+                                        showSuccessMessage = true
+                                        isError = false
+                                        val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
+                                        viewModel.fetchMaterials(boxId, dateStr)
+                                    } else {
+                                        isError = true
+                                        showSuccessMessage = false
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        // Future date: navigate to order review screen
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
-                            viewModel.setGlobalBoxOrderForReview(boxId, dateStr, materials)
-                            navController.navigate("${Routes.BOX_ORDER_REVIEW}".replace("{boxId}", boxId.toString()).replace("{dateMillis}", millis.toString()))
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(bottom = 32.dp)
-                    .height(55.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isToday) {
-                        if (isAllStocked) Color(0xFFD32F2F) else Color(0xFF65558F)
-                    } else {
-                        Color(0xFF1E70EB)
-                    },
-                    disabledContainerColor = Color(0xFFBDBDBD)
-                )
-            ) {
-                if (orderCreating) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = Color.White,
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Text(
-                        text = if (isToday) {
-                            if (isAllStocked) "Cancel·lar Reposció" else "Confirmar Reposció"
                         } else {
-                            "Crear Comanda"
+                            // Future date: navigate to order review screen
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
+                                viewModel.setGlobalBoxOrderForReview(boxId, dateStr, materials)
+                                navController.navigate("${Routes.BOX_ORDER_REVIEW}".replace("{boxId}", boxId.toString()).replace("{dateMillis}", millis.toString()))
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(top = 16.dp)
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isToday) {
+                            if (isAllStocked) Color(0xFFD32F2F) else Color(0xFF65558F)
+                        } else {
+                            Color(0xFF1E70EB)
                         },
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        disabledContainerColor = Color(0xFFBDBDBD)
                     )
+                ) {
+                    if (orderCreating) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = if (isToday) {
+                                if (isAllStocked) "Cancel·lar Reposció" else "Confirmar Reposció"
+                            } else {
+                                "Crear Comanda"
+                            },
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+                    }
                 }
             }
         }
