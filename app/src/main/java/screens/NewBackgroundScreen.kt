@@ -41,14 +41,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import api.RetrofitClient
 import com.example.easyteeth.model.BackgroundRequest
+import com.example.easyteeth.model.PatientRequest
 import kotlinx.coroutines.launch
 import navigation.Routes
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewBackgroundScreen(
     navController: NavController,
-    patientId: Long
+    patientId: Long,
+    patientData: String? = null
 ) {
     var familyHistory by remember { mutableStateOf("") }
     var healthState by remember { mutableStateOf("") }
@@ -63,6 +67,16 @@ fun NewBackgroundScreen(
 
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    
+    // Deserialize patient data if it's a draft
+    var draftPatient by remember { 
+        mutableStateOf<PatientRequest?>(
+            if (patientData != null && patientId == 0L) {
+                val decodedData = URLDecoder.decode(patientData, StandardCharsets.UTF_8.toString())
+                deserializePatientRequest(decodedData)
+            } else null
+        )
+    }
 
     val scope = rememberCoroutineScope()
     val cardShape = RoundedCornerShape(10.dp)
@@ -103,19 +117,6 @@ fun NewBackgroundScreen(
                     text = "Historial mèdic i informació rellevant del pacient",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFE3F2FD),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Patient ID: $patientId",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
                 )
             }
 
@@ -236,6 +237,30 @@ fun NewBackgroundScreen(
                             errorMessage = null
 
                             try {
+                                var finalPatientId = patientId
+
+                                // If patientId is 0, we need to create the patient first
+                                if (patientId == 0L) {
+                                    if (draftPatient == null) {
+                                        errorMessage = "Error: no s'han trobat les dades del pacient"
+                                        return@launch
+                                    }
+
+                                    val patientResponse = RetrofitClient.patientApi.createPatient(draftPatient!!)
+                                    if (patientResponse.isSuccessful) {
+                                        val createdPatient = patientResponse.body()
+                                        finalPatientId = createdPatient?.id ?: 0L
+                                        if (finalPatientId == 0L) {
+                                            errorMessage = "El backend no ha devuelto el ID del paciente"
+                                            return@launch
+                                        }
+                                    } else {
+                                        errorMessage = "Error al guardar el pacient: ${patientResponse.code()}"
+                                        return@launch
+                                    }
+                                }
+
+                                // Now create the background with the patient ID
                                 val response = RetrofitClient.backgroundApi.createBackground(
                                     BackgroundRequest(
                                         familyHistory = familyHistory.trim(),
@@ -247,7 +272,7 @@ fun NewBackgroundScreen(
                                         infectiousDisease = infectiousDisease,
                                         hasSignedConsent = hasSignedConsent,
                                         hasSignedAnesthesia = hasSignedAnesthesia,
-                                        patientId = patientId
+                                        patientId = finalPatientId
                                     )
                                 )
 
@@ -351,4 +376,51 @@ private fun SwitchRow(
             )
         }
     }
+}
+
+private fun deserializePatientRequest(json: String): PatientRequest? {
+    return try {
+        // Simple JSON parsing for PatientRequest
+        val name = extractJsonValue(json, "name") ?: return null
+        val lastname1 = extractJsonValue(json, "lastname1") ?: return null
+        val lastname2 = extractJsonValue(json, "lastname2") ?: return null
+        val ssn = extractJsonValue(json, "ssn") ?: return null
+        val dni = extractJsonValue(json, "dni") ?: return null
+        val phoneNumber = extractJsonValue(json, "phoneNumber")
+        val email = extractJsonValue(json, "email")
+        val billingAddress = extractJsonValue(json, "billingAddress")
+        val bankAccountNumber = extractJsonValue(json, "bankAccountNumber")
+        val taxIdentificationNumber = extractJsonValue(json, "taxIdentificationNumber")
+
+        PatientRequest(
+            name = name,
+            lastname1 = lastname1,
+            lastname2 = lastname2,
+            ssn = ssn,
+            dni = dni,
+            phoneNumber = phoneNumber,
+            email = email,
+            billingAddress = billingAddress,
+            bankAccountNumber = bankAccountNumber,
+            taxIdentificationNumber = taxIdentificationNumber
+        )
+    } catch (e: Exception) {
+        null
+    }
+}
+
+private fun extractJsonValue(json: String, key: String): String? {
+    val pattern = "\"$key\":\"?([^,}]*)\"?".toRegex()
+    val matchResult = pattern.find(json)
+    return matchResult?.groupValues?.get(1)?.let {
+        if (it == "null") null else unescapeJson(it.trim('"'))
+    }
+}
+
+private fun unescapeJson(str: String): String {
+    return str.replace("\\\"", "\"")
+        .replace("\\\\", "\\")
+        .replace("\\n", "\n")
+        .replace("\\r", "\r")
+        .replace("\\t", "\t")
 }

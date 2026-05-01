@@ -15,7 +15,7 @@ object Routes {
     const val PATIENTS_APPOINTMENT = "patients_appointment"
 
     const val NEW_PATIENT_SCREEN = "newPatientScreen"
-    const val NEW_BACKGROUND_SCREEN = "newPatientBackground/{patientId}"
+    const val NEW_BACKGROUND_SCREEN = "newPatientBackground/{patientId}?patientData={patientData}"
 
     const val PATIENT_LIST_TO_PROFILE = "patientListToProfile"
 

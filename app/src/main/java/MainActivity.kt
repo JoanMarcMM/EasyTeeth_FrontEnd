@@ -117,14 +117,20 @@ fun AppContent(navController: NavHostController) {
                         arguments = listOf(
                             navArgument("patientId") {
                                 type = NavType.LongType
+                            },
+                            navArgument("patientData") {
+                                type = NavType.StringType
+                                nullable = true
                             }
                         )
                     ) { backStackEntry ->
                         val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                        val patientData = backStackEntry.arguments?.getString("patientData")
 
                         NewBackgroundScreen(
                             navController = navController,
-                            patientId = patientId
+                            patientId = patientId,
+                            patientData = patientData
                         )
                     }
                     composable(Routes.APPOINTMENT_SEARCHER) {
