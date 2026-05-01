@@ -104,6 +104,26 @@ fun ToothLegendItem(label: String) {
     Text(label)
 }
 
+// Helper function to check if there are special pathologies (absence, endodontics, extraction)
+fun hasSpecialPathologies(sides: List<Odontogram>): Boolean {
+    return sides.any { it.pathology?.id in listOf(4L, 5L, 6L) }
+}
+
+// Helper function to get only special pathologies
+fun getSpecialPathologies(sides: List<Odontogram>): List<Odontogram> {
+    return sides.filter { it.pathology?.id in listOf(4L, 5L, 6L) }
+}
+
+// Helper function to get normal pathologies (excluding special ones)
+fun getNormalPathologies(sides: List<Odontogram>): List<Odontogram> {
+    return sides.filter { it.pathology != null && it.pathology?.id !in listOf(4L, 5L, 6L) }
+}
+
+// Helper function to check if there's an absence pathology
+fun hasAbsence(sides: List<Odontogram>): Boolean {
+    return sides.any { it.pathology?.id == 4L }
+}
+
 @Composable
 fun PathologyListCard(
     sides: List<Odontogram>,
@@ -114,9 +134,15 @@ fun PathologyListCard(
     val scope = rememberCoroutineScope()
     var isProcessing by remember { mutableStateOf(false) }
 
+    // If there are special pathologies, show only those. Otherwise show normal pathologies
+    val pathologiesToShow = if (hasSpecialPathologies(sides)) {
+        getSpecialPathologies(sides)
+    } else {
+        getNormalPathologies(sides)
+    }
+
     // Group pathologies with their affected sides
-    val pathologyGroups = sides
-        .filter { it.pathology != null && it.pathology?.id != 4L } // Exclude missing tooth pathology
+    val pathologyGroups = pathologiesToShow
         .groupBy { it.pathology?.id to it.pathology?.name }
 
     if (pathologyGroups.isEmpty()) {
@@ -248,6 +274,7 @@ fun EditSideDialog(
     patientId: Long,
     toothId: Long,
     sideId: Long,
+    allSides: List<Odontogram>,
     onDismiss: () -> Unit,
     onSaved: () -> Unit
 ) {
@@ -258,16 +285,38 @@ fun EditSideDialog(
 
     val scope = rememberCoroutineScope()
 
+    // Check if there's an absence (ID 4) anywhere
+    val hasAbsenceAnywhere = hasAbsence(allSides)
+    
+    // Check if we're currently editing an absence
+    val isCurrentlyAbsence = existing?.pathology?.id == 4L
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Editar costat $sideId") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                // Show warning if there's absence and we're not editing it
+                if (hasAbsenceAnywhere && !isCurrentlyAbsence) {
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
+                        border = BorderStroke(1.dp, Color(0xFFFF9800))
+                    ) {
+                        Text(
+                            text = "⚠ Hi ha absència. Només pots posar o treure absència.",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(8.dp),
+                            color = Color(0xFFE65100)
+                        )
+                    }
+                }
+
                 Text("Patologia")
 
                 DropdownSelector(
                     selected = pathologyId,
-                    onSelected = { pathologyId = it }
+                    onSelected = { pathologyId = it },
+                    restrictedMode = hasAbsenceAnywhere && !isCurrentlyAbsence
                 )
 
                 Row(
@@ -361,7 +410,8 @@ fun EditSideDialog(
 @Composable
 fun DropdownSelector(
     selected: Long,
-    onSelected: (Long) -> Unit
+    onSelected: (Long) -> Unit,
+    restrictedMode: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
     var pathologies by remember { mutableStateOf<List<Pathology>>(emptyList()) }
@@ -374,9 +424,16 @@ fun DropdownSelector(
             try {
                 val response = RetrofitClient.pathologyApi.getAllPathologies()
                 if (response.isSuccessful) {
-                    pathologies = listOf(
+                    val allPathologies = listOf(
                         Pathology(0L, "Ninguna")
                     ) + (response.body() ?: emptyList())
+                    
+                    // If restricted mode is on, only show Ninguna (0) and Absencia (4)
+                    pathologies = if (restrictedMode) {
+                        allPathologies.filter { it.id in listOf(0L, 4L) }
+                    } else {
+                        allPathologies
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -713,6 +770,7 @@ fun ToothDetailScreen(
                 patientId = patientId,
                 toothId = toothId,
                 sideId = selectedSideId!!,
+                allSides = sides,
                 onDismiss = { selectedSideId = null },
                 onSaved = {
                     selectedSideId = null
