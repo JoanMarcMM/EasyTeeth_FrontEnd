@@ -64,6 +64,31 @@ fun BoxCalendarScreen(
         calendar.get(Calendar.DAY_OF_YEAR) == selectedCalendar.get(Calendar.DAY_OF_YEAR)
     }
 
+    // Check if selected date is in the past
+    val isPastDate = remember(datePickerState.selectedDateMillis) {
+        val calendar = Calendar.getInstance()
+        val selectedCalendar = Calendar.getInstance()
+        selectedCalendar.timeInMillis = datePickerState.selectedDateMillis ?: todayMillis
+        
+        val selectedYear = selectedCalendar.get(Calendar.YEAR)
+        val selectedDay = selectedCalendar.get(Calendar.DAY_OF_YEAR)
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentDay = calendar.get(Calendar.DAY_OF_YEAR)
+        
+        if (selectedYear == currentYear) {
+            selectedDay < currentDay
+        } else {
+            selectedYear < currentYear
+        }
+    }
+
+    // Filter materials for past dates - show only stocked items
+    val displayedMaterials = if (isPastDate) {
+        materials.filter { it.stocked }
+    } else {
+        materials
+    }
+
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
@@ -147,24 +172,27 @@ fun BoxCalendarScreen(
                             CircularProgressIndicator(color = Color(0xFF65558F))
                         }
                     }
-                } else if (materials.isEmpty()) {
+                } else if (displayedMaterials.isEmpty()) {
                     item {
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 32.dp), contentAlignment = Alignment.Center) {
-                            Text("No hi ha materials programats", color = Color.Gray)
+                            Text(
+                                if (isPastDate) "Cap utensil va ser utilitzat en aquesta data" else "No hi ha materials programats",
+                                color = Color.Gray
+                            )
                         }
                     }
                 } else {
                     item {
                         Text(
-                            text = "Instrumental necessari",
+                            text = if (isPastDate) "Utensilis utilitzats" else "Instrumental necessari",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
-                    items(materials) { item ->
+                    items(displayedMaterials) { item ->
                         MaterialItemRow(item)
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -172,6 +200,40 @@ fun BoxCalendarScreen(
             }
 
             val isAllStocked = materials.isNotEmpty() && materials.all { it.stocked }
+
+            // Show past date warning
+            if (isPastDate && displayedMaterials.isNotEmpty()) {
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0))
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = "Info",
+                                tint = Color(0xFFE65100),
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = "Aquesta es una data anterior. Es mostren nomes els utensilis que es van utilitzar. No es pot efectuar cap accio.",
+                                color = Color(0xFFE65100),
+                                fontSize = 13.sp,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+            }
 
             if (showSuccessMessage) {
                 item {
@@ -195,7 +257,7 @@ fun BoxCalendarScreen(
             }
 
             // Show date warning - not today
-            if (!isToday && materials.isNotEmpty()) {
+            if (!isToday && materials.isNotEmpty() && !isPastDate) {
                 item {
                     Card(
                         modifier = Modifier
@@ -309,8 +371,9 @@ fun BoxCalendarScreen(
                 Button(
                     enabled = datePickerState.selectedDateMillis != null && 
                             materials.isNotEmpty() && 
-                            (isToday && !hasInsufficientStock || !isToday) &&
-                            !orderCreating,
+                            (isToday && !hasInsufficientStock || !isToday && !isPastDate) &&
+                            !orderCreating &&
+                            !isPastDate,
                     onClick = {
                         if (isToday) {
                             // Today: confirm/cancel restock
