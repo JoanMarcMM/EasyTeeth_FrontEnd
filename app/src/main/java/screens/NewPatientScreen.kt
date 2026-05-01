@@ -38,6 +38,8 @@ import androidx.navigation.NavController
 import api.RetrofitClient
 import com.example.easyteeth.model.PatientRequest
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -254,33 +256,26 @@ fun NewPatientScreen(
                             errorMessage = null
 
                             try {
-                                val response = RetrofitClient.patientApi.createPatient(
-                                    PatientRequest(
-                                        name = name.trim(),
-                                        lastname1 = lastname1.trim(),
-                                        lastname2 = lastname2.trim(),
-                                        ssn = ssn.trim(),
-                                        dni = dni.trim(),
-                                        phoneNumber = phoneNumber.ifBlank { null },
-                                        email = email.ifBlank { null },
-                                        billingAddress = billingAddress.ifBlank { null },
-                                        bankAccountNumber = bankAccountNumber.ifBlank { null },
-                                        taxIdentificationNumber = taxIdentificationNumber.ifBlank { null }
-                                    )
+                                // Create patient request and serialize to JSON
+                                val patientRequest = PatientRequest(
+                                    name = name.trim(),
+                                    lastname1 = lastname1.trim(),
+                                    lastname2 = lastname2.trim(),
+                                    ssn = ssn.trim(),
+                                    dni = dni.trim(),
+                                    phoneNumber = phoneNumber.ifBlank { null },
+                                    email = email.ifBlank { null },
+                                    billingAddress = billingAddress.ifBlank { null },
+                                    bankAccountNumber = bankAccountNumber.ifBlank { null },
+                                    taxIdentificationNumber = taxIdentificationNumber.ifBlank { null }
                                 )
-
-                                if (response.isSuccessful) {
-                                    val createdPatient = response.body()
-                                    val patientId = createdPatient?.id
-
-                                    if (patientId != null) {
-                                        navController.navigate("newPatientBackground/$patientId")
-                                    } else {
-                                        errorMessage = "El backend no ha devuelto el ID del paciente"
-                                    }
-                                } else {
-                                    errorMessage = "Error al guardar el pacient: ${response.code()}"
-                                }
+                                
+                                // Serialize to JSON and encode for URL
+                                val patientJson = serializePatientRequest(patientRequest)
+                                val encodedData = URLEncoder.encode(patientJson, StandardCharsets.UTF_8.toString())
+                                
+                                // Navigate to background screen with patient data
+                                navController.navigate("newPatientBackground/0?patientData=$encodedData")
                             } catch (e: Exception) {
                                 errorMessage = e.message ?: "Error de connexió"
                             } finally {
@@ -337,6 +332,78 @@ private fun PatientTextField(
             unfocusedContainerColor = Color.Transparent
         )
     )
+}
+
+private fun serializePatientRequest(patient: PatientRequest): String {
+    return buildString {
+        append("{")
+        append("\"name\":\"${escapeJson(patient.name)}\",")
+        append("\"lastname1\":\"${escapeJson(patient.lastname1)}\",")
+        append("\"lastname2\":\"${escapeJson(patient.lastname2)}\",")
+        append("\"ssn\":\"${escapeJson(patient.ssn)}\",")
+        append("\"dni\":\"${escapeJson(patient.dni)}\",")
+        append("\"phoneNumber\":${patient.phoneNumber?.let { "\"${escapeJson(it)}\"" } ?: "null"},")
+        append("\"email\":${patient.email?.let { "\"${escapeJson(it)}\"" } ?: "null"},")
+        append("\"billingAddress\":${patient.billingAddress?.let { "\"${escapeJson(it)}\"" } ?: "null"},")
+        append("\"bankAccountNumber\":${patient.bankAccountNumber?.let { "\"${escapeJson(it)}\"" } ?: "null"},")
+        append("\"taxIdentificationNumber\":${patient.taxIdentificationNumber?.let { "\"${escapeJson(it)}\"" } ?: "null"}")
+        append("}")
+    }
+}
+
+private fun escapeJson(str: String): String {
+    return str.replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+        .replace("\t", "\\t")
+}
+
+private fun deserializePatientRequest(json: String): PatientRequest? {
+    return try {
+        // Simple JSON parsing for PatientRequest
+        val name = extractJsonValue(json, "name") ?: return null
+        val lastname1 = extractJsonValue(json, "lastname1") ?: return null
+        val lastname2 = extractJsonValue(json, "lastname2") ?: return null
+        val ssn = extractJsonValue(json, "ssn") ?: return null
+        val dni = extractJsonValue(json, "dni") ?: return null
+        val phoneNumber = extractJsonValue(json, "phoneNumber")
+        val email = extractJsonValue(json, "email")
+        val billingAddress = extractJsonValue(json, "billingAddress")
+        val bankAccountNumber = extractJsonValue(json, "bankAccountNumber")
+        val taxIdentificationNumber = extractJsonValue(json, "taxIdentificationNumber")
+
+        PatientRequest(
+            name = name,
+            lastname1 = lastname1,
+            lastname2 = lastname2,
+            ssn = ssn,
+            dni = dni,
+            phoneNumber = phoneNumber,
+            email = email,
+            billingAddress = billingAddress,
+            bankAccountNumber = bankAccountNumber,
+            taxIdentificationNumber = taxIdentificationNumber
+        )
+    } catch (e: Exception) {
+        null
+    }
+}
+
+private fun extractJsonValue(json: String, key: String): String? {
+    val pattern = "\"$key\":\"?([^,}]*)\"?".toRegex()
+    val matchResult = pattern.find(json)
+    return matchResult?.groupValues?.get(1)?.let {
+        if (it == "null") null else unescapeJson(it.trim('"'))
+    }
+}
+
+private fun unescapeJson(str: String): String {
+    return str.replace("\\\"", "\"")
+        .replace("\\\\", "\\")
+        .replace("\\n", "\n")
+        .replace("\\r", "\r")
+        .replace("\\t", "\t")
 }
 
 private fun isValidEmail(email: String): Boolean {
