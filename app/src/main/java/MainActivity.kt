@@ -107,6 +107,9 @@ fun AppContent(navController: NavHostController) {
                     composable(Routes.PATIENT_MENU_SCREEN) {
                         PatientMenuScreen(navController)
                     }
+                    composable(Routes.APPOINTMENT_MENU_SCREEN) {
+                        AppointmentMenuScreen(navController)
+                    }
 
                     composable(Routes.NEW_PATIENT_SCREEN) {
                         NewPatientScreen(navController)
@@ -135,6 +138,14 @@ fun AppContent(navController: NavHostController) {
                     }
                     composable(Routes.APPOINTMENT_SEARCHER) {
                         AppointmentSearcherScreen(navController)
+
+                    }
+                    composable(Routes.DELETE_APPOINTMENT) {
+                        DeleteAppointmentScreen(navController)
+
+                    }
+                    composable(Routes.UPDATE_APPOINTMENT) {
+                        UpdateAppointmentScreen(navController)
 
                     }
 
@@ -203,6 +214,117 @@ fun AppContent(navController: NavHostController) {
                         val toothId = it.arguments?.getLong("toothId") ?: 0L
 
                         ToothDetailScreen(navController, patientId, toothId)
+                    }
+                    composable(
+                        route = Routes.ADD_APPOINTMENT_DETAILS,
+                        arguments = listOf(navArgument("patientId") { type = NavType.LongType })
+                    ) { backStackEntry ->
+                        val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                        AddAppointmentDetailsScreen(navController = navController, patientId = patientId)
+                    }
+
+                    composable(
+                        route = Routes.SELECT_APPOINTMENT_SHIFT,
+                        arguments = listOf(
+                            navArgument("patientId") { type = NavType.LongType },
+                            navArgument("treatmentId") { type = NavType.LongType },
+                            navArgument("odontologistId") { type = NavType.LongType },
+                            navArgument("motive") { type = NavType.StringType }
+                        )
+                    ) { backStackEntry ->
+                        val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                        val treatmentId = backStackEntry.arguments?.getLong("treatmentId") ?: 0L
+                        val odontologistId = backStackEntry.arguments?.getLong("odontologistId") ?: 0L
+                        val motive = backStackEntry.arguments?.getString("motive") ?: ""
+
+                        ShiftSelectionScreen(
+                            patientId = patientId,
+                            treatmentId = treatmentId,
+                            odontologistId = odontologistId,
+                            motive = motive,
+                            navController = navController
+                        )
+                    }
+
+                    composable(
+                        route = Routes.SELECT_BOXES,
+                        arguments = listOf(
+                            navArgument("patientId") { type = NavType.LongType },
+                            navArgument("treatmentId") { type = NavType.LongType },
+                            navArgument("odontologistId") { type = NavType.LongType },
+                            navArgument("motive") { type = NavType.StringType },
+                            navArgument("shift") { type = NavType.StringType }
+                        )
+                    ) { backStackEntry ->
+                        val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                        val treatmentId = backStackEntry.arguments?.getLong("treatmentId") ?: 0L
+                        val odontologistId = backStackEntry.arguments?.getLong("odontologistId") ?: 0L
+                        val motive = backStackEntry.arguments?.getString("motive") ?: ""
+                        val shift = backStackEntry.arguments?.getString("shift") ?: "MORNING"
+
+                        SelectBoxesScreen(
+                            patientId = patientId,
+                            treatmentId = treatmentId,
+                            odontologistId = odontologistId,
+                            motive = motive,
+                            shift = shift,
+                            navController = navController
+                        )
+                    }
+
+                    composable(
+                        route = Routes.SELECT_AVAILABLE_SLOTS,
+                        arguments = listOf(
+                            navArgument("patientId") { type = NavType.LongType },
+                            navArgument("treatmentId") { type = NavType.LongType },
+                            navArgument("odontologistId") { type = NavType.LongType },
+                            navArgument("motive") { type = NavType.StringType },
+                            navArgument("shift") { type = NavType.StringType },
+                            navArgument("boxId") { type = NavType.LongType }
+                        )
+                    ) { backStackEntry ->
+                        val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                        val treatmentId = backStackEntry.arguments?.getLong("treatmentId") ?: 0L
+                        val odontologistId = backStackEntry.arguments?.getLong("odontologistId") ?: 0L
+                        val motive = backStackEntry.arguments?.getString("motive") ?: ""
+                        val shift = backStackEntry.arguments?.getString("shift") ?: "MORNING"
+                        val boxId = backStackEntry.arguments?.getLong("boxId") ?: 0L
+
+                        SelectAvailableSlotsScreen(
+                            navController = navController,
+                            patientId = patientId,
+                            treatmentId = treatmentId,
+                            odontologistId = odontologistId,
+                            motive = motive,
+                            shift = shift,
+                            boxId = boxId
+                        )
+                    }
+
+                    composable(
+                        route = Routes.SELECT_APPOINTMENT_DATETIME,
+                        arguments = listOf(
+                            navArgument("patientId") { type = NavType.LongType },
+                            navArgument("treatmentId") { type = NavType.LongType },
+                            navArgument("odontologistId") { type = NavType.LongType },
+                            navArgument("boxId") { type = NavType.LongType },
+                            navArgument("motive") { type = NavType.StringType }
+                        )
+                    ) { backStackEntry ->
+                        val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
+                        val treatmentId = backStackEntry.arguments?.getLong("treatmentId") ?: 0L
+                        val odontologistId = backStackEntry.arguments?.getLong("odontologistId") ?: 0L
+                        val boxId = backStackEntry.arguments?.getLong("boxId") ?: 0L
+                        val motive = backStackEntry.arguments?.getString("motive") ?: ""
+
+                        SelectAppointmentDateTimeScreen(
+                            navController = navController,
+                            patientId = patientId,
+                            treatmentId = treatmentId,
+                            odontologistId = odontologistId,
+                            boxId = boxId,
+                            motive = motive
+                        )
                     }
                     composable("patientImages/{patientId}") { backStackEntry ->
                         val patientId =

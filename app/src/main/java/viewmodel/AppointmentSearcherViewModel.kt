@@ -37,8 +37,15 @@ class AppointmentSearcherViewModel : ViewModel() {
             isLoading = true
             try {
                 val response = api.getAllAppointments()
+                android.util.Log.d("AppointmentSearcher", "API Response successful: ${response.isSuccessful}")
+
                 if (response.isSuccessful) {
                     val body = response.body() ?: emptyList()
+                    android.util.Log.d("AppointmentSearcher", "Loaded ${body.size} appointments")
+                    body.forEach { appointment ->
+                        android.util.Log.d("AppointmentSearcher", "Appointment: ${appointment.patient?.name} - ${appointment.date}")
+                    }
+
                     allAppointments = body
 
                     // Extraer opciones únicas para los desplegables
@@ -55,8 +62,13 @@ class AppointmentSearcherViewModel : ViewModel() {
                     boxOptions.addAll(body.mapNotNull { it.box?.numBox?.toString() }.distinct().sorted())
 
                     applyAllFilters()
+                } else {
+                    android.util.Log.e("AppointmentSearcher", "API Error: ${response.code()} - ${response.message()}")
                 }
-            } catch (e: Exception) { e.printStackTrace() }
+            } catch (e: Exception) {
+                android.util.Log.e("AppointmentSearcher", "Exception: ${e.message}", e)
+                e.printStackTrace()
+            }
             finally { isLoading = false }
         }
     }
@@ -85,6 +97,48 @@ class AppointmentSearcherViewModel : ViewModel() {
         }
         filteredAppointments.clear()
         filteredAppointments.addAll(filtered)
+    }
+
+    fun deleteAppointment(appointmentId: Long, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = api.deleteAppointment(appointmentId)
+                if (response.isSuccessful) {
+                    android.util.Log.d("AppointmentSearcher", "Appointment deleted: $appointmentId")
+                    onSuccess()
+                } else {
+                    android.util.Log.e("AppointmentSearcher", "Delete error: ${response.code()}")
+                    onError("Error al eliminar la cita")
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("AppointmentSearcher", "Exception: ${e.message}", e)
+                onError("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun updateAppointment(
+        appointmentId: Long,
+        request: com.example.easyteeth.model.AppointmentRequest,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = api.updateAppointment(appointmentId, request)
+                if (response.isSuccessful) {
+                    android.util.Log.d("AppointmentSearcher", "Appointment updated: $appointmentId")
+                    fetchAllAppointments()
+                    onSuccess()
+                } else {
+                    android.util.Log.e("AppointmentSearcher", "Update error: ${response.code()}")
+                    onError("Error al actualizar la cita")
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("AppointmentSearcher", "Exception: ${e.message}", e)
+                onError("Error: ${e.message}")
+            }
+        }
     }
 
     fun clearFilters() {

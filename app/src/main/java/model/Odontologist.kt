@@ -6,6 +6,7 @@ data class Odontologist(
     val lastname1: String,
     val lastname2: String?,
     val dni: String,
-    val licenseNumber: String
+    val licenseNumber: String,
+    val specialities: List<Speciality> = emptyList()
 
 )
