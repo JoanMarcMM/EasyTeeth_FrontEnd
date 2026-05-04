@@ -58,13 +58,13 @@ fun CalendarScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Calendario", fontWeight = FontWeight.Bold, color = Color.White) },
+                title = { Text("Calendario", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
             )
         },
         containerColor = Color.White
@@ -133,33 +133,6 @@ fun CalendarScreen(
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            // 3. BOTONES INFERIORES
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = { navController.navigate(Routes.PATIENTS_APPOINTMENT) },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
-                ) {
-                    Text("Agendar cita", color = Color.White, fontWeight = FontWeight.Bold)
-                }
-
-                OutlinedButton(
-                    onClick = {
-                        // Asegúrate de añadir esta ruta en tu NavHost
-                        navController.navigate("appointment_searcher")
-                    },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(2.dp, Color(0xFF1B4B7C))
-                ) {
-                    Text("Buscar Cita", color = Color(0xFF1B4B7C), fontWeight = FontWeight.Bold)
-                }
-            }
         }
     }
 }

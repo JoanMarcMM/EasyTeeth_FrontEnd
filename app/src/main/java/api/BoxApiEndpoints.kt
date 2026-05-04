@@ -1,4 +1,4 @@
-package com.example.easyteeth.api
+package api
 
 import com.example.easyteeth.model.Box
 import com.example.easyteeth.model.StockBox

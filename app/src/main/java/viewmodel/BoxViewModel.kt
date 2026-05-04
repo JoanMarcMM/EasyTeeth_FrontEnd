@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import api.RetrofitClient
-import com.example.easyteeth.api.BoxApiEndpoints
+import api.BoxApiEndpoints
 import com.example.easyteeth.model.Box
 import com.example.easyteeth.model.ItemReductionRequest
 import com.example.easyteeth.model.StockBox

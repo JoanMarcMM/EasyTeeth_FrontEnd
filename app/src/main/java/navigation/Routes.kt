@@ -2,7 +2,7 @@ package navigation
 
 import com.example.easyteeth.model.Appointment
 
-object Routes {
+object  Routes {
     const val HOME = "home"
     const val LOGIN = "login"
     const val PROFILE = "profile"
@@ -10,6 +10,9 @@ object Routes {
     const val SHOW_PATIENTS = "show_patients"
 
     const val APPOINTMENT_SEARCHER = "appointment_searcher"
+    const val DELETE_APPOINTMENT = "delete_appointment"
+
+    const val UPDATE_APPOINTMENT = "update_appointment"
 
     const val CALENDAR = "calendar"
     const val PATIENTS_APPOINTMENT = "patients_appointment"
@@ -34,6 +37,24 @@ object Routes {
     const val PATIENT_IMAGES = "patientImages"
     const val PATIENT_DOCUMENTS = "patientDocuments"
     const val TOOTH_DETAIL_SCREEN = "toothDetail/{patientId}/{toothId}"
+    const val ADD_APPOINTMENT_DETAILS = "add_appointment_details/{patientId}"
+    fun addAppointmentDetails(id: Long) = "add_appointment_details/$id"
+
+    const val SELECT_APPOINTMENT_SHIFT = "select_appointment_shift/{patientId}/{treatmentId}/{odontologistId}/{motive}"
+    fun selectAppointmentShift(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String) =
+        "select_appointment_shift/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}"
+
+    const val SELECT_BOXES = "select_boxes/{patientId}/{treatmentId}/{odontologistId}/{motive}/{shift}"
+    fun selectBoxes(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String) =
+        "select_boxes/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}/$shift"
+
+    const val SELECT_AVAILABLE_SLOTS = "select_available_slots/{patientId}/{treatmentId}/{odontologistId}/{motive}/{shift}/{boxId}"
+    fun selectAvailableSlots(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String, boxId: Long) =
+        "select_available_slots/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}/$shift/$boxId"
+
+    const val SELECT_APPOINTMENT_DATETIME = "select_appointment_datetime/{patientId}/{treatmentId}/{odontologistId}/{boxId}/{motive}"
+    fun selectAppointmentDateTime(patientId: Long, treatmentId: Long, odontologistId: Long, boxId: Long, motive: String) =
+        "select_appointment_datetime/$patientId/$treatmentId/$odontologistId/$boxId/${motive.replace("/", "_").replace(" ", "+")}"
 
     const val RADIOGRAPHYS = "radiographys"
     const val FIRST_APPOINTMENT = "first_appointment"
