@@ -1,8 +1,10 @@
 package com.example.easyteeth.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -88,10 +90,12 @@ fun PatientSelectorScreen(
                         contentPadding = PaddingValues(bottom = 20.dp)
                     ) {
                         items(viewModel.filteredPatients) { patient ->
-                            PatientCard(patient = patient) {
+                            PatientCard(patient = patient, viewModel = viewModel) {
                                 // Al hacer clic, navegamos a la pantalla de detalles de la cita
                                 // pasando el ID del paciente seleccionado
-                                navController.navigate("add_appointment_details/${patient.id}")
+                                patient.id?.let { patientId ->
+                                    navController.navigate("add_appointment_details/$patientId")
+                                }
                             }
                         }
                     }
@@ -103,7 +107,7 @@ fun PatientSelectorScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PatientCard(patient: Patient, onClick: () -> Unit) {
+fun PatientCard(patient: Patient, viewModel: PatientSelectorViewModel, onClick: () -> Unit) {
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
@@ -117,12 +121,37 @@ fun PatientCard(patient: Patient, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "${patient.name} ${patient.lastname1} ${patient.lastname2}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "${patient.name} ${patient.lastname1} ${patient.lastname2}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    // Colored circles for allergies and infectious disease
+                    if (viewModel.hasInfectiousDisease(patient.id)) {
+                        Box(
+                            modifier = Modifier
+                                .size(12.dp)
+                                .background(color = Color(0xFFD32F2F), shape = CircleShape)
+                        )
+                    }
+                    
+                    if (viewModel.hasAllergie(patient.id)) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(12.dp)
+                                .background(color = Color(0xFF4CAF50), shape = CircleShape)
+                        )
+                    }
+                }
+                
                 Spacer(modifier = Modifier.height(4.dp))
                 Row {
                     Badge(containerColor = Color(0xFFE3F2FD), contentColor = Color(0xFF1E70EB)) {
