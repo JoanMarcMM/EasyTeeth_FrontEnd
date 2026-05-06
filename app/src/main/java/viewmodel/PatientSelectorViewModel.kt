@@ -5,15 +5,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import api.RetrofitClient
 import api.*
+import com.example.easyteeth.api.BackgroundApiEndpoints
 import com.example.easyteeth.api.PatientApiEndpoints
+import com.example.easyteeth.model.Background
 import kotlinx.coroutines.launch
 import com.example.easyteeth.model.Patient
 
 class PatientSelectorViewModel : ViewModel() {
-    private val api = RetrofitClient.instance.create(PatientApiEndpoints::class.java)
+    private val patientApi = RetrofitClient.instance.create(PatientApiEndpoints::class.java)
+    private val backgroundApi = RetrofitClient.instance.create(BackgroundApiEndpoints::class.java)
 
     private var allPatients = listOf<Patient>()
     var filteredPatients = mutableStateListOf<Patient>()
+    
+    // Map to store background data for each patient - made reactive
+    var patientBackgrounds = mutableStateMapOf<Long, Background>()
 
     var isLoading by mutableStateOf(false)
     var searchQuery by mutableStateOf("")
@@ -26,10 +32,13 @@ class PatientSelectorViewModel : ViewModel() {
         viewModelScope.launch {
             isLoading = true
             try {
-                val response = api.getAllPatients()
+                val response = patientApi.getAllPatients()
                 if (response.isSuccessful) {
                     allPatients = response.body() ?: emptyList()
                     applyFilter("") // Inicializa la lista
+                    
+                    // Fetch background data for each patient
+                    fetchBackgroundsForPatients(allPatients)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -37,6 +46,39 @@ class PatientSelectorViewModel : ViewModel() {
                 isLoading = false
             }
         }
+    }
+
+    private fun fetchBackgroundsForPatients(patients: List<Patient>) {
+        viewModelScope.launch {
+            for (patient in patients) {
+                patient.id?.let { patientId ->
+                    try {
+                        val response = backgroundApi.getBackgroundsByPatientId(patientId)
+                        if (response.isSuccessful) {
+                            val backgrounds = response.body() ?: emptyList()
+                            if (backgrounds.isNotEmpty()) {
+                                // Store the first background for this patient
+                                patientBackgrounds[patientId] = backgrounds[0]
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
+    fun getBackgroundForPatient(patientId: Long): Background? {
+        return patientBackgrounds[patientId]
+    }
+
+    fun hasAllergie(patientId: Long?): Boolean {
+        return patientId?.let { patientBackgrounds[it]?.importantAllergie ?: false } ?: false
+    }
+
+    fun hasInfectiousDisease(patientId: Long?): Boolean {
+        return patientId?.let { patientBackgrounds[it]?.infectiousDisease ?: false } ?: false
     }
 
     fun applyFilter(query: String) {
