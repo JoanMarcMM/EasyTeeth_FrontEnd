@@ -52,15 +52,31 @@ fun UpdateAppointmentScreen(
         viewModel.fetchAllAppointments()
     }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Actualizar Cita", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        text = "Actualitzar cita",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, "Tornar")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
         }
     ) { innerPadding ->
@@ -77,7 +93,7 @@ fun UpdateAppointmentScreen(
                     viewModel.filterPatient = it
                     viewModel.applyAllFilters()
                 },
-                label = { Text("Buscar por paciente") },
+                label = { Text("Buscar per pacient") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -106,11 +122,11 @@ fun UpdateAppointmentScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Filtros avanzados", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text("Filtres avançats", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 IconButton(onClick = { showFilters = !showFilters }) {
                     Icon(
                         imageVector = if (showFilters) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                        contentDescription = "Filtros"
+                        contentDescription = "Filtres"
                     )
                 }
             }
@@ -130,7 +146,7 @@ fun UpdateAppointmentScreen(
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else if (viewModel.filteredAppointments.isEmpty()) {
                 Text(
-                    "No se encontraron citas",
+                    "No s'han trobat cites",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color.Gray
                 )
@@ -189,7 +205,7 @@ fun UpdateAppointmentScreen(
                 ) {
                     // Título
                     Text(
-                        "Actualizar Cita",
+                        "Actualitzar Cita",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp)
@@ -197,7 +213,7 @@ fun UpdateAppointmentScreen(
 
                     // Paciente (No editable)
                     Text(
-                        "Paciente",
+                        "Pacient",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Gray
@@ -212,7 +228,7 @@ fun UpdateAppointmentScreen(
 
                     // FECHA
                     Text(
-                        "Fecha",
+                        "Data",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Gray
@@ -300,7 +316,7 @@ fun UpdateAppointmentScreen(
                         .sortedBy { it.second }
 
                     Text(
-                        "Tratamiento",
+                        "Tractament",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Gray
@@ -313,7 +329,7 @@ fun UpdateAppointmentScreen(
                             value = treatmentList.find { it.first == editTreatmentId }?.second ?: "",
                             onValueChange = {},
                             readOnly = true,
-                            label = { Text("Seleccionar Tratamiento") },
+                            label = { Text("Seleccionar Tractament") },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTreatment) },
                             modifier = Modifier
                                 .menuAnchor()
@@ -346,7 +362,7 @@ fun UpdateAppointmentScreen(
                         .sortedBy { it.second }
 
                     Text(
-                        "Odontólogo",
+                        "Odontòleg",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Gray
@@ -359,7 +375,7 @@ fun UpdateAppointmentScreen(
                             value = odontologistList.find { it.first == editOdontologistId }?.second ?: "",
                             onValueChange = {},
                             readOnly = true,
-                            label = { Text("Seleccionar Odontólogo") },
+                            label = { Text("Seleccionar Odontòleg") },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedOdontologist) },
                             modifier = Modifier
                                 .menuAnchor()
@@ -386,7 +402,7 @@ fun UpdateAppointmentScreen(
 
                     // MOTIVE
                     Text(
-                        "Motivo de la cita",
+                        "Motiu de la cita",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Gray
@@ -521,7 +537,7 @@ fun UpdateAppointmentRow(
                     color = Color.DarkGray
                 )
                 Text(
-                    text = appointment.treatment?.name ?: "Tratamiento N/A",
+                    text = appointment.treatment?.name ?: "Tractament N/A",
                     fontSize = 11.sp,
                     color = Color(0xFF1E70EB),
                     fontWeight = FontWeight.Medium
@@ -530,7 +546,7 @@ fun UpdateAppointmentRow(
             IconButton(onClick = onUpdateClick) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Actualizar",
+                    contentDescription = "Actualitzar",
                     tint = Color(0xFF1E70EB)
                 )
             }

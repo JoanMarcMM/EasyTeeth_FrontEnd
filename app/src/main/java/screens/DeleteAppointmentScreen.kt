@@ -67,17 +67,17 @@ fun DeleteAppointmentScreen(
                 showConfirmDelete = false
                 appointmentToDelete = null
             },
-            title = { Text("Confirmar eliminación", fontWeight = FontWeight.Bold) },
+            title = { Text("Confirmar eliminació", fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("¿Estás seguro de que deseas eliminar esta cita?")
+                    Text("¿Estás segur de que desitges eliminar aquesta cita?")
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        "Paciente: ${appointmentToDelete?.patient?.name} ${appointmentToDelete?.patient?.lastname1}",
+                        "Pacient: ${appointmentToDelete?.patient?.name} ${appointmentToDelete?.patient?.lastname1}",
                         fontSize = 13.sp
                     )
                     Text(
-                        "Fecha: ${appointmentToDelete?.date?.split("T")?.get(0)}",
+                        "Data: ${appointmentToDelete?.date?.split("T")?.get(0)}",
                         fontSize = 13.sp
                     )
                 }
@@ -90,6 +90,7 @@ fun DeleteAppointmentScreen(
                                 onSuccess = {
                                     showConfirmDelete = false
                                     appointmentToDelete = null
+                                    
                                     viewModel.applyAllFilters()
                                 },
                                 onError = {
@@ -116,19 +117,33 @@ fun DeleteAppointmentScreen(
         )
     }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Eliminar Cita", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        text = "Cites",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -150,7 +165,7 @@ fun DeleteAppointmentScreen(
                         viewModel.filterPatient = it
                         viewModel.applyAllFilters()
                     },
-                    label = { Text("Nombre del paciente") },
+                    label = { Text("Nom del pacient") },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
                     leadingIcon = { Icon(Icons.Default.Search, null) },
@@ -167,7 +182,7 @@ fun DeleteAppointmentScreen(
                 ) {
                     Icon(
                         imageVector = if (showFilters) Icons.Default.KeyboardArrowUp else Icons.Default.List,
-                        contentDescription = "Filtros"
+                        contentDescription = "Filtres"
                     )
                 }
             }
@@ -181,7 +196,7 @@ fun DeleteAppointmentScreen(
                         .padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Text("Filtros avanzados", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
+                    Text("Filtres avançats", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
 
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(
@@ -193,7 +208,7 @@ fun DeleteAppointmentScreen(
                                 contentColor = if(viewModel.filterDate.isEmpty()) Color.Gray else Color(0xFF1E70EB)
                             )
                         ) {
-                            Text(if(viewModel.filterDate.isEmpty()) "Elegir Fecha" else viewModel.filterDate, fontSize = 12.sp)
+                            Text(if(viewModel.filterDate.isEmpty()) "Escollir Data" else viewModel.filterDate, fontSize = 12.sp)
                         }
 
                         OutlinedTextField(
@@ -220,7 +235,7 @@ fun DeleteAppointmentScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = Color(0xFF1E70EB))
                 } else if (viewModel.filteredAppointments.isEmpty()) {
                     Text(
-                        "No se encontraron citas con estos filtros",
+                        "No s'han trobat cites amb aquestes dates",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Gray,
                         fontSize = 14.sp
@@ -291,12 +306,12 @@ fun DeleteAppointmentRow(
                     fontSize = 14.sp
                 )
                 Text(
-                    text = appointment.treatment?.name ?: "Tratamiento",
+                    text = appointment.treatment?.name ?: "Tractament",
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
                 Text(
-                    text = appointment.odontologist?.let { "${it.name} ${it.lastname1}" } ?: "Odontólogo",
+                    text = appointment.odontologist?.let { "${it.name} ${it.lastname1}" } ?: "Odontòleg",
                     fontSize = 12.sp,
                     color = Color.Gray
                 )

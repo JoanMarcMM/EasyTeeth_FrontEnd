@@ -43,19 +43,33 @@ fun SelectAppointmentDateTimeScreen(
     var expandedOdontologist by remember { mutableStateOf(false) }
     var expandedBox by remember { mutableStateOf(false) }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Agendar Cita", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+                title = {
+                    Text(
+                        text = "Agendar Cita",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -66,13 +80,13 @@ fun SelectAppointmentDateTimeScreen(
             contentPadding = PaddingValues(bottom = 100.dp)
         ) {
             item {
-                Text("Paso 3: Detalles de la Cita", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text("Pas 3: Detalls de la Cita", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
 
             // FECHA
             item {
                 Column {
-                    Text("Fecha:", fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    Text("Data:", fontWeight = FontWeight.SemiBold, color = Color.Black)
                     OutlinedButton(
                         onClick = { showDatePicker = !showDatePicker },
                         modifier = Modifier
@@ -83,7 +97,7 @@ fun SelectAppointmentDateTimeScreen(
                         Text(
                             viewModel.selectedDateTime?.let {
                                 SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it)
-                            } ?: "Selecciona fecha",
+                            } ?: "Selecciona una data",
                             color = if (viewModel.selectedDateTime != null) Color.Black else Color.Gray
                         )
                     }
@@ -126,9 +140,9 @@ fun SelectAppointmentDateTimeScreen(
             // ODONTÓLOGO
             item {
                 Column {
-                    Text("Odontólogo:", fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    Text("Odontòleg:", fontWeight = FontWeight.SemiBold, color = Color.Black)
                     Text(
-                        "Especializados en este tratamiento",
+                        "Especialitzats en aquest tractament",
                         fontSize = 11.sp,
                         color = Color.Gray,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -158,7 +172,7 @@ fun SelectAppointmentDateTimeScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    "Sin odontólogos disponibles",
+                                    "Sense odontòlegs disponibles",
                                     color = Color.Red,
                                     fontSize = 13.sp
                                 )
@@ -181,7 +195,7 @@ fun SelectAppointmentDateTimeScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        viewModel.selectedOdontologist?.name ?: "Selecciona odontólogo (${viewModel.availableOdontologists.size})",
+                                        viewModel.selectedOdontologist?.name ?: "Selecciona odontòleg (${viewModel.availableOdontologists.size})",
                                         color = if (viewModel.selectedOdontologist != null) Color.Black else Color.Gray
                                     )
                                     Icon(
@@ -214,7 +228,7 @@ fun SelectAppointmentDateTimeScreen(
             // CAJA
             item {
                 Column {
-                    Text("Caja:", fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    Text("Box:", fontWeight = FontWeight.SemiBold, color = Color.Black)
                     Box {
                         OutlinedButton(
                             onClick = { expandedBox = !expandedBox },
@@ -233,7 +247,7 @@ fun SelectAppointmentDateTimeScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    viewModel.selectedBox?.let { "Caja ${it.numBox}" } ?: "Selecciona caja",
+                                    viewModel.selectedBox?.let { "Caja ${it.numBox}" } ?: "Selecciona el box:",
                                     color = if (viewModel.selectedBox != null) Color.Black else Color.Gray
                                 )
                                 Icon(
@@ -250,7 +264,7 @@ fun SelectAppointmentDateTimeScreen(
                         ) {
                             viewModel.availableBoxes.forEach { box ->
                                 DropdownMenuItem(
-                                    text = { Text("Caja ${box.numBox}") },
+                                    text = { Text("Box ${box.numBox}") },
                                     onClick = {
                                         viewModel.selectedBox = box
                                         expandedBox = false

@@ -61,10 +61,10 @@ fun SelectAvailableSlotsScreen(
             title = { Text("Confirmar Cita", fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("¿Deseas confirmar esta cita?", modifier = Modifier.padding(bottom = 8.dp))
+                    Text("¿Vols confirmar aquesta cita?", modifier = Modifier.padding(bottom = 8.dp))
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        "Fecha: ${formatDate(viewModel.selectedDate ?: java.time.LocalDate.now())}",
+                        "Data: ${formatDate(viewModel.selectedDate ?: java.time.LocalDate.now())}",
                         fontSize = 14.sp
                     )
                     Text(
@@ -72,7 +72,7 @@ fun SelectAvailableSlotsScreen(
                         fontSize = 14.sp
                     )
                     Text(
-                        "Duración: 55 minutos",
+                        "Duració: 55 minuts",
                         fontSize = 14.sp
                     )
                 }
@@ -120,19 +120,33 @@ fun SelectAvailableSlotsScreen(
         )
     }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Seleccionar Disponibilidad", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+                title = {
+                    Text(
+                        text = "Seleccionar disponibilitat",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         when {
             viewModel.isLoadingSlots || viewModel.isLoadingBoxes -> {
@@ -145,7 +159,7 @@ fun SelectAvailableSlotsScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(color = Color(0xFF1E70EB))
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Cargando disponibilidad...", color = Color.Gray)
+                        Text("Cargant disponibilitat...", color = Color.Gray)
                     }
                 }
             }
@@ -168,7 +182,7 @@ fun SelectAvailableSlotsScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            viewModel.errorMessage ?: "Error desconocido",
+                            viewModel.errorMessage ?: "Error desconegut",
                             textAlign = TextAlign.Center,
                             color = Color.Red,
                             fontSize = 16.sp
@@ -193,20 +207,20 @@ fun SelectAvailableSlotsScreen(
                     ) {
                         Icon(
                             Icons.Default.EventBusy,
-                            contentDescription = "No hay disponibilidad",
+                            contentDescription = "No hi ha disponibilitat",
                             tint = Color.Gray,
                             modifier = Modifier.size(48.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            "Sin disponibilidad",
+                            "Sense disponibilitat",
                             textAlign = TextAlign.Center,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            "Este odontólogo no tiene disponibilidad en los próximos 30 días",
+                            "Aquest odontoleg no te disponibilitat en els següents 30 díes",
                             textAlign = TextAlign.Center,
                             color = Color.Gray,
                             fontSize = 14.sp
@@ -224,7 +238,7 @@ fun SelectAvailableSlotsScreen(
                     contentPadding = PaddingValues(bottom = 100.dp)
                 ) {
                     item {
-                        Text("Próxima disponibilidad", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Próxima disponibilitat", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
 
                     // Mostrar día disponible
@@ -269,7 +283,7 @@ fun SelectAvailableSlotsScreen(
                                     if (viewModel.selectedDate == daySlots.date) {
                                         Icon(
                                             Icons.Default.CheckCircle,
-                                            contentDescription = "Seleccionado",
+                                            contentDescription = "Seleccionat",
                                             tint = Color(0xFF1E70EB)
                                         )
                                     }
@@ -279,7 +293,7 @@ fun SelectAvailableSlotsScreen(
 
                                 // Mostrar horarios disponibles
                                 Text(
-                                    "Horarios disponibles:",
+                                    "Horaris disponibles:",
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 14.sp,
                                     modifier = Modifier.padding(bottom = 8.dp)

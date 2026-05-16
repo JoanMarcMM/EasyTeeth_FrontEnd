@@ -43,23 +43,33 @@ fun AddAppointmentDetailsScreen(
     var expandedPathology by remember { mutableStateOf(false) }
     var expandedOdontologist by remember { mutableStateOf(false) }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("Crear Cita", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(
+                        text = "Crear Cita",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
                 },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
+                    containerColor = darkBlue
                 )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -99,7 +109,7 @@ fun AddAppointmentDetailsScreen(
 
             // Paso 1: Seleccionar Patología
             Text(
-                text = "Paso 1: Selecciona Patología",
+                text = "Pas 1: Selecciona la patología",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -156,7 +166,7 @@ fun AddAppointmentDetailsScreen(
                 ) {
                     if (viewModel.patientPathologies.isEmpty()) {
                         DropdownMenuItem(
-                            text = { Text("Sin patologías registradas", color = Color.Gray) },
+                            text = { Text("Sense patologías registrades", color = Color.Gray) },
                             onClick = {}
                         )
                     } else {
@@ -179,7 +189,7 @@ fun AddAppointmentDetailsScreen(
             // Paso 2: Seleccionar Tratamiento
             if (viewModel.selectedPathology != null) {
                 Text(
-                    text = "Paso 2: Selecciona Tratamiento",
+                    text = "Pas 2: Selecciona Tractament",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
@@ -187,7 +197,7 @@ fun AddAppointmentDetailsScreen(
                 )
 
                 Text(
-                    text = "Tratamientos disponibles para ${viewModel.selectedPathology?.name}: ${viewModel.filteredTreatments.size}",
+                    text = "Tractaments disponibles per ${viewModel.selectedPathology?.name}: ${viewModel.filteredTreatments.size}",
                     fontSize = 12.sp,
                     color = Color.Gray,
                     modifier = Modifier.padding(bottom = 12.dp)
@@ -214,7 +224,7 @@ fun AddAppointmentDetailsScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                "No hay tratamientos disponibles para esta patología",
+                                "No hi ha tractaments disponibles per aquesta patología",
                                 color = Color.Gray,
                                 fontSize = 14.sp,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -241,7 +251,7 @@ fun AddAppointmentDetailsScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
-                        text = "Paso 3: Selecciona Odontólogo",
+                        text = "Pas 3: Selecciona Odontòleg",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -277,7 +287,7 @@ fun AddAppointmentDetailsScreen(
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    "No hay odontólogos disponibles para este tratamiento",
+                                    "No hi ha odontòlegs disponibles",
                                     color = Color.Gray,
                                     fontSize = 14.sp,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -314,7 +324,7 @@ fun AddAppointmentDetailsScreen(
                                 ) {
                                     Text(
                                         text = viewModel.selectedOdontologist?.name
-                                            ?: "Selecciona odontólogo (${viewModel.availableOdontologists.size})",
+                                            ?: "Selecciona odontòleg (${viewModel.availableOdontologists.size})",
                                         color = if (viewModel.selectedOdontologist != null)
                                             Color.Black else Color.Gray,
                                         fontSize = 14.sp
@@ -352,7 +362,7 @@ fun AddAppointmentDetailsScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
-                        val motive = "Tratamiento: ${viewModel.selectedTreatment?.name}, Odontólogo: ${viewModel.selectedOdontologist?.name}"
+                        val motive = "Tractament: ${viewModel.selectedTreatment?.name}, Odontòleg: ${viewModel.selectedOdontologist?.name}"
                         navController.navigate(
                             Routes.selectAppointmentShift(
                                 patientId = viewModel.patientId ?: 0L,
@@ -372,7 +382,7 @@ fun AddAppointmentDetailsScreen(
                         disabledContainerColor = Color.LightGray
                     )
                 ) {
-                    Text("Siguiente", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("Següent", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
