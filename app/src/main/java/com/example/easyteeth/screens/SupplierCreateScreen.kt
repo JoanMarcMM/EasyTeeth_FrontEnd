@@ -48,10 +48,10 @@ fun SupplierCreateScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Add New Supplier", color = Color.White, fontWeight = FontWeight.Bold) },
+                title = { Text("Afegir nou proveïdor", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Enrere", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
@@ -71,7 +71,7 @@ fun SupplierCreateScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Add a New Supplier",
+                    text = "Afegir un nou proveïdor",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -79,7 +79,7 @@ fun SupplierCreateScreen(
 
                 // Name field
                 Text(
-                    text = "Supplier Name *",
+                    text = "Nom del proveïdor *",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Gray
@@ -89,12 +89,12 @@ fun SupplierCreateScreen(
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    placeholder = { Text("Enter supplier name") }
+                    placeholder = { Text("Introduïr nom del proveïdor") }
                 )
 
                 // Email field
                 Text(
-                    text = "Email *",
+                    text = "Correu electrònic *",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Gray
@@ -104,13 +104,13 @@ fun SupplierCreateScreen(
                     onValueChange = { email = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    placeholder = { Text("Enter email") },
+                    placeholder = { Text("Introduïr correu electrònic") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
                 // Phone field
                 Text(
-                    text = "Phone",
+                    text = "Telèfon",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Gray
@@ -120,7 +120,7 @@ fun SupplierCreateScreen(
                     onValueChange = { phone = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    placeholder = { Text("Enter phone number") },
+                    placeholder = { Text("Introduïr número de telèfon") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
                 )
 
@@ -174,7 +174,7 @@ fun SupplierCreateScreen(
                         enabled = !isLoading && name.isNotBlank() && email.isNotBlank(),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Create Supplier")
+                        Text("Crear proveïdor")
                     }
 
                     OutlinedButton(
@@ -185,7 +185,7 @@ fun SupplierCreateScreen(
                         enabled = !isLoading,
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Cancel")
+                        Text("Cancel·lar")
                     }
                 }
             }
