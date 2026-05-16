@@ -59,24 +59,33 @@ fun AppointmentSearcherScreen(
         }
     }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Buscador de Citas", fontWeight = FontWeight.Bold, color = Color.White) },
+                title = {
+                    Text(
+                        text = "Buscador de cites",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                actions = {
-                    IconButton(onClick = { viewModel.clearFilters() }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Limpiar Filtros", tint = Color.Red)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -98,7 +107,7 @@ fun AppointmentSearcherScreen(
                         viewModel.filterPatient = it
                         viewModel.applyAllFilters()
                     },
-                    label = { Text("Nombre del paciente") },
+                    label = { Text("Nom del pacient") },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
                     leadingIcon = { Icon(Icons.Default.Search, null) },
@@ -116,7 +125,7 @@ fun AppointmentSearcherScreen(
                 ) {
                     Icon(
                         imageVector = if (showFilters) Icons.Default.KeyboardArrowUp else Icons.Default.List,
-                        contentDescription = "Filtros"
+                        contentDescription = "Filtres"
                     )
                 }
             }
@@ -130,7 +139,7 @@ fun AppointmentSearcherScreen(
                         .padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Text("Filtros avanzados", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
+                    Text("Filtres avançats", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
 
                     // Fecha y Hora
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -143,7 +152,7 @@ fun AppointmentSearcherScreen(
                                 contentColor = if(viewModel.filterDate.isEmpty()) Color.Gray else Color(0xFF1E70EB)
                             )
                         ) {
-                            Text(if(viewModel.filterDate.isEmpty()) "Elegir Fecha" else viewModel.filterDate, fontSize = 12.sp)
+                            Text(if(viewModel.filterDate.isEmpty()) "Escollir data" else viewModel.filterDate, fontSize = 12.sp)
                         }
 
                         OutlinedTextField(
@@ -163,7 +172,7 @@ fun AppointmentSearcherScreen(
                     // Tratamiento y Odontólogo
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         MyDropdownMenu(
-                            label = "Tratamiento",
+                            label = "Tractament",
                             selectedOption = viewModel.filterTreatment,
                             options = viewModel.treatmentOptions,
                             expanded = expandedTreatment,
@@ -176,7 +185,7 @@ fun AppointmentSearcherScreen(
                         )
 
                         MyDropdownMenu(
-                            label = "Odontólogo",
+                            label = "Odontòleg",
                             selectedOption = viewModel.filterOdontologist,
                             options = viewModel.odontologistOptions,
                             expanded = expandedOdonto,
@@ -213,7 +222,7 @@ fun AppointmentSearcherScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = Color(0xFF1E70EB))
                 } else if (viewModel.filteredAppointments.isEmpty()) {
                     Text(
-                        "No se encontraron citas con estos filtros",
+                        "No s'han trobat cites amb aquests parametres",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Gray,
                         fontSize = 14.sp

@@ -24,21 +24,33 @@ fun ShiftSelectionScreen(
     motive: String,
     navController: NavController
 ) {
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("Seleccionar Turno", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(
+                        text = "Seleccionar torn",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
                 },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -49,7 +61,7 @@ fun ShiftSelectionScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "¿En qué turno deseas agendar?",
+                "¿En quin horari vols fer la cita?",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 32.dp)
@@ -75,7 +87,7 @@ fun ShiftSelectionScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "MAÑANA",
+                        "MATÍ",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF2E7D32)
@@ -111,7 +123,7 @@ fun ShiftSelectionScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "TARDE",
+                        "TARDA",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFE65100)

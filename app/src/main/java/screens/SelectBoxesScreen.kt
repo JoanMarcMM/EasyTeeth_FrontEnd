@@ -38,19 +38,33 @@ fun SelectBoxesScreen(
         viewModel.initialize(patientId, treatmentId, odontologistId, motive, shift)
     }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Seleccionar Consultorio", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+                title = {
+                    Text(
+                        text = "Seleccionar Box",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         when {
             viewModel.isLoadingBoxes -> {
@@ -76,7 +90,7 @@ fun SelectBoxesScreen(
                     ) {
                         Icon(
                             Icons.Default.EventBusy,
-                            contentDescription = "No hay consultorios",
+                            contentDescription = "No hi ha boxes",
                             tint = Color.Gray,
                             modifier = Modifier.size(48.dp)
                         )
@@ -101,7 +115,7 @@ fun SelectBoxesScreen(
                 ) {
                     item {
                         Text(
-                            "Selecciona un consultorio",
+                            "Selecciona un box",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(vertical = 8.dp)
@@ -154,7 +168,7 @@ fun SelectBoxesScreen(
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
-                                        "Consultorio",
+                                        "Box",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.SemiBold
                                     )
