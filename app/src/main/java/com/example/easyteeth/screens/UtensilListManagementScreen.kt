@@ -44,10 +44,10 @@ fun UtensilListManagementScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Utensilis", color = Color.White, fontWeight = FontWeight.Bold) },
+                title = { Text("Estris", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Enrere", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
@@ -87,7 +87,7 @@ fun UtensilListManagementScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No utensils found",
+                            text = "No hi ha estris disponibles",
                             fontSize = 16.sp,
                             color = Color.Gray
                         )
@@ -151,24 +151,24 @@ fun UtensilListItem(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Brand: ${utensil.brand}",
+                        text = "Marca: ${utensil.brand}",
                         fontSize = 14.sp,
                         color = Color.Gray
                     )
                     Text(
-                        text = "Model: ${utensil.model}",
+                        text = "Tipus: ${utensil.model}",
                         fontSize = 14.sp,
                         color = Color.Gray
                     )
                     Text(
-                        text = "Price: €${utensil.price}",
+                        text = "Preu: €${utensil.price}",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF1976D2)
                     )
                     if (!utensil.supplier?.name.isNullOrEmpty()) {
                         Text(
-                            text = "Supplier: ${utensil.supplier?.name}",
+                            text = "Proveïdor: ${utensil.supplier?.name}",
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
@@ -186,7 +186,7 @@ fun UtensilListItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit"
+                        contentDescription = "Editar"
                     )
                 }
             }

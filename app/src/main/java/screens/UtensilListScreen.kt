@@ -34,10 +34,10 @@ fun UtensilListScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Utensils", fontWeight = FontWeight.Bold, color = Color.White) },
+                title = { Text("Estris", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Enrere", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
@@ -50,7 +50,7 @@ fun UtensilListScreen(navController: NavController) {
                 contentColor = Color.White,
                 shape = RoundedCornerShape(50)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Crear orden")
+                Icon(Icons.Default.Add, contentDescription = "Crear comanda")
             }
         },
         containerColor = Color.White
@@ -80,7 +80,7 @@ fun UtensilListScreen(navController: NavController) {
                     }
                     utensils.isEmpty() -> {
                         Text(
-                            "No utensils available",
+                            "No hi ha estris disponibles",
                             modifier = Modifier.align(Alignment.Center),
                             color = Color.Gray
                         )
@@ -124,7 +124,7 @@ fun UtensilReadOnlyCard(utensil: Utensil) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Brand",
+                        text = "Marca",
                         fontSize = 11.sp,
                         color = Color.Gray,
                         fontWeight = FontWeight.Medium
@@ -138,7 +138,7 @@ fun UtensilReadOnlyCard(utensil: Utensil) {
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Model",
+                        text = "Tipus",
                         fontSize = 11.sp,
                         color = Color.Gray,
                         fontWeight = FontWeight.Medium
