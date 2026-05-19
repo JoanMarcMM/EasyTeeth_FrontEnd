@@ -41,6 +41,7 @@ import api.RetrofitClient
 import com.example.easyteeth.model.Background
 import com.example.easyteeth.model.BackgroundRequest
 import kotlinx.coroutines.launch
+import utils.Validators
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -244,6 +245,32 @@ fun UpdateBackgroundScreen(
                                 val idToUpdate = backgroundId
                                 if (idToUpdate == null) {
                                     errorMessage = "No hi ha background per actualitzar"
+                                    return@Button
+                                }
+
+                                // Validate medical fields
+                                if (!Validators.isValidMedicalField(familyHistory)) {
+                                    errorMessage = "L'historial familiar no és vàlid (màxim 2000 caràcters)"
+                                    return@Button
+                                }
+
+                                if (!Validators.isValidMedicalField(healthState)) {
+                                    errorMessage = "L'estat de salut no és vàlid (màxim 2000 caràcters)"
+                                    return@Button
+                                }
+
+                                if (!Validators.isValidMedicalField(lifeHabits)) {
+                                    errorMessage = "Els hàbits de vida no són vàlids (màxim 2000 caràcters)"
+                                    return@Button
+                                }
+
+                                if (!Validators.isValidMedicalField(allergies)) {
+                                    errorMessage = "Les al·lèrgies no són vàlides (màxim 2000 caràcters)"
+                                    return@Button
+                                }
+
+                                if (!Validators.isValidMedicalField(medication)) {
+                                    errorMessage = "La medicació no és vàlida (màxim 2000 caràcters)"
                                     return@Button
                                 }
 

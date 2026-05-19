@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.example.easyteeth.R // Asegúrate de que el package sea el correcto
 import navigation.Routes
 import viewmodel.LoginViewModel
+import utils.Validators
 
 @Composable
 fun LoginScreen(
@@ -166,6 +167,16 @@ fun LoginScreen(
             // Botón Iniciar Sesión
             Button(
                 onClick = {
+                    // Validate username and password are not empty
+                    if (!Validators.isValidTextField(viewModel.username, minLength = 3)) {
+                        viewModel.errorMessage = "El nom d'usuari ha de tenir almenys 3 caràcters"
+                        return@Button
+                    }
+                    if (!Validators.isValidTextField(viewModel.password, minLength = 1)) {
+                        viewModel.errorMessage = "La contrasenya no pot estar buida"
+                        return@Button
+                    }
+
                     viewModel.onLoginClick { user: com.example.easyteeth.model.User ->
                         UserStateHolder.setUser(user)
                         navController.navigate(Routes.HOME) {
