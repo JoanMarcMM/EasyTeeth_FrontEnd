@@ -10,5 +10,6 @@ data class PatientRequest(
     val email: String? = null,
     val billingAddress: String? = null,
     val bankAccountNumber: String? = null,
-    val taxIdentificationNumber: String? = null
+    val taxIdentificationNumber: String? = null,
+    val isContagious: Boolean = false
 )
