@@ -69,7 +69,7 @@ fun SelectAvailableSlotsScreen(
                         fontSize = 14.sp
                     )
                     Text(
-                        "Hora: ${viewModel.selectedAppointmentSlot?.slotStart ?: ""}",
+                        "Hora: ${viewModel.selectedAppointmentSlot?.slotStart ?: ""} - ${viewModel.selectedAppointmentSlot?.slotEnd ?: ""}",
                         fontSize = 14.sp
                     )
                     Text(
@@ -387,8 +387,8 @@ fun SelectAvailableSlotsScreen(
                                                                         verticalArrangement = Arrangement.Center
                                                                     ) {
                                                                         Text(
-                                                                            slot.slotStart,
-                                                                            fontSize = 16.sp,
+                                                                            "${slot.slotStart} - ${slot.slotEnd}",
+                                                                            fontSize = 14.sp,
                                                                             fontWeight = FontWeight.Bold
                                                                         )
                                                                         Text(

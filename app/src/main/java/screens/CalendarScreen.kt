@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -173,9 +174,31 @@ fun AppointmentRow(appointment: Appointment) {
                 modifier = Modifier.padding(end = 16.dp)
             ) {
                 val hora = appointment.date.split("T").getOrNull(1)?.substring(0, 5) ?: "--:--"
+                
+                // Calcular hora final (55 minutos después de la hora de inicio)
+                val horaFinal = remember(hora) {
+                    try {
+                        val timeParts = hora.split(":")
+                        if (timeParts.size == 2) {
+                            val hour = timeParts[0].toIntOrNull() ?: 0
+                            val minute = timeParts[1].toIntOrNull() ?: 0
+                            
+                            val totalMinutes = hour * 60 + minute + 55
+                            val finalHour = (totalMinutes / 60) % 24
+                            val finalMinute = totalMinutes % 60
+                            
+                            String.format("%02d:%02d", finalHour, finalMinute)
+                        } else {
+                            "--:--"
+                        }
+                    } catch (e: Exception) {
+                        "--:--"
+                    }
+                }
+                
                 Text(
-                    text = hora,
-                    fontSize = 18.sp,
+                    text = "$hora - $horaFinal",
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF323232)
                 )
