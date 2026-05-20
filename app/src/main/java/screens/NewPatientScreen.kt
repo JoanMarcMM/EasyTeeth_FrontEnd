@@ -30,8 +30,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.focusable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -148,7 +150,7 @@ fun NewPatientScreen(
                     PatientTextField(
                         value = ssn,
                         onValueChange = { ssn = it },
-                        label = "SSN"
+                        label = "NSS"
                     )
                 }
             }
@@ -205,10 +207,28 @@ fun NewPatientScreen(
                         label = "Adreça de facturació"
                     )
 
-                    PatientTextField(
+                    OutlinedTextField(
                         value = bankAccountNumber,
-                        onValueChange = { bankAccountNumber = it },
-                        label = "Compte bancari"
+                        onValueChange = { newValue ->
+                            // Allow user to type without formatting while focused
+                            bankAccountNumber = newValue
+                        },
+                        label = { Text("Compte bancari (IBAN o 16-20 dígits)") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged { focusState ->
+                                // Format only when losing focus
+                                if (!focusState.isFocused && bankAccountNumber.isNotEmpty()) {
+                                    val formatted = Validators.formatBankAccountNumber(bankAccountNumber)
+                                    bankAccountNumber = formatted
+                                }
+                            },
+                        singleLine = true,
+                        shape = RoundedCornerShape(10.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent
+                        )
                     )
 
                     PatientTextField(
@@ -263,9 +283,9 @@ fun NewPatientScreen(
                                 return@launch
                             }
 
-                            // Validate SSN
+                            // Validate NSS
                             if (!Validators.isValidSSN(ssn)) {
-                                errorMessage = "El SSN no és vàlid. Ha de contenir 12 dígits"
+                                errorMessage = "El NSS no és vàlid. Ha de contenir 12 dígits"
                                 return@launch
                             }
 
@@ -278,12 +298,6 @@ fun NewPatientScreen(
                             // Validate phone number
                             if (!Validators.isValidPhoneNumber(phoneNumber)) {
                                 errorMessage = "El telèfon no és vàlid. Usa format espanyol: 6XX-XXX-XXX, 9XX-XXX-XXX o +34-9XX-XXX-XXX"
-                                return@launch
-                            }
-
-                            // Validate billing address
-                            if (!Validators.isValidAddress(billingAddress)) {
-                                errorMessage = "L'adreça de facturació no és vàlida (5-200 caràcters)"
                                 return@launch
                             }
 
@@ -365,13 +379,18 @@ fun NewPatientScreen(
 private fun PatientTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String
+    label: String,
+    onFocusChanged: ((Boolean) -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                onFocusChanged?.invoke(focusState.isFocused)
+            },
         singleLine = true,
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.colors(
