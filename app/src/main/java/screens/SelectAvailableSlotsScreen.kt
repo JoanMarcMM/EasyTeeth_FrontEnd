@@ -34,12 +34,13 @@ fun SelectAvailableSlotsScreen(
     motive: String,
     shift: String,
     boxId: Long,
+    hasMedicalAlert: Boolean = false,
     navController: NavController,
     viewModel: SelectAvailableSlotsViewModel = viewModel()
 ) {
     // Inicializar ViewModel
     LaunchedEffect(patientId, odontologistId, shift) {
-        viewModel.initialize(patientId, treatmentId, odontologistId, motive, shift, boxId)
+        viewModel.initialize(patientId, treatmentId, odontologistId, motive, shift, boxId, hasMedicalAlert)
     }
 
     var showConfirmationDialog by remember { mutableStateOf(false) }
@@ -224,11 +225,38 @@ fun SelectAvailableSlotsScreen(
                     contentPadding = PaddingValues(bottom = 100.dp)
                 ) {
                     item {
+                        if (hasMedicalAlert) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color.Red)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red, modifier = Modifier.size(20.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        "Protocolo médico: Solo se permite el último turno disponible.",
+                                        color = Color.Red,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
                         Text("Próxima disponibilidad", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
 
                     // Mostrar día disponible
                     items(viewModel.availableSlots) { daySlots ->
+                        val lastAvailableSlotInDay = remember(daySlots) {
+                            daySlots.timeSlots.flatMap { it.appointmentSlots }.lastOrNull { it.available }
+                        }
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -312,6 +340,9 @@ fun SelectAvailableSlotsScreen(
                                                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                                                         ) {
                                                             pair.forEach { slot ->
+                                                                val isSelected = viewModel.selectedDate == daySlots.date && viewModel.selectedAppointmentSlot == slot
+                                                                val isEnabled = slot.available && (!hasMedicalAlert || slot == lastAvailableSlotInDay)
+
                                                                 Button(
                                                                     onClick = {
                                                                         if (slot.available) {
@@ -322,17 +353,17 @@ fun SelectAvailableSlotsScreen(
                                                                     modifier = Modifier
                                                                         .weight(1f)
                                                                         .height(56.dp),
-                                                                    enabled = slot.available,
+                                                                    enabled = isEnabled,
                                                                     shape = RoundedCornerShape(8.dp),
                                                                     colors = ButtonDefaults.buttonColors(
-                                                                        containerColor = if (viewModel.selectedDate == daySlots.date && viewModel.selectedAppointmentSlot == slot)
+                                                                        containerColor = if (isSelected)
                                                                             Color(0xFF1E70EB) else Color(0xFFE3F2FD),
-                                                                        contentColor = if (viewModel.selectedDate == daySlots.date && viewModel.selectedAppointmentSlot == slot)
+                                                                        contentColor = if (isSelected)
                                                                             Color.White else Color(0xFF1E70EB),
                                                                         disabledContainerColor = Color(0xFFEEEEEE),
                                                                         disabledContentColor = Color.Gray
                                                                     ),
-                                                                    border = if (viewModel.selectedDate == daySlots.date && viewModel.selectedAppointmentSlot == slot)
+                                                                    border = if (isSelected)
                                                                         androidx.compose.foundation.BorderStroke(2.dp, Color(0xFF1E70EB))
                                                                     else
                                                                         androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFDDDDDD))

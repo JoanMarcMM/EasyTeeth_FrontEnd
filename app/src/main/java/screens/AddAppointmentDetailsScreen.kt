@@ -358,7 +358,8 @@ fun AddAppointmentDetailsScreen(
                                 patientId = viewModel.patientId ?: 0L,
                                 treatmentId = viewModel.selectedTreatment?.id ?: 0L,
                                 odontologistId = viewModel.selectedOdontologist?.id ?: 0L,
-                                motive = motive
+                                motive = motive,
+                                hasMedicalAlert = viewModel.hasMedicalAlert
                             )
                         )
                     },

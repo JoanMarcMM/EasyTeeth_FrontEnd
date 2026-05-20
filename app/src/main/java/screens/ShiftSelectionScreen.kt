@@ -1,9 +1,11 @@
 package screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ fun ShiftSelectionScreen(
     treatmentId: Long,
     odontologistId: Long,
     motive: String,
+    hasMedicalAlert: Boolean = false,
     navController: NavController
 ) {
     Scaffold(
@@ -48,6 +51,35 @@ fun ShiftSelectionScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (hasMedicalAlert) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
+                    border = BorderStroke(1.dp, Color.Red)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = Color.Red,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            "Paciente con advertencia médica: programado automáticamente al final del día.",
+                            color = Color.Red,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
+
             Text(
                 "¿En qué turno deseas agendar?",
                 fontSize = 18.sp,
@@ -59,15 +91,17 @@ fun ShiftSelectionScreen(
             Button(
                 onClick = {
                     navController.navigate(
-                        Routes.selectBoxes(patientId, treatmentId, odontologistId, motive, "MORNING")
+                        Routes.selectBoxes(patientId, treatmentId, odontologistId, motive, "MORNING", hasMedicalAlert)
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
+                enabled = !hasMedicalAlert,
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFE8F5E9)
+                    containerColor = if (hasMedicalAlert) Color.LightGray else Color(0xFFE8F5E9),
+                    disabledContainerColor = Color(0xFFF5F5F5)
                 )
             ) {
                 Column(
@@ -78,13 +112,13 @@ fun ShiftSelectionScreen(
                         "MAÑANA",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2E7D32)
+                        color = if (hasMedicalAlert) Color.Gray else Color(0xFF2E7D32)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "08:00 - 12:00",
                         fontSize = 14.sp,
-                        color = Color(0xFF558B2F)
+                        color = if (hasMedicalAlert) Color.Gray else Color(0xFF558B2F)
                     )
                 }
             }
@@ -95,7 +129,7 @@ fun ShiftSelectionScreen(
             Button(
                 onClick = {
                     navController.navigate(
-                        Routes.selectBoxes(patientId, treatmentId, odontologistId, motive, "AFTERNOON")
+                        Routes.selectBoxes(patientId, treatmentId, odontologistId, motive, "AFTERNOON", hasMedicalAlert)
                     )
                 },
                 modifier = Modifier
@@ -103,8 +137,9 @@ fun ShiftSelectionScreen(
                     .height(120.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFF3E0)
-                )
+                    containerColor = if (hasMedicalAlert) Color(0xFFFFCC80) else Color(0xFFFFF3E0)
+                ),
+                border = if (hasMedicalAlert) BorderStroke(2.dp, Color(0xFFE65100)) else null
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

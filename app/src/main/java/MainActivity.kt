@@ -229,19 +229,22 @@ fun AppContent(navController: NavHostController) {
                             navArgument("patientId") { type = NavType.LongType },
                             navArgument("treatmentId") { type = NavType.LongType },
                             navArgument("odontologistId") { type = NavType.LongType },
-                            navArgument("motive") { type = NavType.StringType }
+                            navArgument("motive") { type = NavType.StringType },
+                            navArgument("hasMedicalAlert") { type = NavType.BoolType; defaultValue = false }
                         )
                     ) { backStackEntry ->
                         val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
                         val treatmentId = backStackEntry.arguments?.getLong("treatmentId") ?: 0L
                         val odontologistId = backStackEntry.arguments?.getLong("odontologistId") ?: 0L
                         val motive = backStackEntry.arguments?.getString("motive") ?: ""
+                        val hasMedicalAlert = backStackEntry.arguments?.getBoolean("hasMedicalAlert") ?: false
 
                         ShiftSelectionScreen(
                             patientId = patientId,
                             treatmentId = treatmentId,
                             odontologistId = odontologistId,
                             motive = motive,
+                            hasMedicalAlert = hasMedicalAlert,
                             navController = navController
                         )
                     }
@@ -253,7 +256,8 @@ fun AppContent(navController: NavHostController) {
                             navArgument("treatmentId") { type = NavType.LongType },
                             navArgument("odontologistId") { type = NavType.LongType },
                             navArgument("motive") { type = NavType.StringType },
-                            navArgument("shift") { type = NavType.StringType }
+                            navArgument("shift") { type = NavType.StringType },
+                            navArgument("hasMedicalAlert") { type = NavType.BoolType; defaultValue = false }
                         )
                     ) { backStackEntry ->
                         val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
@@ -261,6 +265,7 @@ fun AppContent(navController: NavHostController) {
                         val odontologistId = backStackEntry.arguments?.getLong("odontologistId") ?: 0L
                         val motive = backStackEntry.arguments?.getString("motive") ?: ""
                         val shift = backStackEntry.arguments?.getString("shift") ?: "MORNING"
+                        val hasMedicalAlert = backStackEntry.arguments?.getBoolean("hasMedicalAlert") ?: false
 
                         SelectBoxesScreen(
                             patientId = patientId,
@@ -268,6 +273,7 @@ fun AppContent(navController: NavHostController) {
                             odontologistId = odontologistId,
                             motive = motive,
                             shift = shift,
+                            hasMedicalAlert = hasMedicalAlert,
                             navController = navController
                         )
                     }
@@ -280,7 +286,8 @@ fun AppContent(navController: NavHostController) {
                             navArgument("odontologistId") { type = NavType.LongType },
                             navArgument("motive") { type = NavType.StringType },
                             navArgument("shift") { type = NavType.StringType },
-                            navArgument("boxId") { type = NavType.LongType }
+                            navArgument("boxId") { type = NavType.LongType },
+                            navArgument("hasMedicalAlert") { type = NavType.BoolType; defaultValue = false }
                         )
                     ) { backStackEntry ->
                         val patientId = backStackEntry.arguments?.getLong("patientId") ?: 0L
@@ -289,6 +296,7 @@ fun AppContent(navController: NavHostController) {
                         val motive = backStackEntry.arguments?.getString("motive") ?: ""
                         val shift = backStackEntry.arguments?.getString("shift") ?: "MORNING"
                         val boxId = backStackEntry.arguments?.getLong("boxId") ?: 0L
+                        val hasMedicalAlert = backStackEntry.arguments?.getBoolean("hasMedicalAlert") ?: false
 
                         SelectAvailableSlotsScreen(
                             navController = navController,
@@ -297,7 +305,8 @@ fun AppContent(navController: NavHostController) {
                             odontologistId = odontologistId,
                             motive = motive,
                             shift = shift,
-                            boxId = boxId
+                            boxId = boxId,
+                            hasMedicalAlert = hasMedicalAlert
                         )
                     }
 

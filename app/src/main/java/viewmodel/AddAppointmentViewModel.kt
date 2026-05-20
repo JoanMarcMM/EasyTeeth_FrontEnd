@@ -9,6 +9,8 @@ import api.OdontologistApiEndpoints
 import api.BoxApiEndpoints
 import api.OdontogramApiEndpoints
 import api.PathologyApiEndpoints
+import com.example.easyteeth.api.BackgroundApiEndpoints
+import com.example.easyteeth.api.PatientApiEndpoints
 import com.example.easyteeth.model.Pathology
 import com.example.easyteeth.model.Treatment
 import com.example.easyteeth.model.Odontologist
@@ -22,8 +24,12 @@ class AddAppointmentViewModel : ViewModel() {
     private val odontologistApi = RetrofitClient.instance.create(OdontologistApiEndpoints::class.java)
     private val boxApi = RetrofitClient.instance.create(BoxApiEndpoints::class.java)
 
+    private val patientApi = RetrofitClient.instance.create(PatientApiEndpoints::class.java)
+    private val backgroundApi = RetrofitClient.instance.create(BackgroundApiEndpoints::class.java)
+
     // Estados de la pantalla de detalles de cita
     var patientId by mutableStateOf<Long?>(null)
+    var hasMedicalAlert by mutableStateOf(false)
     var isLoadingPathologies by mutableStateOf(false)
     var isLoadingTreatments by mutableStateOf(false)
     var isLoadingOdontologists by mutableStateOf(false)
@@ -70,11 +76,41 @@ class AddAppointmentViewModel : ViewModel() {
             val pathologiesJob = viewModelScope.launch { loadPatientPathologiesFromOdontogram(patientId) }
             val odontologistsJob = viewModelScope.launch { loadOdontologists() }
             val boxesJob = viewModelScope.launch { loadBoxes() }
+            val alertsJob = viewModelScope.launch { checkMedicalAlerts(patientId) }
 
             // Esperar a que todas las cargas terminen
             pathologiesJob.join()
             odontologistsJob.join()
             boxesJob.join()
+            alertsJob.join()
+        }
+    }
+
+    /**
+     * Verifica si el paciente tiene enfermedades contagiosas o alergias importantes
+     */
+    private suspend fun checkMedicalAlerts(patientId: Long) {
+        try {
+            // 1. Verificar datos básicos del paciente
+            val patientResponse = patientApi.getPatientById(patientId)
+            if (patientResponse.isSuccessful) {
+                val patient = patientResponse.body()
+                if (patient?.isContagious == true || patient?.hasAllergies == true) {
+                    hasMedicalAlert = true
+                    return
+                }
+            }
+
+            // 2. Verificar el background clínico
+            val backgroundResponse = backgroundApi.getBackgroundsByPatientId(patientId)
+            if (backgroundResponse.isSuccessful) {
+                val backgrounds = backgroundResponse.body() ?: emptyList()
+                if (backgrounds.any { it.infectiousDisease || it.importantAllergie }) {
+                    hasMedicalAlert = true
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
