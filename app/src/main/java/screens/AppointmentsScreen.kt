@@ -19,7 +19,7 @@ import navigation.Routes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppointmentMenuScreen(navController: NavController) {
-
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
         containerColor = Color.White,
         topBar = {
@@ -27,24 +27,27 @@ fun AppointmentMenuScreen(navController: NavController) {
                 title = {
                     Text(
                         text = "Cites",
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
                     )
                 },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar"
+                            contentDescription = "Tornar",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
+                    containerColor = darkBlue
                 )
             )
         }
     ) { innerPadding ->
-
+        val darkBlue = Color(0xFF1B4B7C)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -60,7 +63,10 @@ fun AppointmentMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = darkBlue
+                )
             ) {
                 Text(
                     text = "Agendar Cita",
@@ -75,7 +81,10 @@ fun AppointmentMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = darkBlue
+                )
             ) {
                 Text(
                     text = "Calendari",
@@ -90,7 +99,10 @@ fun AppointmentMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = darkBlue
+                )
             ) {
                 Text(
                     text = "Buscador de Cites",
@@ -105,7 +117,10 @@ fun AppointmentMenuScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = darkBlue
+                )
             ) {
                 Text(
                     text = "Actualizar Cita",
@@ -114,13 +129,17 @@ fun AppointmentMenuScreen(navController: NavController) {
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-
+            val darkBlue = Color(0xFF1B4B7C)
             Button(
+
                 onClick = { navController.navigate(Routes.DELETE_APPOINTMENT) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = darkBlue
+                )
             ) {
                 Text(
                     text = "Eliminar Cita",

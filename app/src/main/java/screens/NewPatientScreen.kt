@@ -40,6 +40,7 @@ import com.example.easyteeth.model.PatientRequest
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import utils.Validators
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -240,15 +241,61 @@ fun NewPatientScreen(
                 Button(
                     onClick = {
                         scope.launch {
+                            // Validate name fields
+                            if (!Validators.isValidName(name)) {
+                                errorMessage = "El nom no és vàlid (2-50 caràcters)"
+                                return@launch
+                            }
+
+                            if (!Validators.isValidName(lastname1)) {
+                                errorMessage = "El primer cognom no és vàlid (2-50 caràcters)"
+                                return@launch
+                            }
+
+                            if (!Validators.isValidName(lastname2)) {
+                                errorMessage = "El segon cognom no és vàlid (2-50 caràcters)"
+                                return@launch
+                            }
+
+                            // Validate DNI
+                            if (!Validators.isValidDNI(dni)) {
+                                errorMessage = "El DNI no és vàlid. Format: 12345678A o X12345678A"
+                                return@launch
+                            }
+
+                            // Validate SSN
+                            if (!Validators.isValidSSN(ssn)) {
+                                errorMessage = "El SSN no és vàlid. Ha de contenir 12 dígits"
+                                return@launch
+                            }
+
                             // Validate email
-                            if (!isValidEmail(email)) {
+                            if (!Validators.isValidEmail(email)) {
                                 errorMessage = "El correu electrònic no és vàlid. Utilitza el format: exemple@domini.com"
                                 return@launch
                             }
 
                             // Validate phone number
-                            if (!isValidPhoneNumber(phoneNumber)) {
-                                errorMessage = "El telèfon no és vàlid. Ha de tenir almenys 6 dígits (opcional: +)"
+                            if (!Validators.isValidPhoneNumber(phoneNumber)) {
+                                errorMessage = "El telèfon no és vàlid. Usa format espanyol: 6XX-XXX-XXX, 9XX-XXX-XXX o +34-9XX-XXX-XXX"
+                                return@launch
+                            }
+
+                            // Validate billing address
+                            if (!Validators.isValidAddress(billingAddress)) {
+                                errorMessage = "L'adreça de facturació no és vàlida (5-200 caràcters)"
+                                return@launch
+                            }
+
+                            // Validate bank account number
+                            if (!Validators.isValidBankAccountNumber(bankAccountNumber)) {
+                                errorMessage = "El compte bancari no és vàlid. Usa format IBAN (ES+20 dígits) o 16-20 dígits"
+                                return@launch
+                            }
+
+                            // Validate NIF/CIF
+                            if (!Validators.isValidNIF_CIF(taxIdentificationNumber)) {
+                                errorMessage = "El NIF/CIF no és vàlid. Format: 12345678A (NIF) o A12345678 (CIF)"
                                 return@launch
                             }
 
@@ -404,16 +451,4 @@ private fun unescapeJson(str: String): String {
         .replace("\\n", "\n")
         .replace("\\r", "\r")
         .replace("\\t", "\t")
-}
-
-private fun isValidEmail(email: String): Boolean {
-    if (email.isBlank()) return true // Email is optional
-    val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-    return email.matches(Regex(emailPattern))
-}
-
-private fun isValidPhoneNumber(phoneNumber: String): Boolean {
-    if (phoneNumber.isBlank()) return true // Phone is optional
-    val phonePattern = "^[+]?[0-9]{6,}$"
-    return phoneNumber.matches(Regex(phonePattern))
 }

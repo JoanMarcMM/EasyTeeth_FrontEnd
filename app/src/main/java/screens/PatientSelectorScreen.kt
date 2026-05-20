@@ -28,19 +28,33 @@ fun PatientSelectorScreen(
     navController: NavController,
     viewModel: PatientSelectorViewModel = viewModel()
 ) {
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Seleccionar Paciente", fontWeight = FontWeight.Bold, color = Color.White) },
+                title = {
+                    Text(
+                        text = "Seleccionar Pacient",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -55,7 +69,7 @@ fun PatientSelectorScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                placeholder = { Text("Buscar por nombre o DNI...") },
+                placeholder = { Text("Buscar per nom o DNI...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 trailingIcon = {
                     if (viewModel.searchQuery.isNotEmpty()) {
@@ -69,7 +83,7 @@ fun PatientSelectorScreen(
             )
 
             Text(
-                text = "Resultados encontrados: ${viewModel.filteredPatients.size}",
+                text = "Resultats trobats: ${viewModel.filteredPatients.size}",
                 fontSize = 12.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(bottom = 8.dp)

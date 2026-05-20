@@ -61,10 +61,10 @@ fun SupplierEditScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Edit Supplier", color = Color.White, fontWeight = FontWeight.Bold) },
+                title = { Text("Editar proveïdor", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Enrere", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
@@ -108,7 +108,7 @@ fun SupplierEditScreen(
                     ) {
                         // Name field (editable)
                         Text(
-                            text = "Supplier Name",
+                            text = "Nom del proveïdor",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -118,12 +118,12 @@ fun SupplierEditScreen(
                             onValueChange = { name = it },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
-                            placeholder = { Text("Enter supplier name") }
+                            placeholder = { Text("Introduïr nom del proveïdor") }
                         )
 
                         // Email field (editable)
                         Text(
-                            text = "Email",
+                            text = "Correu electrònic",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -133,13 +133,13 @@ fun SupplierEditScreen(
                             onValueChange = { email = it },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
-                            placeholder = { Text("Enter email") },
+                            placeholder = { Text("Introduïr correu electrònic") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                         )
 
                         // Phone field (editable)
                         Text(
-                            text = "Phone",
+                            text = "Telèfon",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -149,7 +149,7 @@ fun SupplierEditScreen(
                             onValueChange = { phone = it },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
-                            placeholder = { Text("Enter phone number") },
+                            placeholder = { Text("Introduïr número de telèfon") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
                         )
 
@@ -198,7 +198,7 @@ fun SupplierEditScreen(
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                         ) {
-                            Text("Save Changes")
+                            Text("Guardar canvis")
                         }
                     }
                 }

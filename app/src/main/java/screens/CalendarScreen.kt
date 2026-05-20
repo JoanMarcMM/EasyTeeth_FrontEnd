@@ -55,19 +55,33 @@ fun CalendarScreen(
         }
     }
 
+    val darkBlue = Color(0xFF1B4B7C)
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Calendario", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        text = "Calendari",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(255,255,255)
+                    )
+                },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Tornar",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = darkBlue
+                )
             )
-        },
-        containerColor = Color.White
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -100,7 +114,7 @@ fun CalendarScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Visitas programadas",
+                text = "Visites programades",
                 modifier = Modifier.fillMaxWidth(),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -115,7 +129,7 @@ fun CalendarScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 } else if (viewModel.appointmentsByDate.isEmpty()) {
                     Text(
-                        "No hay citas para este día",
+                        "No hi ha cites per aquest día",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Gray
                     )
@@ -189,7 +203,7 @@ fun AppointmentRow(appointment: Appointment) {
             ) {
                 val fullname = appointment.patient?.let {
                     "${it.name} ${it.lastname1}"
-                } ?: "Paciente desconocido"
+                } ?: "Pacient desconegut"
 
                 Text(
                     text = fullname,
@@ -199,7 +213,7 @@ fun AppointmentRow(appointment: Appointment) {
                 )
 
                 // Acceso directo al nombre del tratamiento
-                val tratamientoTexto = appointment.treatment?.name ?: "Tratamiento no asignado"
+                val tratamientoTexto = appointment.treatment?.name ?: "Tractament no asignat"
 
                 Text(
                     text = tratamientoTexto,

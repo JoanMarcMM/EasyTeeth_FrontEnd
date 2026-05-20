@@ -65,10 +65,10 @@ fun UtensilEditScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Edit Utensil", color = Color.White, fontWeight = FontWeight.Bold) },
+                title = { Text("Editar estri", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Enrere", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
@@ -112,7 +112,7 @@ fun UtensilEditScreen(
                     ) {
                         // Display name (non-editable)
                         Text(
-                            text = "Utensil Name",
+                            text = "Nom de l'estri",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -139,7 +139,7 @@ fun UtensilEditScreen(
 
                         // Brand field (editable)
                         Text(
-                            text = "Brand",
+                            text = "Marca",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -149,12 +149,12 @@ fun UtensilEditScreen(
                             onValueChange = { brand = it },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
-                            placeholder = { Text("Enter brand") }
+                            placeholder = { Text("Introduïr marca") }
                         )
 
                         // Model field (editable)
                         Text(
-                            text = "Model",
+                            text = "Tipus",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -164,12 +164,12 @@ fun UtensilEditScreen(
                             onValueChange = { model = it },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
-                            placeholder = { Text("Enter model") }
+                            placeholder = { Text("Introduïr model") }
                         )
 
                         // Price field (editable)
                         Text(
-                            text = "Price (€)",
+                            text = "Preu (€)",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -179,13 +179,13 @@ fun UtensilEditScreen(
                             onValueChange = { price = it },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
-                            placeholder = { Text("Enter price") },
+                            placeholder = { Text("Introduïr preu") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                         )
 
                         // Supplier (editable dropdown)
                         Text(
-                            text = "Supplier *",
+                            text = "Proveïdor *",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray
@@ -195,7 +195,7 @@ fun UtensilEditScreen(
                             onExpandedChange = { expandedSupplier = it }
                         ) {
                             OutlinedTextField(
-                                value = suppliers.find { it.id == selectedSupplierId }?.name ?: "Select a supplier",
+                                value = suppliers.find { it.id == selectedSupplierId }?.name ?: "Seleccionar proveïdor",
                                 onValueChange = {},
                                 readOnly = true,
                                 modifier = Modifier
@@ -269,7 +269,7 @@ fun UtensilEditScreen(
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                         ) {
-                            Text("Save Changes")
+                            Text("Guardar canvis")
                         }
                     }
                 }

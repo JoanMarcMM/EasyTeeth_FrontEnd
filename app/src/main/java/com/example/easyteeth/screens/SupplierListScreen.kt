@@ -44,10 +44,10 @@ fun SupplierListScreen(
         containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Proveidors", color = Color.White, fontWeight = FontWeight.Bold) },
+                title = { Text("Proveïdors", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Enrere", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1B4B7C))
@@ -61,7 +61,7 @@ fun SupplierListScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "Add Supplier",
+                    contentDescription = "Afegir proveïdor",
                     tint = Color.White
                 )
             }
@@ -100,7 +100,7 @@ fun SupplierListScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No suppliers found. Click + to add one.",
+                            text = "No hi ha proveïdors. Feu clic + per afegir un.",
                             fontSize = 16.sp,
                             color = Color.Gray,
                             modifier = Modifier.padding(16.dp)
@@ -166,14 +166,14 @@ fun SupplierListItem(
                     Spacer(modifier = Modifier.height(8.dp))
                     if (!supplier.email.isNullOrEmpty()) {
                         Text(
-                            text = "Email: ${supplier.email}",
+                            text = "Correu: ${supplier.email}",
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
                     }
                     if (supplier.phone != null && supplier.phone!! > 0) {
                         Text(
-                            text = "Phone: ${supplier.phone}",
+                            text = "Telèfon: ${supplier.phone}",
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
@@ -191,7 +191,7 @@ fun SupplierListItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit"
+                        contentDescription = "Editar"
                     )
                 }
             }

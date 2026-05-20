@@ -40,10 +40,10 @@ fun PatientListToProfileScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Seleccionar Paciente", fontWeight = FontWeight.Bold, color = Color.White) },
+                title = { Text("Seleccionar Pacient", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF1B4B7C))
@@ -63,7 +63,7 @@ fun PatientListToProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                placeholder = { Text("Buscar por nombre o DNI...") },
+                placeholder = { Text("Buscar per nom o DNI...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 trailingIcon = {
                     if (viewModel.searchQuery.isNotEmpty()) {
@@ -91,7 +91,7 @@ fun PatientListToProfileScreen(
                     )
                 } else if (viewModel.filteredPatients.isEmpty()) {
                     Text(
-                        "No se encontraron pacientes",
+                        "No s'han trobat pacients",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Gray
                     )
