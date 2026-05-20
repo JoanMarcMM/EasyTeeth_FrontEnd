@@ -2,52 +2,35 @@ package utils
 
 /**
  * Centralized validation functions for form fields
- * Provides validators for common critical fields: DNI, SSN, Phone, Email, etc.
+ * Provides validators for common critical fields: DNI, NSS, Phone, Email, etc.
  */
 object Validators {
 
     /**
-     * Validates Spanish DNI (Documento Nacional de Identidad)
-     * Format: 8 digits + 1 letter (e.g., 12345678A)
-     * Optional: Can include X or Y prefix for foreign residents
+     * Validates Spanish DNI/NIE (Documento Nacional de Identidad / Número de Identidad de Extranjero)
+     * Format validation only - does not check if letter is correct
+     * DNI: 8 digits + 1 letter (e.g., 12345678A)
+     * NIE: X/Y/Z + 7-8 digits + 1 letter (e.g., X1234567L)
+     * Accepts with or without spaces/hyphens
      */
     fun isValidDNI(dni: String): Boolean {
         if (dni.isBlank()) return true // DNI is optional
-        val cleanDni = dni.uppercase().trim()
+        // Remove spaces, hyphens and convert to uppercase
+        val cleanDni = dni.replace(" ", "").replace("-", "").uppercase().trim()
         
-        // Pattern: Optional X/Y/Z prefix for foreign residents, then 7-8 digits and 1-2 letters
-        val dniPattern = "^[XYZ]?\\d{7,8}[A-Z]$".toRegex()
-        if (!dniPattern.matches(cleanDni)) return false
+        // Pattern: Either standard DNI (8 digits + letter) or NIE (X/Y/Z + 7-8 digits + letter)
+        val dniPattern = "^\\d{8}[A-Z]$".toRegex()
+        val niePattern = "^[XYZ]\\d{7,8}[A-Z]$".toRegex()
         
-        // Validate DNI letter (optional but good practice)
-        return validateDNILetter(cleanDni)
+        return dniPattern.matches(cleanDni) || niePattern.matches(cleanDni)
     }
 
     /**
-     * Validates the check letter of a Spanish DNI
-     * Uses the official algorithm: number % 23 = position in letter table
-     */
-    private fun validateDNILetter(dni: String): Boolean {
-        val letters = "TRWAGMYFPDXBNJZSQVHLCKE"
-        
-        // Extract just the numbers part
-        val numbers = dni.filter { it.isDigit() }
-        if (numbers.isEmpty()) return false
-        
-        val numberPart = numbers.toLongOrNull() ?: return false
-        val letterIndex = (numberPart % 23).toInt()
-        val expectedLetter = letters[letterIndex]
-        val actualLetter = dni.last()
-        
-        return actualLetter == expectedLetter
-    }
-
-    /**
-     * Validates Spanish SSN (Seguridad Social / Social Security Number)
+     * Validates Spanish NSS (Número de Seguridad Social / Social Security Number)
      * Format: 12 digits (NNNNNNNNNNNN)
      */
     fun isValidSSN(ssn: String): Boolean {
-        if (ssn.isBlank()) return true // SSN is optional
+        if (ssn.isBlank()) return true // NSS is optional
         val cleanSsn = ssn.trim().replace("-", "").replace(" ", "")
         
         // Pattern: 12 digits
@@ -123,7 +106,7 @@ object Validators {
         
         // Check if it's a DNI (NIF for individuals)
         if (clean.matches("^[XYZ]?\\d{7,8}[A-Z]$".toRegex())) {
-            return validateDNILetter(clean)
+            return true // Format validation only
         }
         
         // Check if it's a CIF (for companies)
@@ -137,7 +120,7 @@ object Validators {
 
     /**
      * Validates bank account number (IBAN or Spanish account)
-     * Spanish format: IBAN starting with ES (ES + 22 alphanumeric characters)
+     * Spanish IBAN format: ES + 2 check digits + 20 account digits (24 chars total)
      * Or basic validation for 16-20 digits
      */
     fun isValidBankAccountNumber(accountNumber: String): Boolean {
@@ -145,9 +128,9 @@ object Validators {
         
         val clean = accountNumber.trim().replace(" ", "").replace("-", "").uppercase()
         
-        // Check if it's IBAN format (ES + 20 digits)
+        // Check if it's IBAN format (ES + 22 digits: 2 check + 20 account)
         if (clean.startsWith("ES")) {
-            val ibanPattern = "^ES\\d{20}$".toRegex()
+            val ibanPattern = "^ES\\d{22}$".toRegex()
             return clean.matches(ibanPattern)
         }
         
@@ -158,20 +141,11 @@ object Validators {
 
     /**
      * Validates postal address (not too strict)
-     * Ensures it's not empty and has reasonable length (5-200 chars)
-     * Allows letters, numbers, common symbols
+     * Allows any non-empty address
      */
     fun isValidAddress(address: String): Boolean {
-        if (address.isBlank()) return true // Address is optional
-        
-        val clean = address.trim()
-        
-        // Address should be 5-200 characters
-        if (clean.length < 5 || clean.length > 200) return false
-        
-        // Allow letters, numbers, spaces, commas, dots, hyphens, and some special chars
-        val addressPattern = "^[A-Za-z0-9\\s,.\\/\\-ªº°]+$".toRegex()
-        return clean.matches(addressPattern)
+        // Address is optional - any value is accepted
+        return true
     }
 
     /**
@@ -217,5 +191,81 @@ object Validators {
         // Allow letters, numbers, spaces, punctuation, and special medical chars
         // This is quite permissive to allow doctors to write freely
         return true
+    }
+
+    // ========== FORMAT FUNCTIONS ==========
+
+    /**
+     * Format bank account number with spaces every 4 digits
+     * Smart formatting that maintains cursor position by only removing/adding spaces as needed
+     * Examples: "1234567890123456" → "1234 5678 9012 3456"
+     *          "ES9121000418450200051332" → "ES91 2100 0418 4502 0005 1332"
+     */
+    fun formatBankAccountNumber(input: String): String {
+        // Remove all spaces to get clean input
+        val cleanInput = input.replace(" ", "").replace("-", "").uppercase()
+        
+        // If empty, return as is
+        if (cleanInput.isEmpty()) return input
+        
+        // Format with spaces every 4 characters
+        val formatted = cleanInput.chunked(4).joinToString(" ")
+        
+        return formatted
+    }
+
+    /**
+     * Format phone number for display
+     * Removes existing separators and adds format: 612-345-678 or +34-612-345-678
+     */
+    fun formatPhoneNumber(input: String): String {
+        // Remove existing separators
+        val cleanPhone = input.replace(" ", "").replace("-", "").replace(".", "")
+        
+        if (cleanPhone.isEmpty()) return input
+        
+        // If starts with +34 or 0034, keep it and format the rest
+        if (cleanPhone.startsWith("+34")) {
+            val numberPart = cleanPhone.substring(3)
+            if (numberPart.length == 9) {
+                return "+34-${numberPart.substring(0, 3)}-${numberPart.substring(3, 6)}-${numberPart.substring(6)}"
+            }
+        } else if (cleanPhone.startsWith("0034")) {
+            val numberPart = cleanPhone.substring(4)
+            if (numberPart.length == 9) {
+                return "0034-${numberPart.substring(0, 3)}-${numberPart.substring(3, 6)}-${numberPart.substring(6)}"
+            }
+        }
+        
+        // Standard Spanish format: 612-345-678
+        if (cleanPhone.length == 9 && (cleanPhone.startsWith("6") || cleanPhone.startsWith("9"))) {
+            return "${cleanPhone.substring(0, 3)}-${cleanPhone.substring(3, 6)}-${cleanPhone.substring(6)}"
+        }
+        
+        return input
+    }
+
+    /**
+     * Format DNI/NIE with standard format
+     * Accepts digits with optional spaces/hyphens and converts to: 12345678-A or X1234567-L
+     */
+    fun formatDNI(input: String): String {
+        val cleanInput = input.replace(" ", "").replace("-", "").uppercase()
+        
+        if (cleanInput.isEmpty()) return input
+        
+        // Find where the letters start
+        val lastDigitIndex = cleanInput.indexOfLast { it.isDigit() }
+        
+        if (lastDigitIndex == -1) return input // No digits found
+        
+        val numberPart = cleanInput.substring(0, lastDigitIndex + 1)
+        val letterPart = cleanInput.substring(lastDigitIndex + 1)
+        
+        return if (letterPart.isNotEmpty()) {
+            "$numberPart-$letterPart"
+        } else {
+            numberPart
+        }
     }
 }

@@ -31,6 +31,7 @@ import androidx.compose.material3.TextFieldDefaults
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -181,7 +182,7 @@ fun UpdatePatientScreen(
                         OutlinedTextField(
                             value = ssn,
                             onValueChange = { ssn = it },
-                            label = { Text("SSN") },
+                            label = { Text("NSS") },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
                             colors = TextFieldDefaults.colors(
@@ -272,9 +273,20 @@ fun UpdatePatientScreen(
 
                         OutlinedTextField(
                             value = bankAccountNumber,
-                            onValueChange = { bankAccountNumber = it },
-                            label = { Text("Número de compte") },
-                            modifier = Modifier.fillMaxWidth(),
+                            onValueChange = { newValue ->
+                                // Allow user to type without formatting while focused
+                                bankAccountNumber = newValue
+                            },
+                            label = { Text("Número de compte (IBAN o 16-20 dígits)") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onFocusChanged { focusState ->
+                                    // Format only when losing focus
+                                    if (!focusState.isFocused && bankAccountNumber.isNotEmpty()) {
+                                        val formatted = Validators.formatBankAccountNumber(bankAccountNumber)
+                                        bankAccountNumber = formatted
+                                    }
+                                },
                             shape = RoundedCornerShape(10.dp),
                             colors = TextFieldDefaults.colors(
                                 unfocusedContainerColor = Color.White,
@@ -339,9 +351,9 @@ fun UpdatePatientScreen(
                                     return@launch
                                 }
 
-                                // Validate SSN
+                                // Validate NSS
                                 if (!Validators.isValidSSN(ssn)) {
-                                    errorMessage = "El SSN no és vàlid. Ha de contenir 12 dígits"
+                                    errorMessage = "El NSS no és vàlid. Ha de contenir 12 dígits"
                                     return@launch
                                 }
 
@@ -354,12 +366,6 @@ fun UpdatePatientScreen(
                                 // Validate phone number
                                 if (!Validators.isValidPhoneNumber(phoneNumber)) {
                                     errorMessage = "El telèfon no és vàlid. Usa format espanyol: 6XX-XXX-XXX, 9XX-XXX-XXX o +34-9XX-XXX-XXX"
-                                    return@launch
-                                }
-
-                                // Validate billing address
-                                if (!Validators.isValidAddress(billingAddress)) {
-                                    errorMessage = "L'adreça de facturació no és vàlida (5-200 caràcters)"
                                     return@launch
                                 }
 

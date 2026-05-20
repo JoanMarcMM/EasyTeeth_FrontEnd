@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import viewmodel.SelectAvailableSlotsViewModel
 import navigation.Routes
+import viewmodel.AppointmentSlot
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -44,6 +45,101 @@ fun SelectAvailableSlotsScreen(
     }
 
     var showConfirmationDialog by remember { mutableStateOf(false) }
+    var showAutoSuggestionDialog by remember { mutableStateOf(false) }
+    var suggestedSlot by remember { mutableStateOf<Pair<LocalDate, AppointmentSlot>?>(null) }
+
+    // Logic to trigger the auto-suggestion dialog
+    LaunchedEffect(viewModel.isLoadingSlots, viewModel.availableSlots.size) {
+        if (!viewModel.isLoadingSlots && viewModel.availableSlots.isNotEmpty() && suggestedSlot == null) {
+            // Buscar el primer día que tenga huecos disponibles
+            val firstDayWithSlots = viewModel.availableSlots.firstOrNull { day ->
+                day.timeSlots.any { ts -> ts.appointmentSlots.any { it.available } }
+            }
+
+            if (firstDayWithSlots != null) {
+                val allAvailableSlotsInDay = firstDayWithSlots.timeSlots
+                    .flatMap { it.appointmentSlots }
+                    .filter { it.available }
+
+                if (allAvailableSlotsInDay.isNotEmpty()) {
+                    val targetSlot = if (hasMedicalAlert) {
+                        allAvailableSlotsInDay.last()
+                    } else {
+                        allAvailableSlotsInDay.first()
+                    }
+                    suggestedSlot = Pair(firstDayWithSlots.date, targetSlot)
+                    showAutoSuggestionDialog = true
+                }
+            }
+        }
+    }
+
+    // Auto-Suggestion Dialog
+    if (showAutoSuggestionDialog && suggestedSlot != null) {
+        AlertDialog(
+            onDismissRequest = { showAutoSuggestionDialog = false },
+            title = { Text("Suggeriment de cita", fontWeight = FontWeight.Bold) },
+            text = {
+                Column {
+                    Text("Hem trobat el millor buit per a tu d'acord amb la teva selecció:", modifier = Modifier.padding(bottom = 8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Data: ${formatDate(suggestedSlot!!.first)}",
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        "Hora: ${suggestedSlot!!.second.slotStart} - ${suggestedSlot!!.second.slotEnd}",
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        "Duració: 55 minuts",
+                        fontSize = 14.sp
+                    )
+                    
+                    if (hasMedicalAlert) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = null,
+                                tint = Color.Red,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                "Protocol mèdic aplicat (últim torn del dia).",
+                                color = Color.Red,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.selectedDate = suggestedSlot!!.first
+                        viewModel.selectedAppointmentSlot = suggestedSlot!!.second
+                        showAutoSuggestionDialog = false
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E70EB))
+                ) {
+                    Text("Aceptar", color = Color.White)
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = { showAutoSuggestionDialog = false },
+                    shape = RoundedCornerShape(20.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray)
+                ) {
+                    Text("Manualment", color = Color.Black)
+                }
+            }
+        )
+    }
 
     // Show confirmation dialog when a slot is selected
     LaunchedEffect(viewModel.selectedAppointmentSlot) {
