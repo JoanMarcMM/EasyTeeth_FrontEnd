@@ -11,7 +11,7 @@ import com.example.easyteeth.model.Appointment
 class AppointmentSearcherViewModel : ViewModel() {
     private val api = RetrofitClient.instance.create(AppointmentApiEndpoints::class.java)
 
-    private var allAppointments = listOf<Appointment>()
+    private var allAppointments = mutableListOf<Appointment>()
     var filteredAppointments = mutableStateListOf<Appointment>()
     var isLoading by mutableStateOf(false)
 
@@ -46,7 +46,8 @@ class AppointmentSearcherViewModel : ViewModel() {
                         android.util.Log.d("AppointmentSearcher", "Appointment: ${appointment.patient?.name} - ${appointment.date}")
                     }
 
-                    allAppointments = body
+                    allAppointments.clear()
+                    allAppointments.addAll(body)
 
                     // Extraer opciones únicas para los desplegables
                     treatmentOptions.clear()
@@ -105,6 +106,10 @@ class AppointmentSearcherViewModel : ViewModel() {
                 val response = api.deleteAppointment(appointmentId)
                 if (response.isSuccessful) {
                     android.util.Log.d("AppointmentSearcher", "Appointment deleted: $appointmentId")
+                    // Eliminar la cita de la lista local inmediatamente
+                    allAppointments.removeAll { it.id == appointmentId }
+                    // Aplicar filtros para actualizar la UI
+                    applyAllFilters()
                     onSuccess()
                 } else {
                     android.util.Log.e("AppointmentSearcher", "Delete error: ${response.code()}")

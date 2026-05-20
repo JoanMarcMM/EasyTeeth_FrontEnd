@@ -90,8 +90,6 @@ fun DeleteAppointmentScreen(
                                 onSuccess = {
                                     showConfirmDelete = false
                                     appointmentToDelete = null
-                                    
-                                    viewModel.applyAllFilters()
                                 },
                                 onError = {
                                     // Handle error
