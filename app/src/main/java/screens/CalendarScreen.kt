@@ -154,13 +154,18 @@ fun CalendarScreen(
 
 @Composable
 fun AppointmentRow(appointment: Appointment) {
+    val hasMedicalAlert = appointment.patient?.isContagious == true || appointment.patient?.hasAllergies == true
+    val backgroundColor = if (hasMedicalAlert) Color(0xFFFFEBEE) else Color(0xFFF1F4F9)
+    val borderColor = if (hasMedicalAlert) Color(0xFFFFCDD2) else Color.Transparent
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
             .shadow(4.dp, RoundedCornerShape(12.dp)),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F4F9))
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        border = if (hasMedicalAlert) BorderStroke(1.dp, borderColor) else null
     ) {
         Row(
             modifier = Modifier
@@ -228,12 +233,30 @@ fun AppointmentRow(appointment: Appointment) {
                     "${it.name} ${it.lastname1}"
                 } ?: "Pacient desconegut"
 
-                Text(
-                    text = fullname,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = fullname,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    
+                    if (hasMedicalAlert) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Surface(
+                            color = Color(0xFFD32F2F),
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = "RISC MÈDIC",
+                                color = Color.White,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
 
                 // Acceso directo al nombre del tratamiento
                 val tratamientoTexto = appointment.treatment?.name ?: "Tractament no asignat"
@@ -250,7 +273,7 @@ fun AppointmentRow(appointment: Appointment) {
             Surface(
                 modifier = Modifier.size(12.dp),
                 shape = RoundedCornerShape(50),
-                color = Color(0xFF90E0D0)
+                color = if (hasMedicalAlert) Color.Red else Color(0xFF90E0D0)
             ) {}
         }
     }

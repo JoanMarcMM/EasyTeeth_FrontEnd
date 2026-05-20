@@ -74,7 +74,7 @@ fun PatientSelectorScreen(
                 trailingIcon = {
                     if (viewModel.searchQuery.isNotEmpty()) {
                         IconButton(onClick = { viewModel.applyFilter("") }) {
-                            Icon(Icons.Default.Close, contentDescription = "Limpiar")
+                            Icon(Icons.Default.Close, contentDescription = "Netejar")
                         }
                     }
                 },
@@ -95,7 +95,7 @@ fun PatientSelectorScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = Color(0xFF1E70EB))
                 } else if (viewModel.filteredPatients.isEmpty()) {
                     Text(
-                        "No se encontraron pacientes",
+                        "No s'han trobat pacients",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Gray
                     )

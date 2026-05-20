@@ -115,7 +115,7 @@ fun SelectAvailableSlotsScreen(
                     },
                     enabled = !viewModel.isCreating
                 ) {
-                    Text("Cancelar")
+                    Text("Cancel·lar")
                 }
             }
         )
@@ -160,7 +160,7 @@ fun SelectAvailableSlotsScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(color = Color(0xFF1E70EB))
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Cargant disponibilitat...", color = Color.Gray)
+                        Text("Carregant disponibilitat...", color = Color.Gray)
                     }
                 }
             }
@@ -190,7 +190,7 @@ fun SelectAvailableSlotsScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { navController.popBackStack() }) {
-                            Text("Volver atrás")
+                            Text("Tornar enrere")
                         }
                     }
                 }
@@ -221,7 +221,7 @@ fun SelectAvailableSlotsScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            "Aquest odontoleg no te disponibilitat en els següents 30 díes",
+                            "Aquest odontòleg no té disponibilitat en els següents 30 dies",
                             textAlign = TextAlign.Center,
                             color = Color.Gray,
                             fontSize = 14.sp
@@ -254,7 +254,7 @@ fun SelectAvailableSlotsScreen(
                                     Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red, modifier = Modifier.size(20.dp))
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        "Protocolo médico: Solo se permite el último turno disponible.",
+                                        "Protocol mèdic: Només es permet l'últim torn disponible.",
                                         color = Color.Red,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold
