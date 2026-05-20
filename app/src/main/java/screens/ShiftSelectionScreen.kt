@@ -83,7 +83,7 @@ fun ShiftSelectionScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            "Paciente con advertencia médica: programado automáticamente al final del día.",
+                            "Pacient amb advertència mèdica: programat automàticament al final del dia.",
                             color = Color.Red,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium

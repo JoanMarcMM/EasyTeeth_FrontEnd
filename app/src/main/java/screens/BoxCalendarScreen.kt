@@ -225,7 +225,7 @@ fun BoxCalendarScreen(
                                 modifier = Modifier.size(20.dp)
                             )
                             Text(
-                                text = "Aquesta es una data anterior. Es mostren nomes els utensilis que es van utilitzar. No es pot efectuar cap accio.",
+                                text = "Aquesta és una data anterior. Es mostren només els utensilis que es van utilitzar. No es pot efectuar cap acció.",
                                 color = Color(0xFFE65100),
                                 fontSize = 13.sp,
                                 modifier = Modifier.weight(1f)
@@ -332,7 +332,7 @@ fun BoxCalendarScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.WarningAmber,
-                                contentDescription = "Advertencia",
+                                contentDescription = "Advertència",
                                 tint = Color(0xFFC62828),
                                 modifier = Modifier.size(20.dp)
                             )
@@ -425,7 +425,7 @@ fun BoxCalendarScreen(
                     } else {
                         Text(
                             text = if (isToday) {
-                                if (isAllStocked) "Cancel·lar Reposció" else "Confirmar Reposció"
+                                if (isAllStocked) "Cancel·lar Reposició" else "Confirmar Reposició"
                             } else {
                                 "Crear Comanda"
                             },
