@@ -30,6 +30,7 @@ fun SelectBoxesScreen(
     odontologistId: Long,
     motive: String,
     shift: String,
+    hasMedicalAlert: Boolean = false,
     navController: NavController,
     viewModel: SelectBoxesViewModel = viewModel()
 ) {
@@ -147,7 +148,8 @@ fun SelectBoxesScreen(
                                             odontologistId,
                                             motive,
                                             shift,
-                                            box.id ?: 0L
+                                            box.id ?: 0L,
+                                            hasMedicalAlert
                                         )
                                     )
                                 },

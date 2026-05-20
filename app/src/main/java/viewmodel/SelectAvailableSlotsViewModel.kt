@@ -44,6 +44,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
     var motive by mutableStateOf("")
     var selectedShift by mutableStateOf("MORNING")
     var selectedBoxId by mutableStateOf<Long?>(null)
+    var hasMedicalAlert by mutableStateOf(false)
 
     // Estados de carga
     var isLoadingSlots by mutableStateOf(false)
@@ -60,8 +61,8 @@ class SelectAvailableSlotsViewModel : ViewModel() {
     var selectedAppointmentSlot by mutableStateOf<AppointmentSlot?>(null)
     var selectedBox by mutableStateOf<Box?>(null)
 
-    fun initialize(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String = "MORNING", boxId: Long = 0L) {
-        android.util.Log.d("SelectAvailableSlots", "INITIALIZE called with shift=$shift, boxId=$boxId")
+    fun initialize(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String = "MORNING", boxId: Long = 0L, hasMedicalAlert: Boolean = false) {
+        android.util.Log.d("SelectAvailableSlots", "INITIALIZE called with shift=$shift, boxId=$boxId, hasMedicalAlert=$hasMedicalAlert")
 
         // Clear all state first
         availableSlots.clear()
@@ -78,6 +79,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
         this.motive = motive
         this.selectedShift = shift
         this.selectedBoxId = boxId
+        this.hasMedicalAlert = hasMedicalAlert
 
         android.util.Log.d("SelectAvailableSlots", "State cleared. selectedShift is now: $selectedShift, selectedBoxId: $selectedBoxId")
 
@@ -189,17 +191,10 @@ class SelectAvailableSlotsViewModel : ViewModel() {
             availableSlots.clear()
             availableSlots.addAll(convertedSlots)
 
-            // Auto-select first available day and first available slot
+            // Auto-select first available day but DO NOT auto-select a slot
+            // to allow the user to browse and pick the one they prefer
             if (convertedSlots.isNotEmpty()) {
                 selectedDate = convertedSlots[0].date
-                // Find first available appointment slot across all time periods
-                for (timePeriod in convertedSlots[0].timeSlots) {
-                    val firstAvailable = timePeriod.appointmentSlots.firstOrNull { it.available }
-                    if (firstAvailable != null) {
-                        selectedAppointmentSlot = firstAvailable
-                        break
-                    }
-                }
             }
 
         } catch (e: Exception) {

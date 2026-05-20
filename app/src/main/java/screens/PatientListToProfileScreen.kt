@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.easyteeth.model.Patient
 import com.example.easyteeth.viewmodel.PatientSelectorViewModel
+import com.example.easyteeth.ui.MedicalAlerts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,6 +103,7 @@ fun PatientListToProfileScreen(
                         items(viewModel.filteredPatients) { patient ->
                             PatientCard2(
                                 patient = patient,
+                                viewModel = viewModel,
                                 onClick = {
                                     patient.id?.let { patientId ->
                                         navController.navigate("patient_profile/$patientId")
@@ -125,6 +127,7 @@ fun PatientListToProfileScreen(
 @Composable
 fun PatientCard2(
     patient: Patient,
+    viewModel: PatientSelectorViewModel,
     onClick: () -> Unit,
     onOdontogramClick: () -> Unit
 ) {
@@ -141,12 +144,26 @@ fun PatientCard2(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "${patient.name} ${patient.lastname1} ${patient.lastname2}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "${patient.name} ${patient.lastname1} ${patient.lastname2}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    // Unified medical alerts
+                    val isContagious = patient.isContagious || viewModel.hasInfectiousDisease(patient.id)
+                    val hasAllergies = patient.hasAllergies || viewModel.hasAllergie(patient.id)
+                    
+                    MedicalAlerts(isContagious = isContagious, hasAllergies = hasAllergies)
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                
                 Spacer(modifier = Modifier.height(4.dp))
                 Row {
                     Badge(

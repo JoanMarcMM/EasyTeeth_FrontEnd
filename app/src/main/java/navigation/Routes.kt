@@ -40,17 +40,17 @@ object  Routes {
     const val ADD_APPOINTMENT_DETAILS = "add_appointment_details/{patientId}"
     fun addAppointmentDetails(id: Long) = "add_appointment_details/$id"
 
-    const val SELECT_APPOINTMENT_SHIFT = "select_appointment_shift/{patientId}/{treatmentId}/{odontologistId}/{motive}"
-    fun selectAppointmentShift(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String) =
-        "select_appointment_shift/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}"
+    const val SELECT_APPOINTMENT_SHIFT = "select_appointment_shift/{patientId}/{treatmentId}/{odontologistId}/{motive}?hasMedicalAlert={hasMedicalAlert}"
+    fun selectAppointmentShift(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, hasMedicalAlert: Boolean) =
+        "select_appointment_shift/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}?hasMedicalAlert=$hasMedicalAlert"
 
-    const val SELECT_BOXES = "select_boxes/{patientId}/{treatmentId}/{odontologistId}/{motive}/{shift}"
-    fun selectBoxes(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String) =
-        "select_boxes/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}/$shift"
+    const val SELECT_BOXES = "select_boxes/{patientId}/{treatmentId}/{odontologistId}/{motive}/{shift}?hasMedicalAlert={hasMedicalAlert}"
+    fun selectBoxes(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String, hasMedicalAlert: Boolean) =
+        "select_boxes/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}/$shift?hasMedicalAlert=$hasMedicalAlert"
 
-    const val SELECT_AVAILABLE_SLOTS = "select_available_slots/{patientId}/{treatmentId}/{odontologistId}/{motive}/{shift}/{boxId}"
-    fun selectAvailableSlots(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String, boxId: Long) =
-        "select_available_slots/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}/$shift/$boxId"
+    const val SELECT_AVAILABLE_SLOTS = "select_available_slots/{patientId}/{treatmentId}/{odontologistId}/{motive}/{shift}/{boxId}?hasMedicalAlert={hasMedicalAlert}"
+    fun selectAvailableSlots(patientId: Long, treatmentId: Long, odontologistId: Long, motive: String, shift: String, boxId: Long, hasMedicalAlert: Boolean) =
+        "select_available_slots/$patientId/$treatmentId/$odontologistId/${motive.replace("/", "_").replace(" ", "+")}/$shift/$boxId?hasMedicalAlert=$hasMedicalAlert"
 
     const val SELECT_APPOINTMENT_DATETIME = "select_appointment_datetime/{patientId}/{treatmentId}/{odontologistId}/{boxId}/{motive}"
     fun selectAppointmentDateTime(patientId: Long, treatmentId: Long, odontologistId: Long, boxId: Long, motive: String) =

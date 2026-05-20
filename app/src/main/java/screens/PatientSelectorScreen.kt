@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.easyteeth.model.Patient
 import com.example.easyteeth.viewmodel.PatientSelectorViewModel
+import com.example.easyteeth.ui.MedicalAlerts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -147,23 +148,11 @@ fun PatientCard(patient: Patient, viewModel: PatientSelectorViewModel, onClick: 
                         modifier = Modifier.weight(1f)
                     )
                     
-                    // Colored circles for allergies and infectious disease
-                    if (viewModel.hasInfectiousDisease(patient.id)) {
-                        Box(
-                            modifier = Modifier
-                                .size(12.dp)
-                                .background(color = Color(0xFFD32F2F), shape = CircleShape)
-                        )
-                    }
+                    // Unified medical alerts
+                    val isContagious = patient.isContagious || viewModel.hasInfectiousDisease(patient.id)
+                    val hasAllergies = patient.hasAllergies || viewModel.hasAllergie(patient.id)
                     
-                    if (viewModel.hasAllergie(patient.id)) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .size(12.dp)
-                                .background(color = Color(0xFF4CAF50), shape = CircleShape)
-                        )
-                    }
+                    MedicalAlerts(isContagious = isContagious, hasAllergies = hasAllergies)
                 }
                 
                 Spacer(modifier = Modifier.height(4.dp))
