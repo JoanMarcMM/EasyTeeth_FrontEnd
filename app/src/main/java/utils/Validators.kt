@@ -140,6 +140,97 @@ object Validators {
     }
 
     /**
+     * Formats bank account number with spaces every 4 digits
+     * Only adds spaces where needed, doesn't reformat entire string
+     * Example: ES9121000418450200051332 -> ES91 2100 0418 4502 0005 1332
+     */
+    fun formatBankAccountNumber(accountNumber: String): String {
+        if (accountNumber.isBlank()) return accountNumber
+        
+        // If it's already properly formatted, return as is (preserves cursor)
+        val noSpaces = accountNumber.replace(" ", "").replace("-", "").uppercase()
+        
+        if (noSpaces.isEmpty()) return ""
+        
+        // If already has correct formatting pattern, just return (don't reformat)
+        val expectedFormatted = buildFormattedIban(noSpaces)
+        if (accountNumber == expectedFormatted) {
+            return accountNumber
+        }
+        
+        // Only format if needed
+        return expectedFormatted
+    }
+    
+    /**
+     * Helper function to build the formatted IBAN
+     */
+    private fun buildFormattedIban(clean: String): String {
+        val formatted = StringBuilder()
+        for (i in clean.indices) {
+            if (i > 0 && i % 4 == 0) {
+                formatted.append(" ")
+            }
+            formatted.append(clean[i])
+        }
+        return formatted.toString()
+    }
+
+    /**
+     * Formats bank account with smart cursor position handling
+     * Calculates where the cursor should be after formatting by tracking non-space characters
+     */
+    fun formatBankAccountNumberWithCursorPosition(
+        accountNumber: String,
+        cursorPosition: Int
+    ): Pair<String, Int> {
+        if (accountNumber.isBlank()) return Pair(accountNumber, cursorPosition)
+        
+        // Count how many non-space characters are BEFORE the cursor
+        var nonSpaceCountBeforeCursor = 0
+        for (i in 0 until minOf(cursorPosition, accountNumber.length)) {
+            if (accountNumber[i] != ' ' && accountNumber[i] != '-') {
+                nonSpaceCountBeforeCursor++
+            }
+        }
+        
+        // Remove spaces and hyphens, convert to uppercase
+        val clean = accountNumber.replace(" ", "").replace("-", "").uppercase()
+        
+        if (clean.isEmpty()) return Pair("", 0)
+        
+        // Build formatted string with spaces every 4 characters
+        val formatted = StringBuilder()
+        for (i in clean.indices) {
+            if (i > 0 && i % 4 == 0) {
+                formatted.append(" ")
+            }
+            formatted.append(clean[i])
+        }
+        val formattedStr = formatted.toString()
+        
+        // Find where the cursor should be in the formatted string
+        // Count non-space characters until we reach nonSpaceCountBeforeCursor
+        var newCursorPos = 0
+        var nonSpaceCount = 0
+        
+        for (i in formattedStr.indices) {
+            if (formattedStr[i] != ' ') {
+                if (nonSpaceCount == nonSpaceCountBeforeCursor) {
+                    newCursorPos = i
+                    return Pair(formattedStr, newCursorPos)
+                }
+                nonSpaceCount++
+            }
+        }
+        
+        // If we've counted all non-space chars, cursor goes at the end
+        newCursorPos = formattedStr.length
+        
+        return Pair(formattedStr, newCursorPos)
+    }
+
+    /**
      * Validates postal address (not too strict)
      * Allows any non-empty address
      */
@@ -193,26 +284,7 @@ object Validators {
         return true
     }
 
-    // ========== FORMAT FUNCTIONS ==========
-
-    /**
-     * Format bank account number with spaces every 4 digits
-     * Smart formatting that maintains cursor position by only removing/adding spaces as needed
-     * Examples: "1234567890123456" → "1234 5678 9012 3456"
-     *          "ES9121000418450200051332" → "ES91 2100 0418 4502 0005 1332"
-     */
-    fun formatBankAccountNumber(input: String): String {
-        // Remove all spaces to get clean input
-        val cleanInput = input.replace(" ", "").replace("-", "").uppercase()
-        
-        // If empty, return as is
-        if (cleanInput.isEmpty()) return input
-        
-        // Format with spaces every 4 characters
-        val formatted = cleanInput.chunked(4).joinToString(" ")
-        
-        return formatted
-    }
+    // ========== FORMAT FUNCTIONS =========
 
     /**
      * Format phone number for display

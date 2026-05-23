@@ -210,7 +210,7 @@ fun NewPatientScreen(
                     OutlinedTextField(
                         value = bankAccountNumber,
                         onValueChange = { newValue ->
-                            // Allow user to type without formatting while focused
+                            // Allow user to type without formatting
                             bankAccountNumber = newValue
                         },
                         label = { Text("Compte bancari (IBAN o 16-20 dígits)") },
@@ -219,8 +219,7 @@ fun NewPatientScreen(
                             .onFocusChanged { focusState ->
                                 // Format only when losing focus
                                 if (!focusState.isFocused && bankAccountNumber.isNotEmpty()) {
-                                    val formatted = Validators.formatBankAccountNumber(bankAccountNumber)
-                                    bankAccountNumber = formatted
+                                    bankAccountNumber = Validators.formatBankAccountNumber(bankAccountNumber)
                                 }
                             },
                         singleLine = true,

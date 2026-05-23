@@ -44,6 +44,11 @@ Un objeto Kotlin singleton que proporciona funciones reutilizables para validaci
   - Alternativa: números de cuenta españoles (16-20 dígitos)
   - Elimina espacios y guiones automáticamente
 
+- **`formatBankAccountNumber(accountNumber: String)`**
+  - Formatea números bancarios con espacios cada 4 dígitos
+  - Ejemplo: `ES9121000418450200051332` → `ES91 2100 0418 4502 0005 1332`
+  - Se aplica al perder el foco del campo (onFocusChanged)
+
 - **`isValidAddress(address: String)`**
   - Longitud: 5-200 caracteres
   - Permite letras, números, acentos, símbolos comunes
@@ -227,7 +232,8 @@ if (!Validators.isValidPhoneNumber(phoneNumber)) {
 - ❌ `usuario@` - sin dominio
 
 ### 4. Pruebas de IBAN
-- ✅ `ES9121000418450200051332` - formato IBAN correcto
+- ✅ `ES9121000418450200051332` - formato IBAN correcto (sin formatear)
+- ✅ `ES91 2100 0418 4502 0005 1332` - formato IBAN con espacios (post-validación)
 - ✅ `1234567890123456` - 16 dígitos
 - ❌ `ES912100041845020005133` - IBAN incompleto
 
@@ -247,9 +253,14 @@ Todos los cambios están listos para:
 3. **Regex Patterns File**: Centralizar patrones regex en un archivo de configuración
 4. **Validación Multidioma**: Hacer los validadores agnósticos del idioma para internacionalización
 5. **Unit Tests**: Agregar pruebas unitarias para cada validador
+6. **Formateo Avanzado**: Considerar usar TextFieldValue de Compose para mejor control del cursor durante formateo en tiempo real
 
 ---
 
 **Implementado:** Mayo 2026
-**Rama:** `80-add-mandatory-format-for-every-form`
+**Rama:** `92-fix-validator-errors`
 **Status:** ✅ Completado sin errores de compilación
+**Cambios Recientes:**
+- ✅ Agregada función `formatBankAccountNumber()` para formatear IBANs
+- ✅ Formateo aplicado al perder el foco (mejor UX)
+- ✅ Cursor se mantiene en posición correcta sin desplazamientos
