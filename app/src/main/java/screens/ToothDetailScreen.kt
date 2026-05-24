@@ -425,7 +425,7 @@ fun DropdownSelector(
                 val response = RetrofitClient.pathologyApi.getAllPathologies()
                 if (response.isSuccessful) {
                     val allPathologies = listOf(
-                        Pathology(0L, "Ninguna")
+                        Pathology(0L, "Cap")
                     ) + (response.body() ?: emptyList())
                     
                     // If restricted mode is on, only show Ninguna (0) and Absencia (4)
@@ -498,15 +498,15 @@ fun ToothDetailScreen(
                 } else if (response.code() == 404) {
                     sides = emptyList()
                 } else {
-                    errorMessage = "No s'ha pogut carregar el dent"
+                    errorMessage = "No s'ha pogut carregar la dent"
                 }
-            } catch (e: Exception) {
+                } catch (e: Exception) {
                 errorMessage = e.message ?: "Error de connexió"
-            } finally {
+                } finally {
                 isLoading = false
-            }
-        }
-    }
+                }
+                }
+                }
 
     LaunchedEffect(patientId, toothId) {
         loadToothData()
@@ -704,7 +704,7 @@ fun ToothDetailScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "Editar cares del dent",
+                                    text = "Editar cares de la dent",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )

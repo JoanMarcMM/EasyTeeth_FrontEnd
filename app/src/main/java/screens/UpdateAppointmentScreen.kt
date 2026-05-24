@@ -162,12 +162,12 @@ fun UpdateAppointmentScreen(
                                 selectedAppointment = appointment
                                 editMotive = appointment.motive
                                 // Parse date and time
-                                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+                                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale("ca", "ES"))
                                 try {
                                     val dateObj = dateFormat.parse(appointment.date)
                                     if (dateObj != null) {
-                                        editDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(dateObj)
-                                        editTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(dateObj)
+                                        editDate = SimpleDateFormat("dd/MM/yyyy", Locale("ca", "ES")).format(dateObj)
+                                        editTime = SimpleDateFormat("HH:mm", Locale("ca", "ES")).format(dateObj)
                                     }
                                 } catch (e: Exception) {
                                     editDate = appointment.date
@@ -219,7 +219,7 @@ fun UpdateAppointmentScreen(
                         color = Color.Gray
                     )
                     Text(
-                        selectedAppointment!!.patient?.name ?: "N/A",
+                        selectedAppointment!!.patient?.name ?: "Sense nom",
                         fontSize = 14.sp,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
@@ -426,7 +426,7 @@ fun UpdateAppointmentScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                     ) {
                         TextButton(onClick = { showEditDialog = false }) {
-                            Text("Cancelar")
+                            Text("Cancel·lar")
                         }
                         Button(
                             onClick = {
@@ -434,9 +434,9 @@ fun UpdateAppointmentScreen(
                                     val appointmentId = selectedAppointment?.id
                                     if (appointmentId != null) {
                                         // Convertir fecha y hora a formato ISO
-                                        val dateFormatInput = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                                        val dateFormatInput = SimpleDateFormat("dd/MM/yyyy", Locale("ca", "ES"))
                                         val dateObj = dateFormatInput.parse(editDate)
-                                        val timeFormatInput = SimpleDateFormat("HH:mm", Locale.getDefault())
+                                        val timeFormatInput = SimpleDateFormat("HH:mm", Locale("ca", "ES"))
                                         val timeObj = timeFormatInput.parse(editTime)
 
                                         val calendar = Calendar.getInstance()
@@ -448,7 +448,7 @@ fun UpdateAppointmentScreen(
                                             calendar.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE))
                                         }
 
-                                        val dateFormatOutput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+                                        val dateFormatOutput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale("ca", "ES"))
                                         val finalDate = dateFormatOutput.format(calendar.time)
 
                                         val updateRequest = AppointmentRequest(
@@ -497,9 +497,9 @@ fun UpdateAppointmentRow(
     appointment: Appointment,
     onUpdateClick: () -> Unit
 ) {
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale("ca", "ES"))
     val appointmentDate = try {
-        dateFormat.parse(appointment.date)?.let { SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(it) }
+        dateFormat.parse(appointment.date)?.let { SimpleDateFormat("dd/MM HH:mm", Locale("ca", "ES")).format(it) }
             ?: appointment.date
     } catch (e: Exception) {
         appointment.date
@@ -532,7 +532,7 @@ fun UpdateAppointmentRow(
                     color = Color.Gray
                 )
                 Text(
-                    text = appointment.patient?.name ?: "Paciente N/A",
+                    text = appointment.patient?.name ?: "Pacient N/A",
                     fontSize = 12.sp,
                     color = Color.DarkGray
                 )

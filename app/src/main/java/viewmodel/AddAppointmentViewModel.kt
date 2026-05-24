@@ -139,12 +139,18 @@ class AddAppointmentViewModel : ViewModel() {
 
                 patientPathologies.clear()
                 patientPathologies.addAll(pathologiesSet.toList())
+                
+                if (patientPathologies.isEmpty()) {
+                    errorMessage = "El pacient no té patologies, assigneu-li una."
+                }
 
+            } else if (response.code() == 404) {
+                errorMessage = "El pacient no té patologies, assigneu-li una."
             } else {
-                errorMessage = "Error al obtener patologías: ${response.code()}"
+                errorMessage = "Error en obtenir les patologies: ${response.code()}"
             }
         } catch (e: Exception) {
-            errorMessage = "Excepción al cargar patologías: ${e.message}"
+            errorMessage = "Excepció en carregar les patologies: ${e.message}"
             e.printStackTrace()
         } finally {
             isLoadingPathologies = false
@@ -166,7 +172,7 @@ class AddAppointmentViewModel : ViewModel() {
                 availableBoxes.addAll(boxes)
             }
         } catch (e: Exception) {
-            errorMessage = "Excepción al cargar cajas: ${e.message}"
+            errorMessage = "Excepció en carregar els boxes: ${e.message}"
             e.printStackTrace()
         } finally {
             isLoadingBoxes = false
@@ -188,7 +194,7 @@ class AddAppointmentViewModel : ViewModel() {
                 availableOdontologists.addAll(odontologists)
             }
         } catch (e: Exception) {
-            errorMessage = "Excepción al cargar odontólogos: ${e.message}"
+            errorMessage = "Excepció en carregar els odontòlegs: ${e.message}"
             e.printStackTrace()
         } finally {
             isLoadingOdontologists = false
@@ -219,16 +225,20 @@ class AddAppointmentViewModel : ViewModel() {
                         // Convertir Set<Treatment> a List y mostrar
                         filteredTreatments.clear()
                         filteredTreatments.addAll(pathologyWithTreatments.treatments.toList())
+                        
+                        if (filteredTreatments.isEmpty()) {
+                            errorMessage = "No hi ha tractaments disponibles per a aquesta patologia"
+                        }
                     } else {
-                        errorMessage = "No hay tratamientos disponibles para esta patología"
+                        errorMessage = "No hi ha tractaments disponibles per a aquesta patologia"
                         filteredTreatments.clear()
                     }
                 } else {
-                    errorMessage = "Error al obtener tratamientos: ${response.code()}"
+                    errorMessage = "Error en obtenir els tractaments: ${response.code()}"
                     filteredTreatments.clear()
                 }
             } catch (e: Exception) {
-                errorMessage = "Excepción al cargar tratamientos: ${e.message}"
+                errorMessage = "Excepció en carregar els tractaments: ${e.message}"
                 filteredTreatments.clear()
                 e.printStackTrace()
             } finally {
@@ -256,18 +266,18 @@ class AddAppointmentViewModel : ViewModel() {
                     val odontologists = odontologistsResponse.body() ?: emptyList()
 
                     if (odontologists.isEmpty()) {
-                        errorMessage = "No hay odontólogos disponibles para este tratamiento"
+                        errorMessage = "No hi ha odontòlegs disponibles per a aquest tractament"
                     }
 
                     selectedTreatment = treatment
                     availableOdontologists.clear()
                     availableOdontologists.addAll(odontologists)
                 } else {
-                    errorMessage = "Error al obtener odontólogos: ${odontologistsResponse.code()}"
+                    errorMessage = "Error en obtenir els odontòlegs: ${odontologistsResponse.code()}"
                     availableOdontologists.clear()
                 }
             } catch (e: Exception) {
-                errorMessage = "Excepción al cargar odontólogos: ${e.message}"
+                errorMessage = "Excepció en carregar els odontòlegs: ${e.message}"
                 availableOdontologists.clear()
                 e.printStackTrace()
             } finally {

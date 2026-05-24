@@ -45,14 +45,14 @@ fun AppointmentSearcherScreen(
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).apply {
                             timeZone = TimeZone.getTimeZone("UTC")
                         }
                         viewModel.filterDate = sdf.format(Date(millis))
                         viewModel.applyAllFilters()
                     }
                     showDatePicker = false
-                }) { Text("OK") }
+                }) { Text("D'acord") }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -161,7 +161,7 @@ fun AppointmentSearcherScreen(
                                 viewModel.filterTime = it
                                 viewModel.applyAllFilters()
                             },
-                            label = { Text("Hora (ej. 10:00)") },
+                            label = { Text("Hora (ex. 10:00)") },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(8.dp),
                             textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),
@@ -222,7 +222,7 @@ fun AppointmentSearcherScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = Color(0xFF1E70EB))
                 } else if (viewModel.filteredAppointments.isEmpty()) {
                     Text(
-                        "No s'han trobat cites amb aquests parametres",
+                        "No s'han trobat cites amb aquests paràmetres",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Gray,
                         fontSize = 14.sp

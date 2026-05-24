@@ -296,7 +296,7 @@ fun UpdatePatientScreen(
                         OutlinedTextField(
                             value = taxIdentificationNumber,
                             onValueChange = { taxIdentificationNumber = it },
-                            label = { Text("Tax identification number") },
+                            label = { Text("NIF/CIF") },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
                             colors = TextFieldDefaults.colors(
