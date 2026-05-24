@@ -313,7 +313,7 @@ fun ProfileScreen(
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE3F2FD))
                             ) {
-                                Text("Cancelar", color = Color(0xFF1B4B7C), fontWeight = FontWeight.SemiBold)
+                                Text("Cancel·lar", color = Color(0xFF1B4B7C), fontWeight = FontWeight.SemiBold)
                             }
 
                             Button(
@@ -355,7 +355,7 @@ fun ProfileScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
             ) {
                 Text(
-                    text = "Log Out",
+                    text = "Tancar la sessió",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
@@ -368,8 +368,8 @@ fun ProfileScreen(
     if (showConfirmLogout) {
         AlertDialog(
             onDismissRequest = { showConfirmLogout = false },
-            title = { Text("Tancar Sessió") },
-            text = { Text("¿Estas segur que vols tancar sessió?") },
+            title = { Text("Tancar la sessió") },
+            text = { Text("Segur que vols tancar la sessió?") },
             confirmButton = {
                 Button(
                     onClick = {
@@ -381,7 +381,7 @@ fun ProfileScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                 ) {
-                    Text("Tancar Sessió")
+                    Text("Tancar la sessió")
                 }
             },
             dismissButton = {
@@ -389,7 +389,7 @@ fun ProfileScreen(
                     onClick = { showConfirmLogout = false },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE3F2FD))
                 ) {
-                    Text("Cancelar", color = Color(0xFF1B4B7C), fontWeight = FontWeight.SemiBold)
+                    Text("Cancel·lar", color = Color(0xFF1B4B7C), fontWeight = FontWeight.SemiBold)
                 }
             }
         )

@@ -46,14 +46,14 @@ fun DeleteAppointmentScreen(
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).apply {
                             timeZone = TimeZone.getTimeZone("UTC")
                         }
                         viewModel.filterDate = sdf.format(Date(millis))
                         viewModel.applyAllFilters()
                     }
                     showDatePicker = false
-                }) { Text("OK") }
+                }) { Text("D'acord") }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -70,7 +70,7 @@ fun DeleteAppointmentScreen(
             title = { Text("Confirmar eliminació", fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("¿Estás segur de que desitges eliminar aquesta cita?")
+                    Text("Segur que vols eliminar aquesta cita?")
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Pacient: ${appointmentToDelete?.patient?.name} ${appointmentToDelete?.patient?.lastname1}",
@@ -109,7 +109,7 @@ fun DeleteAppointmentScreen(
                         appointmentToDelete = null
                     }
                 ) {
-                    Text("Cancelar")
+                    Text("Cancel·lar")
                 }
             }
         )
@@ -215,7 +215,7 @@ fun DeleteAppointmentScreen(
                                 viewModel.filterTime = it
                                 viewModel.applyAllFilters()
                             },
-                            label = { Text("Hora (ej. 10:00)") },
+                            label = { Text("Hora (ex. 10:00)") },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(8.dp),
                             textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),

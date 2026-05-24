@@ -79,14 +79,14 @@ fun PatientProfileScreen(
                 if (patientResponse.isSuccessful) {
                     patient = patientResponse.body()
                 } else {
-                    errorMessage = "No se pudo cargar el paciente"
+                    errorMessage = "No s'ha pogut carregar el pacient"
                 }
 
                 if (backgroundResponse.isSuccessful) {
                     background = backgroundResponse.body()?.firstOrNull()
                 }
             } catch (e: Exception) {
-                errorMessage = e.message ?: "Error de conexión"
+                errorMessage = e.message ?: "Error de connexió"
             } finally {
                 isLoading = false
             }
@@ -321,7 +321,7 @@ fun PatientProfileScreen(
                                     value = patient?.bankAccountNumber ?: ""
                                 )
                                 ProfileDataBlock(
-                                    title = "Tax identification number",
+                                    title = "NIF/CIF",
                                     value = patient?.taxIdentificationNumber ?: ""
                                 )
                             }
@@ -338,7 +338,7 @@ fun PatientProfileScreen(
                                 verticalArrangement = Arrangement.spacedBy(14.dp)
                             ) {
                                 Text(
-                                    text = "Background",
+                                    text = "Antecedents",
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -390,11 +390,11 @@ fun PatientProfileScreen(
                                         shape = RoundedCornerShape(14.dp),
                                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                                     ) {
-                                        Text("Actualitzar Background", color = Color.White)
+                                        Text("Actualitzar Antecedents", color = Color.White)
                                     }
                                 } else {
                                     Text(
-                                        text = "Aquest pacient no té background registrat.",
+                                        text = "Aquest pacient no té antecedents registrats.",
                                         color = Color.Gray
                                     )
 
@@ -404,7 +404,7 @@ fun PatientProfileScreen(
                                         shape = RoundedCornerShape(14.dp),
                                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B7C))
                                     ) {
-                                        Text("Actualitzar Background", color = Color.White)
+                                        Text("Actualitzar Antecedents", color = Color.White)
                                     }
                                 }
                             }

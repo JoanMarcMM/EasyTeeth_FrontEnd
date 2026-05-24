@@ -257,7 +257,7 @@ fun PortraitOdontogramContent(
                 )
                 Icon(
                     imageVector = if (showChildDentition) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                    contentDescription = if (showChildDentition) "Contraer" else "Expandir"
+                    contentDescription = if (showChildDentition) "Contraure" else "Expandir"
                 )
             }
 
@@ -343,7 +343,7 @@ fun LandscapeOdontogramContent(
                 )
                 Icon(
                     imageVector = if (showChildDentition) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                    contentDescription = if (showChildDentition) "Contraer" else "Expandir"
+                    contentDescription = if (showChildDentition) "Contraure" else "Expandir"
                 )
             }
 
@@ -609,7 +609,7 @@ fun LegendCard() {
             LegendItem("Sellat de fosses i fissures", OdontoYellow)
             LegendItem("Absència natural", OdontoBlack)
             LegendItem("Sense registre", OdontoGray)
-            LegendItemText("e", "Endodoncia")
+            LegendItemText("e", "Endodòncia")
             LegendItemText("x", "Extracció")
         }
     }

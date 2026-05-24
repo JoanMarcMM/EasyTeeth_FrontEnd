@@ -251,11 +251,11 @@ fun NewBackgroundScreen(
                                         val createdPatient = patientResponse.body()
                                         finalPatientId = createdPatient?.id ?: 0L
                                         if (finalPatientId == 0L) {
-                                            errorMessage = "El backend no ha devuelto el ID del paciente"
+                                            errorMessage = "El servidor no ha retornat l'ID del pacient"
                                             return@launch
                                         }
                                     } else {
-                                        errorMessage = "Error al guardar el pacient: ${patientResponse.code()}"
+                                        errorMessage = "Error en guardar el pacient: ${patientResponse.code()}"
                                         return@launch
                                     }
                                 }
@@ -281,10 +281,10 @@ fun NewBackgroundScreen(
                                         popUpTo(Routes.PATIENT_MENU_SCREEN) { inclusive = false }
                                     }
                                 } else {
-                                    errorMessage = "Error al guardar el background: ${response.code()}"
+                                    errorMessage = "Error en guardar els antecedents: ${response.code()}"
                                 }
                             } catch (e: Exception) {
-                                errorMessage = e.message ?: "Error de conexión"
+                                errorMessage = e.message ?: "Error de connexió"
                             } finally {
                                 isLoading = false
                             }
@@ -302,7 +302,7 @@ fun NewBackgroundScreen(
                             modifier = Modifier.padding(vertical = 2.dp)
                         )
                     } else {
-                        Text("Guardar background", color = Color.White, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
+                        Text("Guardar antecedents", color = Color.White, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
                     }
                 }
 

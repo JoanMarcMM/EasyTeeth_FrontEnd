@@ -63,21 +63,21 @@ class SelectAppointmentDateTimeViewModel : ViewModel() {
         try {
             // Primero obtener el tratamiento con sus especialidades
             if (treatmentId == null || treatmentId!! <= 0) {
-                errorMessage = "TratamientoId inválido"
+                errorMessage = "TractamentId invàlid"
                 return
             }
 
             val treatmentResponse = treatmentApi.getTreatment(treatmentId!!)
 
             if (!treatmentResponse.isSuccessful) {
-                errorMessage = "Error al obtener tratamiento: ${treatmentResponse.code()}"
+                errorMessage = "Error al obtenir el tractament: ${treatmentResponse.code()}"
                 return
             }
 
             val treatment = treatmentResponse.body()
 
             if (treatment == null || treatment.specialities == null || treatment.specialities.isEmpty()) {
-                errorMessage = "El tratamiento no tiene especialidades asociadas"
+                errorMessage = "El tractament no té especialitats associades"
                 availableOdontologists.clear()
                 return
             }
@@ -102,7 +102,7 @@ class SelectAppointmentDateTimeViewModel : ViewModel() {
             availableOdontologists.addAll(odontologistsSet.toList())
 
         } catch (e: Exception) {
-            errorMessage = "Error al cargar odontólogos: ${e.message}"
+            errorMessage = "Error al carregar odontòlegs: ${e.message}"
             e.printStackTrace()
         } finally {
             isLoadingOdontologists = false
@@ -120,7 +120,7 @@ class SelectAppointmentDateTimeViewModel : ViewModel() {
                 availableBoxes.addAll(boxes)
             }
         } catch (e: Exception) {
-            errorMessage = "Error al cargar cajas: ${e.message}"
+            errorMessage = "Error al carregar els boxes: ${e.message}"
             e.printStackTrace()
         } finally {
             isLoadingBoxes = false
@@ -137,7 +137,7 @@ class SelectAppointmentDateTimeViewModel : ViewModel() {
 
     fun createAppointment(onSuccess: () -> Unit, onError: (String) -> Unit) {
         if (!isReadyToProceed()) {
-            onError("Por favor completa todos los campos")
+            onError("Si us plau completa tots els camps")
             return
         }
 
@@ -153,7 +153,7 @@ class SelectAppointmentDateTimeViewModel : ViewModel() {
                     set(Calendar.MINUTE, selectedMinute.toIntOrNull() ?: 0)
                 }
 
-                val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale("ca", "ES"))
                 val dateTimeString = formatter.format(calendar.time)
 
                 // Crear request
@@ -172,11 +172,11 @@ class SelectAppointmentDateTimeViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onError("Error al crear cita: ${response.code()}")
-                    errorMessage = "Error al crear cita: ${response.code()}"
+                    onError("Error al crear la cita: ${response.code()}")
+                    errorMessage = "Error al crear la cita: ${response.code()}"
                 }
             } catch (e: Exception) {
-                val errorMsg = "Excepción: ${e.message}"
+                val errorMsg = "Excepció: ${e.message}"
                 onError(errorMsg)
                 errorMessage = errorMsg
                 e.printStackTrace()

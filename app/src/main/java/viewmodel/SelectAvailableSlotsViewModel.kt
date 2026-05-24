@@ -98,7 +98,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
 
         try {
             if (odontologistId == null || odontologistId!! <= 0) {
-                errorMessage = "Odontólogo inválido"
+                errorMessage = "Odontòleg invàlid"
                 return
             }
 
@@ -108,7 +108,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
             )
 
             if (!response.isSuccessful) {
-                errorMessage = "Error al obtener disponibilidad: ${response.code()}"
+                errorMessage = "Error al obtenir disponibilitat: ${response.code()}"
                 return
             }
 
@@ -124,7 +124,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
             }
 
             if (slots.isEmpty()) {
-                errorMessage = "Sin disponibilidad en los próximos 30 días"
+                errorMessage = "Sense disponibilitat en els pròxims 30 dies"
                 availableSlots.clear()
                 return
             }
@@ -171,7 +171,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
                             }
                     )
                 } catch (e: Exception) {
-                    errorMessage = "Error procesando disponibilidad: ${e.message}"
+                    errorMessage = "Error processant disponibilitat: ${e.message}"
                     android.util.Log.e("SelectAvailableSlots", "Error: ${e.message}", e)
                     e.printStackTrace()
                     null
@@ -198,7 +198,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
             }
 
         } catch (e: Exception) {
-            errorMessage = "Error al cargar disponibilidad: ${e.message}"
+            errorMessage = "Error al carregar disponibilitat: ${e.message}"
             e.printStackTrace()
         } finally {
             isLoadingSlots = false
@@ -221,7 +221,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
                 }
             }
         } catch (e: Exception) {
-            errorMessage = "Error al cargar cajas: ${e.message}"
+            errorMessage = "Error al carregar els boxes: ${e.message}"
             e.printStackTrace()
         } finally {
             isLoadingBoxes = false
@@ -239,7 +239,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
 
     fun createAppointment(onSuccess: () -> Unit, onError: (String) -> Unit) {
         if (!isReadyToProceed()) {
-            onError("Por favor completa todos los campos")
+            onError("Si us plau completa tots els camps")
             return
         }
 
@@ -264,7 +264,7 @@ class SelectAvailableSlotsViewModel : ViewModel() {
                     set(Calendar.MINUTE, minute)
                 }
 
-                val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale("ca", "ES"))
                 val dateTimeString = formatter.format(calendar.time)
 
                 // Crear request
@@ -283,11 +283,11 @@ class SelectAvailableSlotsViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onError("Error al crear cita: ${response.code()}")
-                    errorMessage = "Error al crear cita: ${response.code()}"
+                    onError("Error al crear la cita: ${response.code()}")
+                    errorMessage = "Error al crear la cita: ${response.code()}"
                 }
             } catch (e: Exception) {
-                val errorMsg = "Excepción: ${e.message}"
+                val errorMsg = "Excepció: ${e.message}"
                 onError(errorMsg)
                 errorMessage = errorMsg
                 e.printStackTrace()

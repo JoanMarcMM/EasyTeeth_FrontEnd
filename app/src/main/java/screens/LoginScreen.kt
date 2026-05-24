@@ -149,7 +149,7 @@ fun LoginScreen(
                 onClick = { /* Navegar a registro o recuperación */ },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("¿Contrasenya oblidada?", color = Color(0xFF1E70EB), fontSize = 12.sp)
+                Text("Has oblidat la contrasenya?", color = Color(0xFF1E70EB), fontSize = 12.sp)
             }
 
             // Mensaje de error

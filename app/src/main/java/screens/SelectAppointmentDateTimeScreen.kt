@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,7 +97,7 @@ fun SelectAppointmentDateTimeScreen(
                     ) {
                         Text(
                             viewModel.selectedDateTime?.let {
-                                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it)
+                                SimpleDateFormat("dd/MM/yyyy", Locale("ca", "ES")).format(it)
                             } ?: "Selecciona una data",
                             color = if (viewModel.selectedDateTime != null) Color.Black else Color.Gray
                         )
@@ -195,11 +196,14 @@ fun SelectAppointmentDateTimeScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        viewModel.selectedOdontologist?.name ?: "Selecciona odontòleg (${viewModel.availableOdontologists.size})",
-                                        color = if (viewModel.selectedOdontologist != null) Color.Black else Color.Gray
+                                        text = viewModel.selectedOdontologist?.name ?: "Selecciona odontòleg (${viewModel.availableOdontologists.size})",
+                                        color = if (viewModel.selectedOdontologist != null) Color.Black else Color.Gray,
+                                        modifier = Modifier.weight(1f, fill = false),
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                     )
                                     Icon(
-                                        if (expandedOdontologist) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                        imageVector = if (expandedOdontologist) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                                         contentDescription = null
                                     )
                                 }
@@ -212,7 +216,13 @@ fun SelectAppointmentDateTimeScreen(
                             ) {
                                 viewModel.availableOdontologists.forEach { odontologist ->
                                     DropdownMenuItem(
-                                        text = { Text(odontologist.name) },
+                                        text = { 
+                                            Text(
+                                                text = odontologist.name,
+                                                maxLines = 1,
+                                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                            ) 
+                                        },
                                         onClick = {
                                             viewModel.selectedOdontologist = odontologist
                                             expandedOdontologist = false
@@ -247,16 +257,18 @@ fun SelectAppointmentDateTimeScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    viewModel.selectedBox?.let { "Caja ${it.numBox}" } ?: "Selecciona el box:",
-                                    color = if (viewModel.selectedBox != null) Color.Black else Color.Gray
+                                    text = viewModel.selectedBox?.let { "Box ${it.numBox}" } ?: "Selecciona el box:",
+                                    color = if (viewModel.selectedBox != null) Color.Black else Color.Gray,
+                                    modifier = Modifier.weight(1f, fill = false),
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                 )
                                 Icon(
-                                    if (expandedBox) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                    imageVector = if (expandedBox) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
                                     contentDescription = null
                                 )
-                            }
-                        }
-
+                                }
+                                }
                         DropdownMenu(
                             expanded = expandedBox,
                             onDismissRequest = { expandedBox = false },
@@ -264,7 +276,12 @@ fun SelectAppointmentDateTimeScreen(
                         ) {
                             viewModel.availableBoxes.forEach { box ->
                                 DropdownMenuItem(
-                                    text = { Text("Box ${box.numBox}") },
+                                    text = { 
+                                        Text(
+                                            text = "Box ${box.numBox}",
+                                            maxLines = 1
+                                        ) 
+                                    },
                                     onClick = {
                                         viewModel.selectedBox = box
                                         expandedBox = false
@@ -316,7 +333,7 @@ fun SelectAppointmentDateTimeScreen(
                             .height(50.dp),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text("Cancelar")
+                        Text("Cancel·lar")
                     }
                 }
             }

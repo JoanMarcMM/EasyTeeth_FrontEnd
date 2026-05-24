@@ -126,7 +126,7 @@ fun SelectAvailableSlotsScreen(
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E70EB))
                 ) {
-                    Text("Aceptar", color = Color.White)
+                    Text("Acceptar", color = Color.White)
                 }
             },
             dismissButton = {
@@ -158,7 +158,7 @@ fun SelectAvailableSlotsScreen(
             title = { Text("Confirmar Cita", fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("¿Vols confirmar aquesta cita?", modifier = Modifier.padding(bottom = 8.dp))
+                    Text("Vols confirmar aquesta cita?", modifier = Modifier.padding(bottom = 8.dp))
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Data: ${formatDate(viewModel.selectedDate ?: java.time.LocalDate.now())}",
@@ -392,16 +392,20 @@ fun SelectAvailableSlotsScreen(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Column {
+                                    Column(modifier = Modifier.weight(1f, fill = false)) {
                                         Text(
-                                            daySlots.dayOfWeek.capitalize(),
+                                            DateTimeFormatter.ofPattern("EEEE", java.util.Locale("ca", "ES"))
+                                                .format(daySlots.date).replaceFirstChar { it.uppercase() },
                                             fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp
+                                            fontSize = 16.sp,
+                                            maxLines = 1,
+                                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                         )
                                         Text(
                                             formatDate(daySlots.date),
                                             fontSize = 13.sp,
-                                            color = Color.Gray
+                                            color = Color.Gray,
+                                            maxLines = 1
                                         )
                                     }
                                     if (viewModel.selectedDate == daySlots.date) {
@@ -428,9 +432,14 @@ fun SelectAvailableSlotsScreen(
                                 ) {
                                     daySlots.timeSlots.forEach { timeSlot ->
                                         Column {
-                                            // Period header
+                                            // Period header - Translated shift
+                                            val shiftLabel = when(timeSlot.period.uppercase()) {
+                                                "MORNING" -> "Matí"
+                                                "AFTERNOON" -> "Tarda"
+                                                else -> timeSlot.period
+                                            }
                                             Text(
-                                                timeSlot.period,
+                                                shiftLabel,
                                                 fontWeight = FontWeight.SemiBold,
                                                 fontSize = 12.sp,
                                                 color = Color.Gray,
@@ -536,6 +545,6 @@ fun SelectAvailableSlotsScreen(
 }
 
 fun formatDate(date: LocalDate): String {
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", java.util.Locale("ca", "ES"))
     return date.format(formatter)
 }

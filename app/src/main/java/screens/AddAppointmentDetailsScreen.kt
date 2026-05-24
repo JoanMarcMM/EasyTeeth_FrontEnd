@@ -109,7 +109,7 @@ fun AddAppointmentDetailsScreen(
 
             // Paso 1: Seleccionar Patología
             Text(
-                text = "Pas 1: Selecciona la patología",
+                text = "Pas 1: Selecciona la patologia",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -144,10 +144,13 @@ fun AddAppointmentDetailsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = viewModel.selectedPathology?.name ?: "Selecciona una patología",
+                            text = viewModel.selectedPathology?.name ?: "Selecciona una patologia",
                             color = if (viewModel.selectedPathology != null)
                                 Color.Black else Color.Gray,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            modifier = Modifier.weight(1f, fill = false),
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                         )
                         Icon(
                             imageVector = if (expandedPathology)
@@ -166,7 +169,7 @@ fun AddAppointmentDetailsScreen(
                 ) {
                     if (viewModel.patientPathologies.isEmpty()) {
                         DropdownMenuItem(
-                            text = { Text("Sense patologías registrades", color = Color.Gray) },
+                            text = { Text("Sense patologies registrades", color = Color.Gray) },
                             onClick = {}
                         )
                     } else {
@@ -224,7 +227,7 @@ fun AddAppointmentDetailsScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                "No hi ha tractaments disponibles per aquesta patología",
+                                "No hi ha tractaments disponibles per aquesta patologia",
                                 color = Color.Gray,
                                 fontSize = 14.sp,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -327,7 +330,10 @@ fun AddAppointmentDetailsScreen(
                                             ?: "Selecciona odontòleg (${viewModel.availableOdontologists.size})",
                                         color = if (viewModel.selectedOdontologist != null)
                                             Color.Black else Color.Gray,
-                                        fontSize = 14.sp
+                                        fontSize = 14.sp,
+                                        modifier = Modifier.weight(1f, fill = false),
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                     )
                                     Icon(
                                         imageVector = if (expandedOdontologist)
@@ -345,7 +351,7 @@ fun AddAppointmentDetailsScreen(
                                 viewModel.availableOdontologists.forEach { odontologist ->
                                     DropdownMenuItem(
                                         text = {
-                                            Text(odontologist.name ?: "Sin nombre")
+                                            Text(odontologist.name ?: "Sense nom")
                                         },
                                         onClick = {
                                             viewModel.onOdontologistSelected(odontologist)
@@ -419,7 +425,9 @@ fun TreatmentCard(
                 text = treatment.name,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
-                color = Color.Black
+                color = Color.Black,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
 
             if (!treatment.description.isNullOrEmpty()) {

@@ -185,7 +185,7 @@ class BoxViewModel(
                     // Check if we have enough total
                     if (totalAvailable < requiredQuantity) {
                         insufficientItems.add(
-                            "${material.utensil.name} (Necesarios: $requiredQuantity, Disponibles: $totalAvailable)"
+                            "${material.utensil.name} (Necessaris: $requiredQuantity, Disponibles: $totalAvailable)"
                         )
                     }
                 }
@@ -208,7 +208,7 @@ class BoxViewModel(
 
     fun updateStockStatus(boxId: Long, dateMillis: Long, status: Boolean, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(dateMillis))
+            val dateString = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).format(Date(dateMillis))
             try {
                 // Update the box stock status
                 val response = api.updateStockStatus(boxId, dateString, status)
@@ -309,12 +309,12 @@ class BoxViewModel(
             _orderSuccess.value = false
 
             try {
-                val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(dateMillis))
+                val dateString = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).format(Date(dateMillis))
                 
                 // Get all storages to find the first one (or we could add a parameter for storage selection)
                 val storagesResponse = RetrofitClient.storageApi.getAllStorages()
                 if (!storagesResponse.isSuccessful || storagesResponse.body() == null) {
-                    _orderError.value = "Error obteniendo los almacenes"
+                    _orderError.value = "Error obtenint els magatzems"
                     _orderCreating.value = false
                     onResult(false)
                     return@launch
@@ -322,7 +322,7 @@ class BoxViewModel(
 
                 val storages = storagesResponse.body()!!
                 if (storages.isEmpty()) {
-                    _orderError.value = "No hay almacenes disponibles"
+                    _orderError.value = "No hi ha magatzems disponibles"
                     _orderCreating.value = false
                     onResult(false)
                     return@launch
@@ -341,7 +341,7 @@ class BoxViewModel(
                 }
 
                 if (orderItems.isEmpty()) {
-                    _orderError.value = "No hay materiales para encargar"
+                    _orderError.value = "No hi ha materials per encarregar"
                     _orderCreating.value = false
                     onResult(false)
                     return@launch

@@ -102,7 +102,7 @@ fun BoxCalendarScreen(
             showSuccessMessage = false
             isError = false
             viewModel.clearOrderMessages()
-            val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
+            val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).format(Date(millis))
             viewModel.fetchMaterials(boxId, dateStr)
         }
     }
@@ -384,7 +384,7 @@ fun BoxCalendarScreen(
                                     if (success) {
                                         showSuccessMessage = true
                                         isError = false
-                                        val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
+                                        val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).format(Date(millis))
                                         viewModel.fetchMaterials(boxId, dateStr)
                                     } else {
                                         isError = true
@@ -395,7 +395,7 @@ fun BoxCalendarScreen(
                         } else {
                             // Future date: navigate to order review screen
                             datePickerState.selectedDateMillis?.let { millis ->
-                                val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(millis))
+                                val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).format(Date(millis))
                                 viewModel.setGlobalBoxOrderForReview(boxId, dateStr, materials)
                                 navController.navigate("${Routes.BOX_ORDER_REVIEW}".replace("{boxId}", boxId.toString()).replace("{dateMillis}", millis.toString()))
                             }

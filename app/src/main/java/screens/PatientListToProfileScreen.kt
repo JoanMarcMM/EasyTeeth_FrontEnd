@@ -77,9 +77,11 @@ fun PatientListToProfileScreen(
             )
 
             Text(
-                text = "Resultados encontrados: ${viewModel.filteredPatients.size}",
+                text = "Resultats trobats: ${viewModel.filteredPatients.size}",
                 fontSize = 12.sp,
                 color = Color.Gray,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 

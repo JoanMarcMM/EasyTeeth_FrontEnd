@@ -31,7 +31,7 @@ class AppointmentViewModel : ViewModel() {
         // CONFIGURACIÓN DE FECHA:
         // El DatePicker de Material 3 devuelve milisegundos en UTC.
         // Usamos UTC aquí para evitar que el formateador reste horas y cambie el día.
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale("ca", "ES")).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
 
